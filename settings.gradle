@@ -1,7 +1,1 @@
-include ":actionrequest"
-include ":activemodel"
-include ":activerecord"
-include ":activerecord_rest_adapter"
-include ":activesupport"
 include ":arel"
-include ":ark"

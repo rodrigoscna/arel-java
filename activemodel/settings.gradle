@@ -1,5 +1,0 @@
-rootProject.name = "activemodel"
-
-include ":activesupport"
-
-project(":activesupport").projectDir = file("../activesupport")

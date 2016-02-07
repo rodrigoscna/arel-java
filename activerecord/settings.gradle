@@ -1,7 +1,0 @@
-rootProject.name = "activerecord"
-
-include ":activemodel"
-include ":activesupport"
-
-project(":activemodel").projectDir = file("../activemodel")
-project(":activesupport").projectDir = file("../activesupport")

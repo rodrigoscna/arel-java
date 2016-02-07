@@ -1,3 +1,0 @@
-## ActiveSupport
-
-Under active development.

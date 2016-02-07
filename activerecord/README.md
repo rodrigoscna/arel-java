@@ -1,3 +1,0 @@
-## ActiveRecord
-
-Under active development.

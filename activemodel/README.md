@@ -1,3 +1,0 @@
-## ActiveModel
-
-Under active development.
