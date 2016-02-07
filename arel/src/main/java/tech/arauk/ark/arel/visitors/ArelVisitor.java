@@ -30,7 +30,7 @@ public class ArelVisitor {
             Method method = getClass().getMethod(methodName, Object.class);
             return (ArelCollector) method.invoke(this, object);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
-            throw new RuntimeException("Cannot visit " + object.getClass().getCanonicalName());
+            throw new RuntimeException("Cannot " + methodName);
         }
     }
 
@@ -40,7 +40,7 @@ public class ArelVisitor {
             Method method = getClass().getMethod(methodName, Object.class, ArelCollector.class);
             return (ArelCollector) method.invoke(this, object, collector);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
-            throw new RuntimeException("Cannot visit " + object.getClass().getCanonicalName());
+            throw new RuntimeException("Cannot " + methodName);
         }
     }
 

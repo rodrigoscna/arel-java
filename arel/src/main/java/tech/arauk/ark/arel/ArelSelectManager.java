@@ -6,6 +6,8 @@ import tech.arauk.ark.arel.nodes.ArelNodeSelectStatement;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
 
+import java.util.List;
+
 public class ArelSelectManager extends ArelTreeManager {
     private ArelNodeSelectCore mCtx;
 
@@ -37,7 +39,7 @@ public class ArelSelectManager extends ArelTreeManager {
         }
 
         if (table instanceof ArelNodeJoin) {
-            this.mCtx.source.right.add(table);
+            ((List<Object>) this.mCtx.source.right).add(table);
         } else {
             this.mCtx.source.left = table;
         }
@@ -59,6 +61,11 @@ public class ArelSelectManager extends ArelTreeManager {
 
     public ArelSelectManager skip(ArelNodeOffset amount) {
         ((ArelNodeSelectStatement) this.ast).offset = amount;
+        return this;
+    }
+
+    public ArelSelectManager having(Object expr) {
+        this.mCtx.havings.add(expr);
         return this;
     }
 }

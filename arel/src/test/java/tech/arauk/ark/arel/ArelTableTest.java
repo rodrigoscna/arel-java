@@ -5,15 +5,15 @@ import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.support.FakeRecord;
 
 public class ArelTableTest extends TestCase {
-    private ArelTable mRelation;
-
     static {
         ArelTable.engine = new FakeRecord.Base();
     }
 
+    private ArelTable mRelation;
+
     @Override
     protected void setUp() throws Exception {
-        mRelation = new ArelTable("users");
+        mRelation = new ArelTable("users", new FakeRecord.TypeCaster());
 
         super.setUp();
     }
@@ -75,5 +75,12 @@ public class ArelTableTest extends TestCase {
 
         assertSame(selectManager.getClass(), ArelSelectManager.class);
         assertEquals("SELECT FROM \"users\" OFFSET 2", ((ArelSelectManager) selectManager).toSQL());
+    }
+
+    public void testHaving() {
+        Object selectManager = mRelation.having(mRelation.get("id").eq(10));
+
+        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertEquals("SELECT FROM \"users\" HAVING \"users\".\"id\" = 10", ((ArelSelectManager) selectManager).toSQL());
     }
 }
