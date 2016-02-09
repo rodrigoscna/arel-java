@@ -26,7 +26,7 @@ public class ArelSelectManager extends ArelTreeManager {
 
         this.mCtx = cores[cores.length - 1];
 
-        this.from(table);
+        from(table);
     }
 
     public ArelSelectManager on(Object exprs) {
@@ -58,15 +58,15 @@ public class ArelSelectManager extends ArelTreeManager {
     }
 
     public ArelSelectManager offset(int amount) {
-        return this.skip(amount);
+        return skip(amount);
     }
 
     public ArelSelectManager offset(ArelNodeOffset amount) {
-        return this.skip(amount);
+        return skip(amount);
     }
 
     public ArelSelectManager skip(int amount) {
-        return this.skip(new ArelNodeOffset(amount));
+        return skip(new ArelNodeOffset(amount));
     }
 
     public ArelSelectManager skip(ArelNodeOffset amount) {

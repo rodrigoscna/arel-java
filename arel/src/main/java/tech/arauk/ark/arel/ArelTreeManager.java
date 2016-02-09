@@ -13,7 +13,7 @@ public class ArelTreeManager {
 
     public String toSQL() {
         ArelVisitor visitor = ArelTable.engine;
-        return this.toSQL(visitor);
+        return toSQL(visitor);
     }
 
     public String toSQL(ArelVisitor visitor) {

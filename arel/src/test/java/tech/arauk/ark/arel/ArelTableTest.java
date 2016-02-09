@@ -38,7 +38,7 @@ public class ArelTableTest extends TestCase {
         assertEquals("bar", ((ArelNodeInnerJoin) join).right);
     }
 
-    public void testCreateJoinNodesWithAFullOuterJoinKlass() {
+    public void testCreateJoinNodesWithAFullOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeFullOuterJoin.class);
 
         assertSame(join.getClass(), ArelNodeFullOuterJoin.class);
@@ -46,7 +46,7 @@ public class ArelTableTest extends TestCase {
         assertEquals("bar", ((ArelNodeFullOuterJoin) join).right);
     }
 
-    public void testCreateJoinNodesWithAnOuterJoinKlass() {
+    public void testCreateJoinNodesWithAnOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeOuterJoin.class);
 
         assertSame(join.getClass(), ArelNodeOuterJoin.class);
@@ -54,7 +54,7 @@ public class ArelTableTest extends TestCase {
         assertEquals("bar", ((ArelNodeOuterJoin) join).right);
     }
 
-    public void testCreateJoinNodesWithARightOuterJoinKlass() {
+    public void testCreateJoinNodesWithARightOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeRightOuterJoin.class);
 
         assertSame(join.getClass(), ArelNodeRightOuterJoin.class);

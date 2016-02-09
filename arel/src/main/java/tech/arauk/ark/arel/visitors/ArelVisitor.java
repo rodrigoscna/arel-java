@@ -51,7 +51,7 @@ public class ArelVisitor {
             this.mDispatch = new HashMap<>();
         }
 
-        public String get(Class<? extends Object> aClass) {
+        public String get(Class<?> aClass) {
             if (!this.mDispatch.containsKey(aClass)) {
                 this.mDispatch.put(aClass, "visit" + aClass.getSimpleName());
             }

@@ -95,8 +95,8 @@ public class ArelTable implements ArelRelation {
         return ArelNodeFactory.createJoin(to, constraint);
     }
 
-    public ArelNodeJoin createJoin(String to, String constraint, Class<? extends ArelNodeJoin> kclass) {
-        return ArelNodeFactory.createJoin(to, constraint, kclass);
+    public ArelNodeJoin createJoin(String to, String constraint, Class<? extends ArelNodeJoin> aClass) {
+        return ArelNodeFactory.createJoin(to, constraint, aClass);
     }
 
     public ArelNodeJoin createStringJoin(String to) {

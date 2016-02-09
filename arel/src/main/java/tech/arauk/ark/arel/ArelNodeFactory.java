@@ -26,9 +26,9 @@ public class ArelNodeFactory {
         return createJoin(to, constraint, ArelNodeInnerJoin.class);
     }
 
-    public static ArelNodeJoin createJoin(Object to, String constraint, Class<? extends ArelNodeJoin> kclass) {
+    public static ArelNodeJoin createJoin(Object to, String constraint, Class<? extends ArelNodeJoin> aClass) {
         try {
-            return kclass.getConstructor(Object.class, String.class, Class.class).newInstance(to, constraint, kclass);
+            return aClass.getConstructor(Object.class, String.class, Class.class).newInstance(to, constraint, aClass);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
             return null;
         }
