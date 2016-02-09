@@ -30,14 +30,14 @@ public class ArelTableTest extends TestCase {
     public void testCreateStringJoinNodes() {
         Object join = mRelation.createStringJoin("foo");
 
-        assertSame(join.getClass(), ArelNodeStringJoin.class);
+        assertSame(ArelNodeStringJoin.class, join.getClass());
         assertEquals("foo", ((ArelNodeStringJoin) join).left);
     }
 
     public void testCreateInnerJoinNodes() {
         Object join = mRelation.createJoin("foo", "bar");
 
-        assertSame(join.getClass(), ArelNodeInnerJoin.class);
+        assertSame(ArelNodeInnerJoin.class, join.getClass());
         assertEquals("foo", ((ArelNodeInnerJoin) join).left);
         assertEquals("bar", ((ArelNodeInnerJoin) join).right);
     }
@@ -45,7 +45,7 @@ public class ArelTableTest extends TestCase {
     public void testCreateJoinNodesWithAFullOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeFullOuterJoin.class);
 
-        assertSame(join.getClass(), ArelNodeFullOuterJoin.class);
+        assertSame(ArelNodeFullOuterJoin.class, join.getClass());
         assertEquals("foo", ((ArelNodeFullOuterJoin) join).left);
         assertEquals("bar", ((ArelNodeFullOuterJoin) join).right);
     }
@@ -53,7 +53,7 @@ public class ArelTableTest extends TestCase {
     public void testCreateJoinNodesWithAnOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeOuterJoin.class);
 
-        assertSame(join.getClass(), ArelNodeOuterJoin.class);
+        assertSame(ArelNodeOuterJoin.class, join.getClass());
         assertEquals("foo", ((ArelNodeOuterJoin) join).left);
         assertEquals("bar", ((ArelNodeOuterJoin) join).right);
     }
@@ -61,7 +61,7 @@ public class ArelTableTest extends TestCase {
     public void testCreateJoinNodesWithARightOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeRightOuterJoin.class);
 
-        assertSame(join.getClass(), ArelNodeRightOuterJoin.class);
+        assertSame(ArelNodeRightOuterJoin.class, join.getClass());
         assertEquals("foo", ((ArelNodeRightOuterJoin) join).left);
         assertEquals("bar", ((ArelNodeRightOuterJoin) join).right);
     }
@@ -69,7 +69,7 @@ public class ArelTableTest extends TestCase {
     public void testInsertManager() {
         Object insertManager = mRelation.compileInsert("VALUES(NULL)");
 
-        assertSame(insertManager.getClass(), ArelInsertManager.class);
+        assertSame(ArelInsertManager.class, insertManager.getClass());
         ((ArelInsertManager) insertManager).into(new ArelTable("users"));
         assertEquals("INSERT INTO \"users\" VALUES(NULL)", ((ArelInsertManager) insertManager).toSQL());
     }
@@ -77,21 +77,21 @@ public class ArelTableTest extends TestCase {
     public void testSkip() {
         Object selectManager = mRelation.skip(2);
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT FROM \"users\" OFFSET 2", ((ArelSelectManager) selectManager).toSQL());
     }
 
     public void testHaving() {
         Object selectManager = mRelation.having(mRelation.get("id").eq(10));
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT FROM \"users\" HAVING \"users\".\"id\" = 10", ((ArelSelectManager) selectManager).toSQL());
     }
 
     public void testJoinOnNull() {
         Object selectManager = mRelation.join(null);
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT FROM \"users\"", ((ArelSelectManager) selectManager).toSQL());
     }
 
@@ -101,7 +101,7 @@ public class ArelTableTest extends TestCase {
 
         Object selectManager = mRelation.join(right, ArelNodeOuterJoin.class).on(predicate);
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", ((ArelSelectManager) selectManager).toSQL());
     }
 
@@ -111,14 +111,14 @@ public class ArelTableTest extends TestCase {
 
         Object selectManager = mRelation.outerJoin(right).on(predicate);
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", ((ArelSelectManager) selectManager).toSQL());
     }
 
     public void testGroup() {
         Object selectManager = mRelation.group(mRelation.get("id"));
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT FROM \"users\" GROUP BY \"users\".\"id\"", ((ArelSelectManager) selectManager).toSQL());
     }
 
@@ -130,7 +130,7 @@ public class ArelTableTest extends TestCase {
         Object tableAlias = mRelation.alias();
         nodes.add(tableAlias);
 
-        assertSame(tableAlias.getClass(), ArelNodeTableAlias.class);
+        assertSame(ArelNodeTableAlias.class, tableAlias.getClass());
         assertEquals(nodes, mRelation.aliases);
         assertEquals("users_2", ((ArelNodeTableAlias) tableAlias).tableName());
         assertEquals(tableAlias, ((ArelNodeTableAlias) tableAlias).get("id").relation);
@@ -139,49 +139,49 @@ public class ArelTableTest extends TestCase {
     public void testTableAlias() {
         Object table = new ArelTable("users", "foo");
 
-        assertSame(table.getClass(), ArelTable.class);
+        assertSame(ArelTable.class, table.getClass());
         assertEquals("foo", ((ArelTable) table).tableAlias());
     }
 
     public void testTableAliasWithTableName() {
         Object table = new ArelTable("users", "users");
 
-        assertSame(table.getClass(), ArelTable.class);
+        assertSame(ArelTable.class, table.getClass());
         assertEquals(null, ((ArelTable) table).tableAlias());
     }
 
     public void testOrder() {
         Object selectManager = mRelation.order("foo");
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT FROM \"users\" ORDER BY foo", ((ArelSelectManager) selectManager).toSQL());
     }
 
     public void testProject() {
         Object selectManager = mRelation.project(new ArelNodeSqlLiteral("*"));
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT * FROM \"users\"", ((ArelSelectManager) selectManager).toSQL());
     }
 
     public void testProjectWithMultipleParameters() {
         Object selectManager = mRelation.project(new ArelNodeSqlLiteral("*"), new ArelNodeSqlLiteral("*"));
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT *, * FROM \"users\"", ((ArelSelectManager) selectManager).toSQL());
     }
 
     public void testTake() {
         Object selectManager = mRelation.take(1);
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         assertEquals("SELECT  FROM \"users\" LIMIT 1", ((ArelSelectManager) selectManager).toSQL());
     }
 
     public void testWhere() {
         Object selectManager = mRelation.where(mRelation.get("id").eq(1));
 
-        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertSame(ArelSelectManager.class, selectManager.getClass());
         ((ArelSelectManager) selectManager).project(mRelation.get("id"));
         assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" = 1", ((ArelSelectManager) selectManager).toSQL());
     }
@@ -193,7 +193,7 @@ public class ArelTableTest extends TestCase {
     public void testAttributeManufacturer() {
         Object attribute = mRelation.get("id");
 
-        assertSame(attribute.getClass(), ArelAttribute.class);
+        assertSame(ArelAttribute.class, attribute.getClass());
         assertEquals("id", ((ArelAttribute) attribute).name);
     }
 }
