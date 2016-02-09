@@ -37,4 +37,8 @@ public class ArelAttribute {
     public ArelNodeNamedFunction lower() {
         return this.relation.lower(this);
     }
+
+    public interface Type {
+        String type();
+    }
 }
