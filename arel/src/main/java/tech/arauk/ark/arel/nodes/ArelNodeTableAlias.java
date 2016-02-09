@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.ArelNodeFactory;
 import tech.arauk.ark.arel.ArelRelation;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 
@@ -24,6 +25,11 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelRelation {
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return false;
         }
+    }
+
+    @Override
+    public ArelNodeNamedFunction lower(Object column) {
+        return ArelNodeFactory.lower(column);
     }
 
     @Override

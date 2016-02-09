@@ -2,10 +2,7 @@ package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.connection.ArelTypeCaster;
-import tech.arauk.ark.arel.nodes.ArelNodeInnerJoin;
-import tech.arauk.ark.arel.nodes.ArelNodeJoin;
-import tech.arauk.ark.arel.nodes.ArelNodeOuterJoin;
-import tech.arauk.ark.arel.nodes.ArelNodeTableAlias;
+import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
 import java.util.ArrayList;
@@ -64,6 +61,11 @@ public class ArelTable implements ArelRelation {
     @Override
     public boolean isAbleToTypeCast() {
         return this.mTypeCaster != null;
+    }
+
+    @Override
+    public ArelNodeNamedFunction lower(Object column) {
+        return ArelNodeFactory.lower(column);
     }
 
     @Override

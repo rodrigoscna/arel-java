@@ -2,6 +2,7 @@ package tech.arauk.ark.arel.attributes;
 
 import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelRelation;
+import tech.arauk.ark.arel.nodes.ArelNodeNamedFunction;
 
 public class ArelAttribute {
     public ArelRelation relation;
@@ -31,5 +32,9 @@ public class ArelAttribute {
 
     public Object typeCastForDatabase(Object value) {
         return this.relation.typeCastForDatabase(this.name, value);
+    }
+
+    public ArelNodeNamedFunction lower() {
+        return this.relation.lower(this);
     }
 }

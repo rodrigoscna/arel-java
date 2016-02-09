@@ -1,9 +1,6 @@
 package tech.arauk.ark.arel;
 
-import tech.arauk.ark.arel.nodes.ArelNodeAnd;
-import tech.arauk.ark.arel.nodes.ArelNodeInnerJoin;
-import tech.arauk.ark.arel.nodes.ArelNodeJoin;
-import tech.arauk.ark.arel.nodes.ArelNodeStringJoin;
+import tech.arauk.ark.arel.nodes.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -36,5 +33,9 @@ public class ArelNodeFactory {
 
     public static ArelNodeJoin createStringJoin(String to) {
         return createJoin(to, null, ArelNodeStringJoin.class);
+    }
+
+    public static ArelNodeNamedFunction lower(Object column) {
+        return new ArelNodeNamedFunction("LOWER", new Object[]{ArelNodes.buildQuoted(column)});
     }
 }
