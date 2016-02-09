@@ -1,6 +1,5 @@
 package tech.arauk.ark.arel.visitors;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import tech.arauk.ark.arel.ArelTable;
 import tech.arauk.ark.arel.ArelUtils;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
@@ -9,6 +8,7 @@ import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeJoinSource;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
+import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,9 @@ public class ArelVisitorToSql extends ArelVisitor {
     private static final String COMMA = ", ";
     private static final String GROUP_BY = " GROUP BY ";
     private static final String IS_NULL = " IS NULL";
+    private static final String LEFT_OUTER_JOIN = "LEFT OUTER JOIN ";
     private static final String OFFSET = "OFFSET ";
+    private static final String ON = "ON ";
     private static final String ORDER_BY = " ORDER BY ";
     private static final String SPACE = " ";
     private static final String WHERE = " WHERE ";
@@ -31,9 +33,9 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelAttribute(Object object, ArelCollector collector) {
         ArelAttribute attribute = (ArelAttribute) object;
 
-        String joinName = joinName = attribute.relation.alias;
+        Object joinName = attribute.relation.tableAlias();
         if (joinName == null) {
-            joinName = attribute.relation.name;
+            joinName = attribute.relation.tableName();
         }
 
         collector.append(quoteTableName(joinName) + "." + quoteColumnName(attribute.name));
@@ -113,6 +115,25 @@ public class ArelVisitorToSql extends ArelVisitor {
             collector = visit(offset.expr, collector);
         }
 
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeOn(Object object, ArelCollector collector) {
+        ArelNodeOn nodeOn = (ArelNodeOn) object;
+
+        collector.append(ON);
+        collector = visit(nodeOn.expr, collector);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeOuterJoin(Object object, ArelCollector collector) {
+        ArelNodeOuterJoin outerJoin = (ArelNodeOuterJoin) object;
+
+        collector.append(LEFT_OUTER_JOIN);
+        collector = visit(outerJoin.left, collector);
+        collector.append(SPACE);
+        collector = visit(outerJoin.right, collector);
         return collector;
     }
 
@@ -234,14 +255,32 @@ public class ArelVisitorToSql extends ArelVisitor {
         return literal(object, collector);
     }
 
+    public ArelCollector visitArelNodeTableAlias(Object object, ArelCollector collector) {
+        ArelNodeTableAlias tableAlias = (ArelNodeTableAlias) object;
+
+        collector = visit(tableAlias.relation(), collector);
+        collector.append(SPACE);
+        collector.append(quoteTableName(tableAlias.name()));
+
+        return collector;
+    }
+
     public ArelCollector visitArelTable(Object object, ArelCollector collector) {
         ArelTable table = (ArelTable) object;
 
-        if ((table.alias != null) && (table.alias.length() > 0)) {
-            collector.append(String.format("%s %s", quoteTableName(table.name), quoteTableName(table.alias)));
+        if ((table.tableAlias != null) && (table.tableAlias.length() > 0)) {
+            collector.append(String.format("%s %s", quoteTableName(table.tableName()), quoteTableName(table.tableAlias)));
         } else {
-            collector.append(quoteTableName(table.name));
+            collector.append(quoteTableName(table.tableName()));
         }
+        return collector;
+    }
+
+    public ArelCollector visitArrayList(Object object, ArelCollector collector) {
+        ArrayList<Object> arrayList = (ArrayList<Object>) object;
+
+        collector = injectJoin(arrayList, collector, COMMA);
+
         return collector;
     }
 

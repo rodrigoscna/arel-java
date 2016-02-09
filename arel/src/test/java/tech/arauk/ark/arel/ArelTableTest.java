@@ -83,4 +83,21 @@ public class ArelTableTest extends TestCase {
         assertSame(selectManager.getClass(), ArelSelectManager.class);
         assertEquals("SELECT FROM \"users\" HAVING \"users\".\"id\" = 10", ((ArelSelectManager) selectManager).toSQL());
     }
+
+    public void testJoinOnNull() {
+        Object selectManager = mRelation.join(null);
+
+        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertEquals("SELECT FROM \"users\"", ((ArelSelectManager) selectManager).toSQL());
+    }
+
+    public void testJoinWith() {
+        ArelNodeTableAlias right = mRelation.alias();
+        Object predicate = mRelation.get("id").eq(right.get("id"));
+
+        Object selectManager = mRelation.join(right, ArelNodeOuterJoin.class).on(predicate);
+
+        assertSame(selectManager.getClass(), ArelSelectManager.class);
+        assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", ((ArelSelectManager) selectManager).toSQL());
+    }
 }

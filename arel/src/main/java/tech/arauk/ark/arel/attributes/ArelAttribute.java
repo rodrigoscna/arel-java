@@ -1,15 +1,15 @@
 package tech.arauk.ark.arel.attributes;
 
 import tech.arauk.ark.arel.ArelPredications;
-import tech.arauk.ark.arel.ArelTable;
+import tech.arauk.ark.arel.ArelRelation;
 
 public class ArelAttribute {
-    public ArelTable relation;
+    public ArelRelation relation;
     public String name;
 
     private ArelPredications mPredications;
 
-    public ArelAttribute(ArelTable relation, String name) {
+    public ArelAttribute(ArelRelation relation, String name) {
         this.relation = relation;
         this.name = name;
     }
