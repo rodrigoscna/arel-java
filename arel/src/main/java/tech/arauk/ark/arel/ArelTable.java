@@ -4,6 +4,7 @@ import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.connection.ArelTypeCaster;
 import tech.arauk.ark.arel.nodes.ArelNodeInnerJoin;
 import tech.arauk.ark.arel.nodes.ArelNodeJoin;
+import tech.arauk.ark.arel.nodes.ArelNodeOuterJoin;
 import tech.arauk.ark.arel.nodes.ArelNodeTableAlias;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
@@ -12,9 +13,9 @@ import java.util.List;
 
 public class ArelTable implements ArelRelation {
     public static ArelVisitor engine;
-    public String tableAlias;
     public List<ArelNodeTableAlias> aliases;
-    private String name;
+    public String tableAlias;
+    private String mName;
     private ArelTypeCaster mTypeCaster;
 
     private ArelTable() {
@@ -24,13 +25,13 @@ public class ArelTable implements ArelRelation {
     public ArelTable(String name) {
         this();
 
-        this.name = name;
+        this.mName = name;
     }
 
     public ArelTable(String name, String as) {
         this(name);
 
-        if (as == this.name) {
+        if (as == this.mName) {
             as = null;
         }
 
@@ -46,13 +47,18 @@ public class ArelTable implements ArelRelation {
     public ArelTable(String name, String as, ArelTypeCaster typeCaster) {
         this(name);
 
-        if (as == this.name) {
+        if (as == this.mName) {
             as = null;
         }
 
         this.tableAlias = as;
 
         this.mTypeCaster = typeCaster;
+    }
+
+    @Override
+    public ArelAttribute get(String name) {
+        return new ArelAttribute(this, name);
     }
 
     @Override
@@ -72,11 +78,11 @@ public class ArelTable implements ArelRelation {
 
     @Override
     public String tableName() {
-        return this.name;
+        return this.mName;
     }
 
     public ArelNodeTableAlias alias() {
-        return alias(String.format("%s_2", this.name));
+        return alias(String.format("%s_2", this.mName));
     }
 
     public ArelNodeTableAlias alias(String name) {
@@ -133,7 +139,27 @@ public class ArelTable implements ArelRelation {
         return from().skip(amount);
     }
 
-    public ArelAttribute get(String name) {
-        return new ArelAttribute(this, name);
+    public ArelSelectManager outerJoin(Object relation) {
+        return join(relation, ArelNodeOuterJoin.class);
+    }
+
+    public ArelSelectManager group(Object... columns) {
+        return from().group(columns);
+    }
+
+    public ArelSelectManager order(Object... expr) {
+        return from().order(expr);
+    }
+
+    public ArelSelectManager take(int amount) {
+        return from().take(amount);
+    }
+
+    public ArelSelectManager project(Object... things) {
+        return from().project(things);
+    }
+
+    public ArelSelectManager where(Object condition) {
+        return (ArelSelectManager) from().where(condition);
     }
 }

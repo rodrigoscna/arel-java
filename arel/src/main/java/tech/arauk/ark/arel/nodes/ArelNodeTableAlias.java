@@ -11,6 +11,7 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelRelation {
         super(left, right);
     }
 
+    @Override
     public ArelAttribute get(String name) {
         return new ArelAttribute(this, name);
     }

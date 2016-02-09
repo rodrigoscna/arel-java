@@ -1,22 +1,19 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
+import tech.arauk.ark.arel.nodes.unary.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ArelSelectManager extends ArelTreeManager {
-    private ArelNodeSelectCore mCtx;
-
     public ArelSelectManager() {
         super(new ArelNodeSelectStatement());
 
         ArelNodeSelectCore[] cores = ((ArelNodeSelectStatement) this.ast).cores;
 
-        this.mCtx = cores[cores.length - 1];
+        this.ctx = cores[cores.length - 1];
     }
 
     public ArelSelectManager(Object table) {
@@ -24,13 +21,13 @@ public class ArelSelectManager extends ArelTreeManager {
 
         ArelNodeSelectCore[] cores = ((ArelNodeSelectStatement) this.ast).cores;
 
-        this.mCtx = cores[cores.length - 1];
+        this.ctx = cores[cores.length - 1];
 
         from(table);
     }
 
     public ArelSelectManager on(Object exprs) {
-        List<Object> right = ((List<Object>) this.mCtx.source.right);
+        List<Object> right = ((List<Object>) this.ctx.source.right);
         List<Object> innerRight = new ArrayList<>();
         innerRight.add(new ArelNodeOn(collapse(exprs)));
 
@@ -49,9 +46,9 @@ public class ArelSelectManager extends ArelTreeManager {
         }
 
         if (table instanceof ArelNodeJoin) {
-            ((List<Object>) this.mCtx.source.right).add(table);
+            ((List<Object>) this.ctx.source.right).add(table);
         } else {
-            this.mCtx.source.left = table;
+            this.ctx.source.left = table;
         }
 
         return this;
@@ -88,13 +85,13 @@ public class ArelSelectManager extends ArelTreeManager {
             aClass = ArelNodeStringJoin.class;
         }
 
-        ((List<Object>) this.mCtx.source.right).add(ArelNodeFactory.createJoin(relation, null, aClass));
+        ((List<Object>) this.ctx.source.right).add(ArelNodeFactory.createJoin(relation, null, aClass));
 
         return this;
     }
 
     public ArelSelectManager having(Object expr) {
-        this.mCtx.havings.add(expr);
+        this.ctx.havings.add(expr);
         return this;
     }
 
@@ -121,5 +118,65 @@ public class ArelSelectManager extends ArelTreeManager {
         } else {
             return createAnd(Arrays.asList(exprs));
         }
+    }
+
+    public ArelSelectManager group(Object... columns) {
+        for (Object column : columns) {
+            if (column instanceof String) {
+                column = new ArelNodeSqlLiteral(String.valueOf(column));
+            }
+
+            this.ctx.groups.add(new ArelNodeGroup(column));
+        }
+
+        return this;
+    }
+
+    public ArelSelectManager order(Object... expr) {
+        ArelNodeSelectStatement selectStatement = (ArelNodeSelectStatement) this.ast;
+
+        for (Object object : expr) {
+            if (object instanceof String) {
+                object = new ArelNodeSqlLiteral(String.valueOf(object));
+            }
+
+            selectStatement.orders.add(object);
+        }
+
+        return this;
+    }
+
+    public ArelSelectManager take() {
+        ((ArelNodeSelectStatement) this.ast).limit = null;
+        this.ctx.top = null;
+
+        return this;
+    }
+
+    public ArelSelectManager take(int limit) {
+        ((ArelNodeSelectStatement) this.ast).limit = new ArelNodeLimit(limit);
+        this.ctx.top = new ArelNodeTop(limit);
+
+        return this;
+    }
+
+    public ArelSelectManager limit() {
+        return take();
+    }
+
+    public ArelSelectManager limit(int limit) {
+        return take(limit);
+    }
+
+    public ArelSelectManager project(Object... projections) {
+        for (Object projection : projections) {
+            if (projection instanceof String) {
+                projection = new ArelNodeSqlLiteral(String.valueOf(projection));
+            }
+
+            this.ctx.projections.add(projection);
+        }
+
+        return this;
     }
 }

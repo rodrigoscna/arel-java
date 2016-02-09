@@ -7,6 +7,8 @@ import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeJoinSource;
+import tech.arauk.ark.arel.nodes.unary.ArelNodeGroup;
+import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 
@@ -19,6 +21,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     private static final String GROUP_BY = " GROUP BY ";
     private static final String IS_NULL = " IS NULL";
     private static final String LEFT_OUTER_JOIN = "LEFT OUTER JOIN ";
+    private static final String LIMIT = "LIMIT ";
     private static final String OFFSET = "OFFSET ";
     private static final String ON = "ON ";
     private static final String ORDER_BY = " ORDER BY ";
@@ -66,6 +69,14 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector visitArelNodeGroup(Object object, ArelCollector collector) {
+        ArelNodeGroup group = (ArelNodeGroup) object;
+
+        collector = visit(group.expr, collector);
+
+        return collector;
+    }
+
     public ArelCollector visitArelNodeInsertStatement(Object object, ArelCollector collector) {
         ArelNodeInsertStatement insertStatement = (ArelNodeInsertStatement) object;
 
@@ -102,6 +113,15 @@ public class ArelVisitorToSql extends ArelVisitor {
             }
             collector = injectJoin(((List<Object>) joinSource.right), collector, SPACE);
         }
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeLimit(Object object, ArelCollector collector) {
+        ArelNodeLimit limit = (ArelNodeLimit) object;
+
+        collector.append(LIMIT);
+        collector = visit(limit.expr, collector);
 
         return collector;
     }
@@ -149,13 +169,13 @@ public class ArelVisitorToSql extends ArelVisitor {
             collector = visitArelNodeSelectCore(selectCore, collector);
         }
 
-        if (selectStatement.orders != null && selectStatement.orders.length > 0) {
+        if (selectStatement.orders != null && selectStatement.orders.size() > 0) {
             collector.append(ORDER_BY);
 
-            int len = selectStatement.orders.length - 1;
+            int len = selectStatement.orders.size() - 1;
 
-            for (int i = 0; i < selectStatement.orders.length; i++) {
-                collector = visit(selectStatement.orders[i], collector);
+            for (int i = 0; i < selectStatement.orders.size(); i++) {
+                collector = visit(selectStatement.orders.get(i), collector);
                 if (len != i) {
                     collector.append(COMMA);
                 }
@@ -176,13 +196,13 @@ public class ArelVisitorToSql extends ArelVisitor {
 
         collector = maybeVisit(selectCore.setQuantifier, collector);
 
-        if (selectCore.projections != null && selectCore.projections.length > 0) {
+        if (selectCore.projections != null && selectCore.projections.size() > 0) {
             collector.append(SPACE);
 
-            int len = selectCore.projections.length - 1;
+            int len = selectCore.projections.size() - 1;
 
-            for (int i = 0; i < selectCore.projections.length; i++) {
-                collector = visit(selectCore.projections[i], collector);
+            for (int i = 0; i < selectCore.projections.size(); i++) {
+                collector = visit(selectCore.projections.get(i), collector);
                 if (len != i) {
                     collector.append(COMMA);
                 }
@@ -194,26 +214,26 @@ public class ArelVisitorToSql extends ArelVisitor {
             collector = visit(selectCore.source, collector);
         }
 
-        if (selectCore.wheres != null && selectCore.wheres.length > 0) {
+        if (selectCore.wheres != null && selectCore.wheres.size() > 0) {
             collector.append(WHERE);
 
-            int len = selectCore.wheres.length - 1;
+            int len = selectCore.wheres.size() - 1;
 
-            for (int i = 0; i < selectCore.wheres.length; i++) {
-                collector = visit(selectCore.wheres[i], collector);
+            for (int i = 0; i < selectCore.wheres.size(); i++) {
+                collector = visit(selectCore.wheres.get(i), collector);
                 if (len != i) {
                     collector.append(AND);
                 }
             }
         }
 
-        if (selectCore.groups != null && selectCore.groups.length > 0) {
+        if (selectCore.groups != null && selectCore.groups.size() > 0) {
             collector.append(GROUP_BY);
 
-            int len = selectCore.groups.length - 1;
+            int len = selectCore.groups.size() - 1;
 
-            for (int i = 0; i < selectCore.groups.length; i++) {
-                collector = visit(selectCore.groups[i], collector);
+            for (int i = 0; i < selectCore.groups.size(); i++) {
+                collector = visit(selectCore.groups.get(i), collector);
                 if (len != i) {
                     collector.append(COMMA);
                 }
@@ -262,6 +282,10 @@ public class ArelVisitorToSql extends ArelVisitor {
         collector.append(SPACE);
         collector.append(quoteTableName(tableAlias.name()));
 
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeTop(Object object, ArelCollector collector) {
         return collector;
     }
 

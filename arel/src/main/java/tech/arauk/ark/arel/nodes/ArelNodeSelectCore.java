@@ -10,15 +10,19 @@ public class ArelNodeSelectCore extends ArelNode {
     public ArelNodeJoinSource source;
     public ArelNodeTop top;
     public ArelNode setQuantifier;
-    public Object[] projections;
-    public Object[] wheres;
-    public Object[] groups;
+    public List<Object> groups;
     public List<Object> havings;
+    public List<Object> projections;
+    public List<Object> wheres;
     public Object[] windows;
 
     public ArelNodeSelectCore() {
         super();
+
+        this.groups = new ArrayList<>();
         this.havings = new ArrayList<>();
+        this.projections = new ArrayList<>();
         this.source = new ArelNodeJoinSource(null);
+        this.wheres = new ArrayList<>();
     }
 }
