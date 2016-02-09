@@ -14,8 +14,8 @@ import java.util.List;
 public class ArelTable implements ArelRelation {
     public static ArelVisitor engine;
     public List<ArelNodeTableAlias> aliases;
-    public String tableAlias;
     private String mName;
+    private String mTableAlias;
     private ArelTypeCaster mTypeCaster;
 
     private ArelTable() {
@@ -35,7 +35,7 @@ public class ArelTable implements ArelRelation {
             as = null;
         }
 
-        this.tableAlias = as;
+        this.mTableAlias = as;
     }
 
     public ArelTable(String name, ArelTypeCaster typeCaster) {
@@ -51,7 +51,7 @@ public class ArelTable implements ArelRelation {
             as = null;
         }
 
-        this.tableAlias = as;
+        this.mTableAlias = as;
 
         this.mTypeCaster = typeCaster;
     }
@@ -73,7 +73,7 @@ public class ArelTable implements ArelRelation {
 
     @Override
     public String tableAlias() {
-        return this.tableAlias;
+        return this.mTableAlias;
     }
 
     @Override

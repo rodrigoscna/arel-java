@@ -292,8 +292,8 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelTable(Object object, ArelCollector collector) {
         ArelTable table = (ArelTable) object;
 
-        if ((table.tableAlias != null) && (table.tableAlias.length() > 0)) {
-            collector.append(String.format("%s %s", quoteTableName(table.tableName()), quoteTableName(table.tableAlias)));
+        if ((table.tableAlias() != null) && (table.tableAlias().length() > 0)) {
+            collector.append(String.format("%s %s", quoteTableName(table.tableName()), quoteTableName(table.tableAlias())));
         } else {
             collector.append(quoteTableName(table.tableName()));
         }
