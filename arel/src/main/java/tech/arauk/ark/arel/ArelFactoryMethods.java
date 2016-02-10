@@ -24,13 +24,13 @@ public class ArelFactoryMethods {
         return createJoin(to, null);
     }
 
-    public static ArelNodeJoin createJoin(Object to, String constraint) {
+    public static ArelNodeJoin createJoin(Object to, Object constraint) {
         return createJoin(to, constraint, ArelNodeInnerJoin.class);
     }
 
-    public static ArelNodeJoin createJoin(Object to, String constraint, Class<? extends ArelNodeJoin> aClass) {
+    public static ArelNodeJoin createJoin(Object to, Object constraint, Class<? extends ArelNodeJoin> aClass) {
         try {
-            return aClass.getConstructor(Object.class, String.class, Class.class).newInstance(to, constraint, aClass);
+            return aClass.getConstructor(Object.class, Object.class).newInstance(to, constraint);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException exception) {
             return null;
         }
