@@ -55,4 +55,8 @@ public class ArelFactoryMethods {
     public static ArelNodeNamedFunction lower(Object column) {
         return new ArelNodeNamedFunction("LOWER", new Object[]{ArelNodes.buildQuoted(column)});
     }
+
+    public static ArelNodeGrouping grouping(Object expr) {
+        return new ArelNodeGrouping(expr);
+    }
 }

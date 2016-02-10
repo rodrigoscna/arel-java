@@ -2,7 +2,10 @@ package tech.arauk.ark.arel.attributes;
 
 import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelRelation;
+import tech.arauk.ark.arel.nodes.ArelNodeEquality;
 import tech.arauk.ark.arel.nodes.ArelNodeNamedFunction;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeGreaterThan;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeLessThan;
 
 public class ArelAttribute {
     public ArelRelation relation;
@@ -15,8 +18,16 @@ public class ArelAttribute {
         this.name = name;
     }
 
-    public Object eq(Object other) {
+    public ArelNodeEquality eq(Object other) {
         return predications().eq(other);
+    }
+
+    public ArelNodeGreaterThan gt(Object right) {
+        return predications().gt(right);
+    }
+
+    public ArelNodeLessThan lt(Object right) {
+        return predications().lt(right);
     }
 
     private ArelPredications predications() {

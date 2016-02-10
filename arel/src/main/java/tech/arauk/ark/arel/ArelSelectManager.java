@@ -1,11 +1,16 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.*;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeIntersect;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeUnion;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeUnionAll;
+import tech.arauk.ark.arel.nodes.function.ArelNodeExists;
 import tech.arauk.ark.arel.nodes.unary.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ArelSelectManager extends ArelTreeManager {
     public ArelSelectManager() {
@@ -26,8 +31,12 @@ public class ArelSelectManager extends ArelTreeManager {
         from(table);
     }
 
-    public ArelSelectManager on(Object exprs) {
-        List<Object> right = ((List<Object>) this.ctx.source.right);
+    public ArelNodeTableAlias as(Object other) {
+        return ArelFactoryMethods.createTableAlias(ArelFactoryMethods.grouping(this.ast), new ArelNodeSqlLiteral(other));
+    }
+
+    public ArelSelectManager on(Object... exprs) {
+        List<Object> right = joinSources();
         List<Object> innerRight = new ArrayList<>();
         innerRight.add(new ArelNodeOn(collapse(exprs)));
 
@@ -46,12 +55,16 @@ public class ArelSelectManager extends ArelTreeManager {
         }
 
         if (table instanceof ArelNodeJoin) {
-            ((List<Object>) this.ctx.source.right).add(table);
+            joinSources().add(table);
         } else {
             this.ctx.source.left = table;
         }
 
         return this;
+    }
+
+    public ArelNodeOffset offset() {
+        return skip();
     }
 
     public ArelSelectManager offset(int amount) {
@@ -62,6 +75,10 @@ public class ArelSelectManager extends ArelTreeManager {
         return skip(amount);
     }
 
+    public ArelNodeOffset skip() {
+        return ((ArelNodeSelectStatement) this.ast).offset;
+    }
+
     public ArelSelectManager skip(int amount) {
         return skip(new ArelNodeOffset(amount));
     }
@@ -69,6 +86,10 @@ public class ArelSelectManager extends ArelTreeManager {
     public ArelSelectManager skip(ArelNodeOffset amount) {
         ((ArelNodeSelectStatement) this.ast).offset = amount;
         return this;
+    }
+
+    public ArelSelectManager join(Object relation) {
+        return join(relation, ArelNodeInnerJoin.class);
     }
 
     public ArelSelectManager join(Object relation, Class<? extends ArelNodeJoin> aClass) {
@@ -85,7 +106,7 @@ public class ArelSelectManager extends ArelTreeManager {
             aClass = ArelNodeStringJoin.class;
         }
 
-        ((List<Object>) this.ctx.source.right).add(ArelFactoryMethods.createJoin(relation, null, aClass));
+        joinSources().add(ArelFactoryMethods.createJoin(relation, null, aClass));
 
         return this;
     }
@@ -178,5 +199,29 @@ public class ArelSelectManager extends ArelTreeManager {
         }
 
         return this;
+    }
+
+    public ArelNodeExists exists() {
+        return new ArelNodeExists(this.ast);
+    }
+
+    public ArelNodeIntersect intersect(ArelSelectManager other) {
+        return new ArelNodeIntersect(this.ast, other.ast);
+    }
+
+    public ArelNodeBinary union(ArelSelectManager other) {
+        return new ArelNodeUnion(this.ast, other.ast);
+    }
+
+    public ArelNodeBinary union(ArelSelectManager other, String operation) {
+        if (Objects.equals("all", operation)) {
+            return new ArelNodeUnionAll(this.ast, other.ast);
+        } else {
+            return union(other);
+        }
+    }
+
+    public List<Object> joinSources() {
+        return (List<Object>) this.ctx.source.right;
     }
 }

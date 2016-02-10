@@ -13,4 +13,8 @@ public class ArelNodeJoinSource extends ArelNodeBinary {
     public ArelNodeJoinSource(Object singleSource, List<Object> joinOp) {
         super(singleSource, joinOp);
     }
+
+    public boolean isEmpty() {
+        return (left == null) && (right == null || ((List<Object>) right).isEmpty());
+    }
 }

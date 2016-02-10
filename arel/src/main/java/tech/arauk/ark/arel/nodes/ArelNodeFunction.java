@@ -14,4 +14,9 @@ public class ArelNodeFunction extends ArelNode {
             this.alias = new ArelNodeSqlLiteral(alias);
         }
     }
+
+    public ArelNodeFunction as(Object alias) {
+        this.alias = new ArelNodeSqlLiteral(alias);
+        return this;
+    }
 }
