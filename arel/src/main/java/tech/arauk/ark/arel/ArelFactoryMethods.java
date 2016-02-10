@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Rodrigo Scomazzon do Nascimento <rodrigo.sc.na@gmail.com>
  */
-public class ArelNodeFactory {
+public class ArelFactoryMethods {
     public static Object createAnd(List<Object> object) {
         return new ArelNodeAnd(object);
     }

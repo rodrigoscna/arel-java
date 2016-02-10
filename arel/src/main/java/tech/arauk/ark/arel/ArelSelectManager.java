@@ -85,7 +85,7 @@ public class ArelSelectManager extends ArelTreeManager {
             aClass = ArelNodeStringJoin.class;
         }
 
-        ((List<Object>) this.ctx.source.right).add(ArelNodeFactory.createJoin(relation, null, aClass));
+        ((List<Object>) this.ctx.source.right).add(ArelFactoryMethods.createJoin(relation, null, aClass));
 
         return this;
     }
@@ -96,11 +96,11 @@ public class ArelSelectManager extends ArelTreeManager {
     }
 
     private Object createAnd(List<Object> object) {
-        return ArelNodeFactory.createAnd(object);
+        return ArelFactoryMethods.createAnd(object);
     }
 
     private Object createJoin(Object to, String constraint, Class<? extends ArelNodeJoin> aClass) {
-        return ArelNodeFactory.createJoin(to, constraint, aClass);
+        return ArelFactoryMethods.createJoin(to, constraint, aClass);
     }
 
     private Object collapse(Object... exprs) {

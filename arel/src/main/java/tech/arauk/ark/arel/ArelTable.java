@@ -65,7 +65,7 @@ public class ArelTable implements ArelRelation {
 
     @Override
     public ArelNodeNamedFunction lower(Object column) {
-        return ArelNodeFactory.lower(column);
+        return ArelFactoryMethods.lower(column);
     }
 
     @Override
@@ -96,19 +96,19 @@ public class ArelTable implements ArelRelation {
     }
 
     public ArelNodeJoin createJoin(String to) {
-        return ArelNodeFactory.createJoin(to);
+        return ArelFactoryMethods.createJoin(to);
     }
 
     public ArelNodeJoin createJoin(String to, String constraint) {
-        return ArelNodeFactory.createJoin(to, constraint);
+        return ArelFactoryMethods.createJoin(to, constraint);
     }
 
     public ArelNodeJoin createJoin(String to, String constraint, Class<? extends ArelNodeJoin> aClass) {
-        return ArelNodeFactory.createJoin(to, constraint, aClass);
+        return ArelFactoryMethods.createJoin(to, constraint, aClass);
     }
 
     public ArelNodeJoin createStringJoin(String to) {
-        return ArelNodeFactory.createStringJoin(to);
+        return ArelFactoryMethods.createStringJoin(to);
     }
 
     public ArelInsertManager createInsert() {
