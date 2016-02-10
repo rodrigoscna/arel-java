@@ -17,7 +17,7 @@ public class ArelTableTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        mRelation = new ArelTable("users", new FakeRecord.TypeCaster());
+        mRelation = new ArelTable("users");
 
         super.setUp();
     }
