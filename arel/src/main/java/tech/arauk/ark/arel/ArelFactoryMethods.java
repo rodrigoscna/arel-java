@@ -1,6 +1,7 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.*;
+import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -11,8 +12,12 @@ import java.util.List;
  * @author Rodrigo Scomazzon do Nascimento <rodrigo.sc.na@gmail.com>
  */
 public class ArelFactoryMethods {
-    public static Object createAnd(List<Object> object) {
-        return new ArelNodeAnd(object);
+    public static ArelNodeAnd createAnd(List<Object> clauses) {
+        return new ArelNodeAnd(clauses);
+    }
+
+    public static ArelNodeFalse createFalse() {
+        return new ArelNodeFalse();
     }
 
     public static ArelNodeJoin createJoin(Object to) {
@@ -31,8 +36,20 @@ public class ArelFactoryMethods {
         }
     }
 
+    public static ArelNodeOn createOn(Object expr) {
+        return new ArelNodeOn(expr);
+    }
+
     public static ArelNodeJoin createStringJoin(String to) {
         return createJoin(to, null, ArelNodeStringJoin.class);
+    }
+
+    public static ArelNodeTableAlias createTableAlias(Object relation, Object name) {
+        return new ArelNodeTableAlias(relation, name);
+    }
+
+    public static ArelNodeTrue createTrue() {
+        return new ArelNodeTrue();
     }
 
     public static ArelNodeNamedFunction lower(Object column) {
