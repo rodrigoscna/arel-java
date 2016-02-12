@@ -25,4 +25,8 @@ public class ArelNodeSelectCore extends ArelNode {
         this.source = new ArelNodeJoinSource(null);
         this.wheres = new ArrayList<>();
     }
+
+    public Object from() {
+        return source.left;
+    }
 }

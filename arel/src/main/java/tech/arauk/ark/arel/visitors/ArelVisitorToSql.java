@@ -17,11 +17,14 @@ import java.util.List;
 public class ArelVisitorToSql extends ArelVisitor {
     private static final String AND = " AND ";
     private static final String AS = " AS ";
+    private static final String ASC = " ASC";
     private static final String BETWEEN = " BETWEEN ";
     private static final String COMMA = ", ";
+    private static final String DESC = " DESC";
     private static final String EXCEPT = " EXCEPT ";
     private static final String EXISTS = "EXISTS ";
     private static final String FROM = " FROM ";
+    private static final String FULL_OUTER_JOIN = "FULL OUTER JOIN ";
     private static final String GREATER_THAN = " > ";
     private static final String GROUP_BY = " GROUP BY ";
     private static final String GROUPING_CLOSE = ")";
@@ -36,6 +39,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     private static final String OFFSET = "OFFSET ";
     private static final String ON = "ON ";
     private static final String ORDER_BY = " ORDER BY ";
+    private static final String RIGHT_OUTER_JOIN = "RIGHT OUTER JOIN ";
     private static final String SPACE = " ";
     private static final String UNION = " UNION ";
     private static final String UNION_ALL = " UNION ALL ";
@@ -81,6 +85,15 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector visitArelNodeAscending(Object object, ArelCollector collector) {
+        ArelNodeAscending ascending = (ArelNodeAscending) object;
+
+        collector = visit(ascending.expr, collector);
+        collector.append(ASC);
+
+        return collector;
+    }
+
     public ArelCollector visitArelNodeBetween(Object object, ArelCollector collector) {
         ArelNodeBetween between = (ArelNodeBetween) object;
 
@@ -95,6 +108,15 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeCasted casted = (ArelNodeCasted) object;
 
         collector.append(quoted(casted.val, casted.attribute));
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeDescending(Object object, ArelCollector collector) {
+        ArelNodeDescending descending = (ArelNodeDescending) object;
+
+        collector = visit(descending.expr, collector);
+        collector.append(DESC);
 
         return collector;
     }
@@ -136,6 +158,17 @@ public class ArelVisitorToSql extends ArelVisitor {
             collector.append(AS);
             collector = visit(exists.alias, collector);
         }
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeFullOuterJoin(Object object, ArelCollector collector) {
+        ArelNodeFullOuterJoin fullOuterJoin = (ArelNodeFullOuterJoin) object;
+
+        collector.append(FULL_OUTER_JOIN);
+        collector = visit(fullOuterJoin.left, collector);
+        collector.append(SPACE);
+        collector = visit(fullOuterJoin.right, collector);
 
         return collector;
     }
@@ -271,6 +304,14 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector visitArelNodeLock(Object object, ArelCollector collector) {
+        ArelNodeLock lock = (ArelNodeLock) object;
+
+        collector = visit(lock.expr, collector);
+
+        return collector;
+    }
+
     public ArelCollector visitArelNodeOffset(Object object, ArelCollector collector) {
         ArelNodeOffset offset = (ArelNodeOffset) object;
 
@@ -307,6 +348,17 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeQuoted quoted = (ArelNodeQuoted) object;
 
         collector.append(quoted(quoted.expr, null));
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeRightOuterJoin(Object object, ArelCollector collector) {
+        ArelNodeRightOuterJoin rightOuterJoin = (ArelNodeRightOuterJoin) object;
+
+        collector.append(RIGHT_OUTER_JOIN);
+        collector = visit(rightOuterJoin.left, collector);
+        collector.append(SPACE);
+        collector = visit(rightOuterJoin.right, collector);
 
         return collector;
     }

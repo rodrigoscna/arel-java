@@ -122,11 +122,19 @@ public class ArelSelectManager extends ArelTreeManager {
         return this;
     }
 
-    private Object createAnd(List<Object> object) {
+    public ArelNodeAnd createAnd(List<Object> object) {
         return ArelFactoryMethods.createAnd(object);
     }
 
-    private Object createJoin(Object to, String constraint, Class<? extends ArelNodeJoin> aClass) {
+    public ArelInsertManager createInsert() {
+        return ArelCrud.createInsert();
+    }
+
+    public ArelNodeJoin createJoin(Object to, Object constraint) {
+        return ArelFactoryMethods.createJoin(to, constraint);
+    }
+
+    public ArelNodeJoin createJoin(Object to, Object constraint, Class<? extends ArelNodeJoin> aClass) {
         return ArelFactoryMethods.createJoin(to, constraint, aClass);
     }
 
@@ -173,11 +181,12 @@ public class ArelSelectManager extends ArelTreeManager {
         return this;
     }
 
-    public ArelSelectManager take() {
-        ((ArelNodeSelectStatement) this.ast).limit = null;
-        this.ctx.top = null;
+    public List<Object> orders() {
+        return ((ArelNodeSelectStatement) this.ast).orders;
+    }
 
-        return this;
+    public ArelNodeLimit take() {
+        return ((ArelNodeSelectStatement) this.ast).limit;
     }
 
     public ArelSelectManager take(int limit) {
@@ -187,11 +196,24 @@ public class ArelSelectManager extends ArelTreeManager {
         return this;
     }
 
-    public ArelSelectManager limit() {
+    public ArelSelectManager take(ArelNodeLimit limit) {
+        ((ArelNodeSelectStatement) this.ast).limit = limit;
+        return this;
+    }
+
+    public ArelNodeLimit taken() {
+        return take();
+    }
+
+    public ArelNodeLimit limit() {
         return take();
     }
 
     public ArelSelectManager limit(int limit) {
+        return take(limit);
+    }
+
+    public ArelSelectManager limit(ArelNodeLimit limit) {
         return take(limit);
     }
 
@@ -257,5 +279,34 @@ public class ArelSelectManager extends ArelTreeManager {
 
     public List<Object> joinSources() {
         return (List<Object>) this.ctx.source.right;
+    }
+
+    public ArelSelectManager lock() {
+        return lock(Arel.sql("FOR UPDATE"));
+    }
+
+    public ArelSelectManager lock(Object locking) {
+        if (locking instanceof Boolean && (Boolean) locking) {
+            locking = Arel.sql("FOR UPDATE");
+        } else if (locking instanceof String) {
+            locking = Arel.sql(String.valueOf(locking));
+        }
+
+        ((ArelNodeSelectStatement) this.ast).lock = new ArelNodeLock(locking);
+
+        return this;
+    }
+
+    public List<Object> froms() {
+        List<Object> froms = new ArrayList<>();
+
+        for (ArelNodeSelectCore selectCore : ((ArelNodeSelectStatement) this.ast).cores) {
+            Object from = selectCore.from();
+            if (from != null) {
+                froms.add(from);
+            }
+        }
+
+        return froms;
     }
 }

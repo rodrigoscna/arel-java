@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Rodrigo Scomazzon do Nascimento <rodrigo.sc.na@gmail.com>
  */
-public class ArelFactoryMethods {
+public abstract class ArelFactoryMethods {
     public static ArelNodeAnd createAnd(List<Object> clauses) {
         return new ArelNodeAnd(clauses);
     }

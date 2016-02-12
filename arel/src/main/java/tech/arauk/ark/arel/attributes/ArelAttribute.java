@@ -1,23 +1,34 @@
 package tech.arauk.ark.arel.attributes;
 
+import tech.arauk.ark.arel.ArelOrderPredications;
 import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelRelation;
-import tech.arauk.ark.arel.nodes.ArelNode;
-import tech.arauk.ark.arel.nodes.ArelNodeEquality;
-import tech.arauk.ark.arel.nodes.ArelNodeNamedFunction;
+import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeGreaterThan;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeIn;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeLessThan;
+
+import java.util.Objects;
 
 public class ArelAttribute {
     public ArelRelation relation;
     public String name;
 
     private ArelPredications mPredications;
+    private ArelOrderPredications mOrderPredications;
 
     public ArelAttribute(ArelRelation relation, String name) {
         this.relation = relation;
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelAttribute) {
+            return Objects.equals(this.relation, ((ArelAttribute) other).relation) && Objects.equals(this.name, ((ArelAttribute) other).name);
+        } else {
+            return super.equals(other);
+        }
     }
 
     public ArelNode between(Object begin, Object end) {
@@ -47,6 +58,13 @@ public class ArelAttribute {
         return this.mPredications;
     }
 
+    public ArelOrderPredications orderPredications() {
+        if (this.mOrderPredications == null) {
+            this.mOrderPredications = new ArelOrderPredications(this);
+        }
+        return this.mOrderPredications;
+    }
+
     public boolean isAbleToTypeCast() {
         return this.relation.isAbleToTypeCast();
     }
@@ -57,6 +75,14 @@ public class ArelAttribute {
 
     public ArelNodeNamedFunction lower() {
         return this.relation.lower(this);
+    }
+
+    public ArelNodeAscending asc() {
+        return orderPredications().asc();
+    }
+
+    public ArelNodeDescending desc() {
+        return orderPredications().desc();
     }
 
     public interface Type {

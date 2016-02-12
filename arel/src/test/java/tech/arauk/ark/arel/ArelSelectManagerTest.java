@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeAs;
+import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
 import tech.arauk.ark.arel.support.FakeRecord;
 
@@ -28,6 +29,67 @@ public class ArelSelectManagerTest {
     }
 
     public static class SelectManager extends Base {
+        public void testAndNodes() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+            List<Object> children = new ArrayList<>();
+            children.add("foo");
+            children.add("bar");
+            children.add("baz");
+            ArelNodeAnd clause = selectManager.createAnd(children);
+
+            assertSame(ArelNodeAnd.class, clause.getClass());
+            assertEquals(children, clause.children);
+        }
+
+        public void testFroms() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+
+            assertEquals(new ArrayList<>(), selectManager.froms());
+        }
+
+        public void testInsertManagers() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+            Object insertManager = selectManager.createInsert();
+
+            assertSame(ArelInsertManager.class, insertManager.getClass());
+        }
+
+        public void testJoinNodes() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+            Object join = selectManager.createJoin("foo", "bar");
+
+            assertSame(ArelNodeInnerJoin.class, join.getClass());
+            assertEquals("foo", ((ArelNodeJoin) join).left);
+            assertEquals("bar", ((ArelNodeJoin) join).right);
+        }
+
+        public void testJoinNodesWithFullOuterJoin() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+            Object join = selectManager.createJoin("foo", "bar", ArelNodeFullOuterJoin.class);
+
+            assertSame(ArelNodeFullOuterJoin.class, join.getClass());
+            assertEquals("foo", ((ArelNodeFullOuterJoin) join).left);
+            assertEquals("bar", ((ArelNodeFullOuterJoin) join).right);
+        }
+
+        public void testJoinNodesWithOuterJoin() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+            Object join = selectManager.createJoin("foo", "bar", ArelNodeOuterJoin.class);
+
+            assertSame(ArelNodeOuterJoin.class, join.getClass());
+            assertEquals("foo", ((ArelNodeOuterJoin) join).left);
+            assertEquals("bar", ((ArelNodeOuterJoin) join).right);
+        }
+
+        public void testJoinNodesWithRightOuterJoin() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+            Object join = selectManager.createJoin("foo", "bar", ArelNodeRightOuterJoin.class);
+
+            assertSame(ArelNodeRightOuterJoin.class, join.getClass());
+            assertEquals("foo", ((ArelNodeRightOuterJoin) join).left);
+            assertEquals("bar", ((ArelNodeRightOuterJoin) join).right);
+        }
+
         public void testJoinSources() {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.joinSources().add(new ArelNodeStringJoin(ArelNodes.buildQuoted("foo")));
@@ -68,6 +130,43 @@ public class ArelSelectManagerTest {
             selectManager.order("foo");
 
             assertEquals("SELECT * FROM \"users\" ORDER BY foo", selectManager.toSQL());
+        }
+
+        public void testOrder() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.project(new ArelNodeSqlLiteral("*"));
+            selectManager.from(table);
+            selectManager.order(table.get("id"));
+
+            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\"", selectManager.toSQL());
+        }
+
+        public void testOrderWithArgs() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.project(new ArelNodeSqlLiteral("*"));
+            selectManager.from(table);
+            selectManager.order(table.get("id"), table.get("name"));
+
+            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\", \"users\".\"name\"", selectManager.toSQL());
+        }
+
+        public void testOrderMethodChain() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = new ArelSelectManager();
+
+            assertEquals(selectManager, selectManager.order(table.get("id")));
+        }
+
+        public void testOrderAttributes() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.project(new ArelNodeSqlLiteral("*"));
+            selectManager.from(table);
+            selectManager.order(table.get("id").desc());
+
+            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\" DESC", selectManager.toSQL());
         }
     }
 
@@ -198,6 +297,30 @@ public class ArelSelectManagerTest {
             selectManager.join(right).on("omg", "123");
 
             assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON omg AND 123", selectManager.toSQL());
+        }
+
+        public void testOnWithTwoParams() {
+            ArelTable left = new ArelTable("users");
+            ArelNodeTableAlias right = left.alias();
+            ArelNode predicate = left.get("id").eq(right.get("id"));
+
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.from(left);
+            selectManager.join(right).on(predicate, predicate);
+
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+        }
+
+        public void testOnWithThreeParams() {
+            ArelTable left = new ArelTable("users");
+            ArelNodeTableAlias right = left.alias();
+            ArelNode predicate = left.get("id").eq(right.get("id"));
+
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.from(left);
+            selectManager.join(right).on(predicate, predicate, left.get("name").eq(right.get("name")));
+
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"name\" = \"users_2\".\"name\"", selectManager.toSQL());
         }
     }
 
@@ -410,6 +533,111 @@ public class ArelSelectManagerTest {
                     "SELECT \"comments\".\"id\", \"comments\".\"parent_id\" FROM \"comments\" INNER JOIN \"replies\" ON \"comments\".\"parent_id\" = \"replies\".\"id\"" +
                     ") " +
                     "SELECT * FROM \"replies\"", selectManager.toSQL());
+        }
+    }
+
+    public static class Statement extends Base {
+        public void testStatement() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = table.from();
+            assertNotNull(selectManager.ast);
+        }
+
+        public void testOrder() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = table.from();
+            selectManager.project(Arel.sql("*"));
+            selectManager.from(table);
+            selectManager.order(new ArelNodeAscending(Arel.sql("foo")));
+
+            assertEquals("SELECT * FROM \"users\" ORDER BY foo ASC", selectManager.toSQL());
+        }
+    }
+
+    public static class Taken extends Base {
+        public void testLimit() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.take(10);
+
+            assertEquals(new ArelNodeLimit(10), selectManager.taken());
+        }
+    }
+
+    public static class Lock extends Base {
+        public void testLock() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = table.from();
+            selectManager.lock();
+
+            assertEquals("SELECT FROM \"users\" FOR UPDATE", selectManager.toSQL());
+        }
+    }
+
+    public static class Orders extends Base {
+        public void testOrders() {
+            ArelTable table = new ArelTable("users");
+            ArelSelectManager selectManager = new ArelSelectManager();
+            List<Object> orders = new ArrayList<>();
+            orders.add(table.get("id"));
+            selectManager.order(table.get("id"));
+
+            assertEquals(orders, selectManager.orders());
+        }
+    }
+
+    public static class Join extends Base {
+        public void testJoin() {
+            ArelTable left = new ArelTable("users");
+            ArelNodeTableAlias right = left.alias();
+            ArelNode predicate = left.get("id").eq(right.get("id"));
+
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.from(left);
+            selectManager.join(right).on(predicate);
+
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+        }
+
+        public void testJoinWithClass() {
+            ArelTable left = new ArelTable("users");
+            ArelNodeTableAlias right = left.alias();
+            ArelNode predicate = left.get("id").eq(right.get("id"));
+
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.from(left);
+            selectManager.join(right, ArelNodeOuterJoin.class).on(predicate);
+
+            assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+        }
+
+        public void testJoinWithFullOuter() {
+            ArelTable left = new ArelTable("users");
+            ArelNodeTableAlias right = left.alias();
+            ArelNode predicate = left.get("id").eq(right.get("id"));
+
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.from(left);
+            selectManager.join(right, ArelNodeFullOuterJoin.class).on(predicate);
+
+            assertEquals("SELECT FROM \"users\" FULL OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+        }
+
+        public void testJoinWithRightOuter() {
+            ArelTable left = new ArelTable("users");
+            ArelNodeTableAlias right = left.alias();
+            ArelNode predicate = left.get("id").eq(right.get("id"));
+
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.from(left);
+            selectManager.join(right, ArelNodeRightOuterJoin.class).on(predicate);
+
+            assertEquals("SELECT FROM \"users\" RIGHT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+        }
+
+        public void testJoinWithNull() {
+            ArelSelectManager selectManager = new ArelSelectManager();
+
+            assertEquals(selectManager, selectManager.join(null));
         }
     }
 }
