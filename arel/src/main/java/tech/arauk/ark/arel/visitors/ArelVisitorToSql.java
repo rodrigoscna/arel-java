@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel.visitors;
 
+import tech.arauk.ark.arel.ArelSelectManager;
 import tech.arauk.ark.arel.ArelTable;
 import tech.arauk.ark.arel.ArelUtils;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
@@ -8,10 +9,7 @@ import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.binary.*;
 import tech.arauk.ark.arel.nodes.function.ArelNodeExists;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeGroup;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
+import tech.arauk.ark.arel.nodes.unary.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +17,18 @@ import java.util.List;
 public class ArelVisitorToSql extends ArelVisitor {
     private static final String AND = " AND ";
     private static final String AS = " AS ";
+    private static final String BETWEEN = " BETWEEN ";
     private static final String COMMA = ", ";
+    private static final String EXCEPT = " EXCEPT ";
     private static final String EXISTS = "EXISTS ";
     private static final String FROM = " FROM ";
     private static final String GREATER_THAN = " > ";
     private static final String GROUP_BY = " GROUP BY ";
     private static final String GROUPING_CLOSE = ")";
     private static final String GROUPING_OPEN = "(";
+    private static final String IN = " IN ";
     private static final String INNER_JOIN = "INNER JOIN ";
-    private static final Object INTERSECT = " INTERSECT ";
+    private static final String INTERSECT = " INTERSECT ";
     private static final String IS_NULL = " IS NULL";
     private static final String LEFT_OUTER_JOIN = "LEFT OUTER JOIN ";
     private static final String LESS_THAN = " < ";
@@ -40,6 +41,10 @@ public class ArelVisitorToSql extends ArelVisitor {
     private static final String UNION_ALL = " UNION ALL ";
     private static final String WHERE = " WHERE ";
     private static final String WINDOW = " WINDOW ";
+    private static final String WITH = "WITH ";
+
+    private static final String WITH_RECURSIVE = "WITH RECURSIVE ";
+    private static final String ONE_EQUALS_ZERO = "1=0";
 
     public ArelVisitorToSql(ArelConnection arelConnection) {
         super(arelConnection);
@@ -66,6 +71,26 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector visitArelNodeAs(Object object, ArelCollector collector) {
+        ArelNodeAs as = (ArelNodeAs) object;
+
+        collector = visit(as.left, collector);
+        collector.append(AS);
+        collector = visit(as.right, collector);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeBetween(Object object, ArelCollector collector) {
+        ArelNodeBetween between = (ArelNodeBetween) object;
+
+        collector = visit(between.left, collector);
+        collector.append(BETWEEN);
+        collector = visit(between.right, collector);
+
+        return collector;
+    }
+
     public ArelCollector visitArelNodeCasted(Object object, ArelCollector collector) {
         ArelNodeCasted casted = (ArelNodeCasted) object;
 
@@ -85,6 +110,16 @@ public class ArelVisitorToSql extends ArelVisitor {
             collector.append(" = ");
             visit(equality.right, collector);
         }
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeExcept(Object object, ArelCollector collector) {
+        ArelNodeExcept except = (ArelNodeExcept) object;
+
+        collector.append(GROUPING_OPEN);
+        collector = infixValue(except, collector, EXCEPT);
+        collector.append(GROUPING_CLOSE);
 
         return collector;
     }
@@ -116,7 +151,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeGrouping(Object object, ArelCollector collector) {
         ArelNodeGrouping grouping = (ArelNodeGrouping) object;
 
-        if (grouping.expr instanceof  ArelNodeGrouping) {
+        if (grouping.expr instanceof ArelNodeGrouping) {
             collector = visit(grouping.expr, collector);
         } else {
             collector.append(GROUPING_OPEN);
@@ -133,6 +168,22 @@ public class ArelVisitorToSql extends ArelVisitor {
         collector = visit(greaterThan.left, collector);
         collector.append(GREATER_THAN);
         collector = visit(greaterThan.right, collector);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeIn(Object object, ArelCollector collector) {
+        ArelNodeIn in = (ArelNodeIn) object;
+
+        if (in.right instanceof List && ((List<Object>) in.right).isEmpty()) {
+            collector.append(ONE_EQUALS_ZERO);
+        } else {
+            collector = visit(in.left, collector);
+            collector.append(IN);
+            collector.append(GROUPING_OPEN);
+            collector = visit(in.right, collector);
+            collector.append(GROUPING_CLOSE);
+        }
 
         return collector;
     }
@@ -415,6 +466,34 @@ public class ArelVisitorToSql extends ArelVisitor {
 
         collector.append(GROUPING_OPEN);
         collector = infixValue(unionAll, collector, UNION_ALL);
+        collector.append(GROUPING_CLOSE);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeWith(Object object, ArelCollector collector) {
+        ArelNodeWith with = (ArelNodeWith) object;
+
+        collector.append(WITH);
+        collector = injectJoin(with.children(), collector, COMMA);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeWithRecursive(Object object, ArelCollector collector) {
+        ArelNodeWithRecursive withRecursive = (ArelNodeWithRecursive) object;
+
+        collector.append(WITH_RECURSIVE);
+        collector = injectJoin(withRecursive.children(), collector, COMMA);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelSelectManager(Object object, ArelCollector collector) {
+        ArelSelectManager selectManager = (ArelSelectManager) object;
+
+        collector.append(GROUPING_OPEN);
+        collector.append(selectManager.toSQL());
         collector.append(GROUPING_CLOSE);
 
         return collector;

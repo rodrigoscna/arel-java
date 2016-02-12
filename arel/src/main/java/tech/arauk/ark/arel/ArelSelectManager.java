@@ -1,6 +1,7 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.*;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeExcept;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeIntersect;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeUnion;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeUnionAll;
@@ -29,6 +30,11 @@ public class ArelSelectManager extends ArelTreeManager {
         this.ctx = cores[cores.length - 1];
 
         from(table);
+    }
+
+    @Override
+    public ArelSelectManager where(Object expr) {
+        return (ArelSelectManager) super.where(expr);
     }
 
     public ArelNodeTableAlias as(Object other) {
@@ -190,6 +196,10 @@ public class ArelSelectManager extends ArelTreeManager {
     }
 
     public ArelSelectManager project(Object... projections) {
+        return project(Arrays.asList(projections));
+    }
+
+    public ArelSelectManager project(List<Object> projections) {
         for (Object projection : projections) {
             if (projection instanceof String) {
                 projection = new ArelNodeSqlLiteral(String.valueOf(projection));
@@ -199,6 +209,10 @@ public class ArelSelectManager extends ArelTreeManager {
         }
 
         return this;
+    }
+
+    public ArelNodeExcept except(ArelSelectManager other) {
+        return new ArelNodeExcept(this.ast, other.ast);
     }
 
     public ArelNodeExists exists() {
@@ -219,6 +233,26 @@ public class ArelSelectManager extends ArelTreeManager {
         } else {
             return union(other);
         }
+    }
+
+    public ArelSelectManager with(Object... subqueries) {
+        return with(Arrays.asList(subqueries));
+    }
+
+    public ArelSelectManager with(List<Object> subqueries) {
+        ((ArelNodeSelectStatement) this.ast).with = new ArelNodeWith(subqueries);
+
+        return this;
+    }
+
+    public ArelSelectManager withRecursive(Object... subqueries) {
+        return withRecursive(Arrays.asList(subqueries));
+    }
+
+    public ArelSelectManager withRecursive(List<Object> subqueries) {
+        ((ArelNodeSelectStatement) this.ast).with = new ArelNodeWithRecursive(subqueries);
+
+        return this;
     }
 
     public List<Object> joinSources() {

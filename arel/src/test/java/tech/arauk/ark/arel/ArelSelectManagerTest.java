@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel;
 
 import junit.framework.TestCase;
+import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.nodes.*;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeAs;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
 import tech.arauk.ark.arel.support.FakeRecord;
 
@@ -337,6 +339,77 @@ public class ArelSelectManagerTest {
             ArelNode node = mSelectManager1.intersect(mSelectManager2);
 
             assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" > 18 INTERSECT SELECT * FROM \"users\" WHERE \"users\".\"age\" < 99)", node.toSQL());
+        }
+    }
+
+    public static class Except extends Base {
+        private ArelSelectManager mSelectManager1;
+        private ArelSelectManager mSelectManager2;
+
+        @Override
+        protected void setUp() throws Exception {
+            super.setUp();
+
+            ArelTable table = new ArelTable("users");
+
+            mSelectManager1 = new ArelSelectManager(table);
+            mSelectManager1.project(Arel.star());
+            mSelectManager1.where(table.get("age").between(18, 60));
+
+            mSelectManager2 = new ArelSelectManager(table);
+            mSelectManager2.project(Arel.star());
+            mSelectManager2.where(table.get("age").between(40, 99));
+        }
+
+        public void testExceptWithTwoManagers() {
+            ArelNode node = mSelectManager1.except(mSelectManager2);
+
+            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" BETWEEN 18 AND 60 EXCEPT SELECT * FROM \"users\" WHERE \"users\".\"age\" BETWEEN 40 AND 99)", node.toSQL());
+        }
+    }
+
+    public static class With extends Base {
+        public void testWith() {
+            ArelTable users = new ArelTable("users");
+            ArelTable usersTop = new ArelTable("users_top");
+            ArelTable comments = new ArelTable("comments");
+
+            ArelTreeManager top = users.project(users.get("id")).where(users.get("karma").gt(100));
+            ArelNodeAs usersAs = new ArelNodeAs(usersTop, top);
+
+            ArelSelectManager selectManager = comments.project(Arel.star()).with(usersAs);
+            selectManager = selectManager.where(comments.get("author_id").in(usersTop.project(usersTop.get("id"))));
+
+            assertEquals("WITH \"users_top\" AS (SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"karma\" > 100) SELECT * FROM \"comments\" WHERE \"comments\".\"author_id\" IN (SELECT \"users_top\".\"id\" FROM \"users_top\")", selectManager.toSQL());
+        }
+
+        public void testWithRecursive() {
+            ArelTable comments = new ArelTable("comments");
+            ArelAttribute commentsId = comments.get("id");
+            ArelAttribute commentsParentId = comments.get("parent_id");
+
+            ArelTable replies = new ArelTable("replies");
+            ArelAttribute repliesId = replies.get("id");
+
+            ArelSelectManager recursiveTerm = new ArelSelectManager();
+            recursiveTerm.from(comments).project(commentsId, commentsParentId).where(commentsId.eq(42));
+
+            ArelSelectManager nonRecursiveTerm = new ArelSelectManager();
+            nonRecursiveTerm.from(comments).project(commentsId, commentsParentId).join(replies).on(commentsParentId.eq(repliesId));
+
+            ArelNode union = recursiveTerm.union(nonRecursiveTerm);
+
+            ArelNodeAs asStatement = new ArelNodeAs(replies, union);
+
+            ArelSelectManager selectManager = new ArelSelectManager();
+            selectManager.withRecursive(asStatement).from(replies).project(Arel.star());
+
+            assertEquals("WITH RECURSIVE \"replies\" AS (" +
+                    "SELECT \"comments\".\"id\", \"comments\".\"parent_id\" FROM \"comments\" WHERE \"comments\".\"id\" = 42 " +
+                    "UNION " +
+                    "SELECT \"comments\".\"id\", \"comments\".\"parent_id\" FROM \"comments\" INNER JOIN \"replies\" ON \"comments\".\"parent_id\" = \"replies\".\"id\"" +
+                    ") " +
+                    "SELECT * FROM \"replies\"", selectManager.toSQL());
         }
     }
 }
