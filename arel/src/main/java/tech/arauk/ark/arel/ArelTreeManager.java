@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ArelTreeManager {
     public Object engine;
-    public ArelNode ast;
+    public Object ast;
     public ArelNodeSelectCore ctx;
     public List<Object> bindValues;
 

@@ -1,5 +1,7 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.attributes.ArelAttribute;
+import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeExcept;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeIntersect;
@@ -7,6 +9,8 @@ import tech.arauk.ark.arel.nodes.binary.ArelNodeUnion;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeUnionAll;
 import tech.arauk.ark.arel.nodes.function.ArelNodeExists;
 import tech.arauk.ark.arel.nodes.unary.*;
+import tech.arauk.ark.arel.visitors.ArelVisitor;
+import tech.arauk.ark.arel.visitors.ArelVisitorWhereSql;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,6 +140,14 @@ public class ArelSelectManager extends ArelTreeManager {
 
     public ArelNodeJoin createJoin(Object to, Object constraint, Class<? extends ArelNodeJoin> aClass) {
         return ArelFactoryMethods.createJoin(to, constraint, aClass);
+    }
+
+    public ArelDeleteManager compileDelete() {
+        return ArelCrud.compileDelete(this);
+    }
+
+    public ArelUpdateManager compileUpdate(Object values, ArelAttribute pk) {
+        return ArelCrud.compileUpdate(this, values, pk);
     }
 
     private Object collapse(Object... exprs) {
@@ -308,5 +320,30 @@ public class ArelSelectManager extends ArelTreeManager {
         }
 
         return froms;
+    }
+
+    public ArelSelectManager outerJoin(Object relation) {
+        return join(relation, ArelNodeOuterJoin.class);
+    }
+
+    public ArelNodeWindow window(String name) {
+        ArelNodeNamedWindow window = new ArelNodeNamedWindow(name);
+        this.ctx.windows.add(window);
+
+        return window;
+    }
+
+    public String whereSql() {
+        ArelVisitor visitor = ArelTable.engine;
+        return whereSql(visitor);
+    }
+
+    public String whereSql(ArelVisitor visitor) {
+        if (this.ctx.wheres != null && !this.ctx.wheres.isEmpty()) {
+            ArelVisitor whereSqlVisitor = new ArelVisitorWhereSql(visitor.connection);
+            return (new ArelNodeSqlLiteral(whereSqlVisitor.accept(this.ctx, new ArelCollector()).getValue())).toString();
+        }
+
+        return "";
     }
 }

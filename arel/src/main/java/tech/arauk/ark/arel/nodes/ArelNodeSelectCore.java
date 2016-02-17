@@ -13,8 +13,8 @@ public class ArelNodeSelectCore extends ArelNode {
     public List<Object> groups;
     public List<Object> havings;
     public List<Object> projections;
+    public List<Object> windows;
     public List<Object> wheres;
-    public Object[] windows;
 
     public ArelNodeSelectCore() {
         super();
@@ -23,10 +23,17 @@ public class ArelNodeSelectCore extends ArelNode {
         this.havings = new ArrayList<>();
         this.projections = new ArrayList<>();
         this.source = new ArelNodeJoinSource(null);
+        this.windows = new ArrayList<>();
         this.wheres = new ArrayList<>();
     }
 
     public Object from() {
         return source.left;
+    }
+
+    public ArelNodeSelectCore from(Object value) {
+        this.source.left = value;
+
+        return this;
     }
 }

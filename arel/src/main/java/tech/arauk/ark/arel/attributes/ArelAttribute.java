@@ -1,9 +1,8 @@
 package tech.arauk.ark.arel.attributes;
 
-import tech.arauk.ark.arel.ArelOrderPredications;
-import tech.arauk.ark.arel.ArelPredications;
-import tech.arauk.ark.arel.ArelRelation;
+import tech.arauk.ark.arel.*;
 import tech.arauk.ark.arel.nodes.*;
+import tech.arauk.ark.arel.nodes.binary.ArelNodeAs;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeGreaterThan;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeIn;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeLessThan;
@@ -14,8 +13,8 @@ public class ArelAttribute {
     public ArelRelation relation;
     public String name;
 
-    private ArelPredications mPredications;
     private ArelOrderPredications mOrderPredications;
+    private ArelPredications mPredications;
 
     public ArelAttribute(ArelRelation relation, String name) {
         this.relation = relation;
@@ -51,11 +50,16 @@ public class ArelAttribute {
         return predications().in(other);
     }
 
-    private ArelPredications predications() {
-        if (this.mPredications == null) {
-            this.mPredications = new ArelPredications(this);
-        }
-        return this.mPredications;
+    public ArelNodeAs as(Object other) {
+        return ArelAliasPredications.as(this, other);
+    }
+
+    public ArelNodeCount count() {
+        return count(false);
+    }
+
+    public ArelNodeCount count(Boolean distinct) {
+        return ArelExpressions.count(this, distinct);
     }
 
     public ArelOrderPredications orderPredications() {
@@ -63,6 +67,13 @@ public class ArelAttribute {
             this.mOrderPredications = new ArelOrderPredications(this);
         }
         return this.mOrderPredications;
+    }
+
+    private ArelPredications predications() {
+        if (this.mPredications == null) {
+            this.mPredications = new ArelPredications(this);
+        }
+        return this.mPredications;
     }
 
     public boolean isAbleToTypeCast() {
