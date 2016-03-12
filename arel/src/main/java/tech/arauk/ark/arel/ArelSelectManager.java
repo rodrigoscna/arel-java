@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ArelSelectManager extends ArelTreeManager {
+public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterface {
     public ArelSelectManager() {
         super(new ArelNodeSelectStatement());
 
@@ -37,12 +37,32 @@ public class ArelSelectManager extends ArelTreeManager {
     }
 
     @Override
+    public ArelDeleteManager compileDelete() {
+        return ArelCrud.compileDelete(this);
+    }
+
+    @Override
+    public ArelInsertManager compileInsert(String values) {
+        return ArelCrud.compileInsert(values);
+    }
+
+    @Override
+    public ArelUpdateManager compileUpdate(Object values, ArelAttribute pk) {
+        return ArelCrud.compileUpdate(this, values, pk);
+    }
+
+    @Override
+    public ArelInsertManager createInsert() {
+        return ArelCrud.createInsert();
+    }
+
+    @Override
     public ArelSelectManager where(Object expr) {
         return (ArelSelectManager) super.where(expr);
     }
 
     public ArelNodeTableAlias as(Object other) {
-        return ArelFactoryMethods.createTableAlias(ArelFactoryMethods.grouping(this.ast), new ArelNodeSqlLiteral(other));
+        return createTableAlias(ArelFactoryMethods.grouping(this.ast), new ArelNodeSqlLiteral(other));
     }
 
     public ArelSelectManager on(Object... exprs) {
@@ -116,7 +136,7 @@ public class ArelSelectManager extends ArelTreeManager {
             aClass = ArelNodeStringJoin.class;
         }
 
-        joinSources().add(ArelFactoryMethods.createJoin(relation, null, aClass));
+        joinSources().add(createJoin(relation, null, aClass));
 
         return this;
     }
@@ -124,30 +144,6 @@ public class ArelSelectManager extends ArelTreeManager {
     public ArelSelectManager having(Object expr) {
         this.ctx.havings.add(expr);
         return this;
-    }
-
-    public ArelNodeAnd createAnd(List<Object> object) {
-        return ArelFactoryMethods.createAnd(object);
-    }
-
-    public ArelInsertManager createInsert() {
-        return ArelCrud.createInsert();
-    }
-
-    public ArelNodeJoin createJoin(Object to, Object constraint) {
-        return ArelFactoryMethods.createJoin(to, constraint);
-    }
-
-    public ArelNodeJoin createJoin(Object to, Object constraint, Class<? extends ArelNodeJoin> aClass) {
-        return ArelFactoryMethods.createJoin(to, constraint, aClass);
-    }
-
-    public ArelDeleteManager compileDelete() {
-        return ArelCrud.compileDelete(this);
-    }
-
-    public ArelUpdateManager compileUpdate(Object values, ArelAttribute pk) {
-        return ArelCrud.compileUpdate(this, values, pk);
     }
 
     private Object collapse(Object... exprs) {

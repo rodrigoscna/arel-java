@@ -9,78 +9,72 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ArelPredications {
-    private Object mHolder;
-
-    public ArelPredications(Object holder) {
-        this.mHolder = holder;
+public abstract class ArelPredications {
+    public static ArelNode between(Object holder, Object begin, Object end) {
+        return between(holder, begin, end, true);
     }
 
-    public ArelNode between(Object begin, Object end) {
-        return between(begin, end, true);
-    }
-
-    public ArelNode between(Object begin, Object end, boolean inclusive) {
+    public static ArelNode between(Object holder, Object begin, Object end, boolean inclusive) {
         if (equalsQuoted(begin, Float.NEGATIVE_INFINITY)) {
             if (equalsQuoted(end, Float.POSITIVE_INFINITY)) {
-                return notIn(new ArrayList<>());
+                return notIn(holder, new ArrayList<>());
             } else if (inclusive) {
-                return lteq(end);
+                return lteq(holder, end);
             } else {
-                return lt(end);
+                return lt(holder, end);
             }
         } else if (equalsQuoted(end, Float.POSITIVE_INFINITY)) {
-            return gteq(end);
+            return gteq(holder, end);
         } else if (inclusive) {
-            Object left = quotedNode(begin);
-            Object right = quotedNode(end);
-            return new ArelNodeBetween(this.mHolder, ((ArelNode) left).and(right));
+            Object left = quotedNode(holder, begin);
+            Object right = quotedNode(holder, end);
+            return new ArelNodeBetween(holder, ((ArelNode) left).and(right));
         } else {
-            return gt(begin).and(lt(end));
+            return gt(holder, begin).and(lt(holder, end));
         }
     }
 
-    public ArelNodeEquality eq(Object other) {
-        return new ArelNodeEquality(this.mHolder, quotedNode(other));
+    public static ArelNodeEquality eq(Object holder, Object other) {
+        return new ArelNodeEquality(holder, quotedNode(holder, other));
     }
 
-    public ArelNodeGreaterThan gt(Object right) {
-        return new ArelNodeGreaterThan(this.mHolder, quotedNode(right));
+    public static ArelNodeGreaterThan gt(Object holder, Object right) {
+        return new ArelNodeGreaterThan(holder, quotedNode(holder, right));
     }
 
-    public ArelNodeGreaterThanOrEqual gteq(Object right) {
-        return new ArelNodeGreaterThanOrEqual(this.mHolder, quotedNode(right));
+    public static ArelNodeGreaterThanOrEqual gteq(Object holder, Object right) {
+        return new ArelNodeGreaterThanOrEqual(holder, quotedNode(holder, right));
     }
 
-    public ArelNodeLessThan lt(Object right) {
-        return new ArelNodeLessThan(this.mHolder, quotedNode(right));
+    public static ArelNodeLessThan lt(Object holder, Object right) {
+        return new ArelNodeLessThan(holder, quotedNode(holder, right));
     }
 
-    public ArelNodeLessThanOrEqual lteq(Object right) {
-        return new ArelNodeLessThanOrEqual(this.mHolder, quotedNode(right));
+    public static ArelNodeLessThanOrEqual lteq(Object holder, Object right) {
+        return new ArelNodeLessThanOrEqual(holder, quotedNode(holder, right));
     }
 
-    public ArelNodeIn in(Object other) {
+    public static ArelNodeIn in(Object holder, Object other) {
         if (other instanceof ArelSelectManager) {
-            return new ArelNodeIn(this.mHolder, ((ArelSelectManager) other).ast);
+            return new ArelNodeIn(holder, ((ArelSelectManager) other).ast);
         } else if (other instanceof List) {
-            return new ArelNodeIn(this, quotedArray((List<Object>) other));
+            return new ArelNodeIn(holder, quotedArray(holder, (List<Object>) other));
         } else {
-            return new ArelNodeIn(this, quotedNode(other));
+            return new ArelNodeIn(holder, quotedNode(holder, other));
         }
     }
 
-    public ArelNodeNotIn notIn(Object other) {
+    public static ArelNodeNotIn notIn(Object holder, Object other) {
         if (other instanceof ArelSelectManager) {
-            return new ArelNodeNotIn(this, ((ArelSelectManager) other).ast);
+            return new ArelNodeNotIn(holder, ((ArelSelectManager) other).ast);
         } else if (other instanceof List) {
-            return new ArelNodeNotIn(this, quotedArray((List<Object>) other));
+            return new ArelNodeNotIn(holder, quotedArray(holder, (List<Object>) other));
         } else {
-            return new ArelNodeNotIn(this, quotedNode(other));
+            return new ArelNodeNotIn(holder, quotedNode(holder, other));
         }
     }
 
-    private boolean equalsQuoted(Object maybeQuoted, Object value) {
+    private static boolean equalsQuoted(Object maybeQuoted, Object value) {
         if (maybeQuoted instanceof ArelNodeQuoted) {
             return Objects.equals(((ArelNodeQuoted) maybeQuoted).expr, value);
         } else {
@@ -88,15 +82,15 @@ public class ArelPredications {
         }
     }
 
-    private List<Object> quotedArray(List<Object> others) {
+    private static List<Object> quotedArray(Object holder, List<Object> others) {
         for (int i = 0; i < others.size(); i++) {
-            others.set(i, quotedNode(others.get(i)));
+            others.set(i, quotedNode(holder, others.get(i)));
         }
 
         return others;
     }
 
-    private Object quotedNode(Object other) {
-        return ArelNodes.buildQuoted(other, mHolder);
+    private static Object quotedNode(Object holder, Object other) {
+        return ArelNodes.buildQuoted(other, holder);
     }
 }

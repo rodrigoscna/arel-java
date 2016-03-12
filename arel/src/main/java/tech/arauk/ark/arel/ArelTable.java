@@ -3,12 +3,14 @@ package tech.arauk.ark.arel;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.connection.ArelTypeCaster;
 import tech.arauk.ark.arel.nodes.*;
+import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class ArelTable implements ArelRelation {
+public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface, ArelRelation {
     public static ArelVisitor engine;
     public List<ArelNodeTableAlias> aliases;
     private String mName;
@@ -28,7 +30,7 @@ public class ArelTable implements ArelRelation {
     public ArelTable(String name, String as) {
         this(name);
 
-        if (as == this.mName) {
+        if (Objects.equals(as, this.mName)) {
             as = null;
         }
 
@@ -44,7 +46,7 @@ public class ArelTable implements ArelRelation {
     public ArelTable(String name, String as, ArelTypeCaster typeCaster) {
         this(name);
 
-        if (as == this.mName) {
+        if (Objects.equals(as, this.mName)) {
             as = null;
         }
 
@@ -54,8 +56,78 @@ public class ArelTable implements ArelRelation {
     }
 
     @Override
+    public ArelDeleteManager compileDelete() {
+        return ArelCrud.compileDelete(this);
+    }
+
+    @Override
+    public ArelInsertManager compileInsert(String values) {
+        return ArelCrud.compileInsert(values);
+    }
+
+    @Override
+    public ArelUpdateManager compileUpdate(Object values, ArelAttribute pk) {
+        return ArelCrud.compileUpdate(this, values, pk);
+    }
+
+    @Override
+    public ArelNodeAnd createAnd(List<Object> clauses) {
+        return ArelFactoryMethods.createAnd(clauses);
+    }
+
+    @Override
+    public ArelNodeFalse createFalse() {
+        return ArelFactoryMethods.createFalse();
+    }
+
+    @Override
+    public ArelInsertManager createInsert() {
+        return ArelCrud.createInsert();
+    }
+
+    @Override
+    public ArelNodeJoin createJoin(Object to) {
+        return ArelFactoryMethods.createJoin(this, to);
+    }
+
+    @Override
+    public ArelNodeJoin createJoin(Object to, Object constraint) {
+        return ArelFactoryMethods.createJoin(to, constraint);
+    }
+
+    @Override
+    public ArelNodeJoin createJoin(Object to, Object constraint, Class<? extends ArelNodeJoin> aClass) {
+        return ArelFactoryMethods.createJoin(to, constraint, aClass);
+    }
+
+    @Override
+    public ArelNodeOn createOn(Object expr) {
+        return ArelFactoryMethods.createOn(expr);
+    }
+
+    @Override
+    public ArelNodeJoin createStringJoin(String to) {
+        return ArelFactoryMethods.createStringJoin(to);
+    }
+
+    @Override
+    public ArelNodeTableAlias createTableAlias(Object relation, Object name) {
+        return ArelFactoryMethods.createTableAlias(relation, name);
+    }
+
+    @Override
+    public ArelNodeTrue createTrue() {
+        return ArelFactoryMethods.createTrue();
+    }
+
+    @Override
     public ArelAttribute get(String name) {
         return new ArelAttribute(this, name);
+    }
+
+    @Override
+    public ArelNodeGrouping grouping(Object expr) {
+        return ArelFactoryMethods.grouping(expr);
     }
 
     @Override
@@ -93,32 +165,6 @@ public class ArelTable implements ArelRelation {
         this.aliases.add(alias);
 
         return alias;
-    }
-
-    public ArelNodeJoin createJoin(String to) {
-        return ArelFactoryMethods.createJoin(to);
-    }
-
-    public ArelNodeJoin createJoin(String to, String constraint) {
-        return ArelFactoryMethods.createJoin(to, constraint);
-    }
-
-    public ArelNodeJoin createJoin(String to, String constraint, Class<? extends ArelNodeJoin> aClass) {
-        return ArelFactoryMethods.createJoin(to, constraint, aClass);
-    }
-
-    public ArelNodeJoin createStringJoin(String to) {
-        return ArelFactoryMethods.createStringJoin(to);
-    }
-
-    public ArelInsertManager createInsert() {
-        return new ArelInsertManager();
-    }
-
-    public ArelInsertManager compileInsert(String values) {
-        ArelInsertManager insertManager = createInsert();
-        insertManager.insert(values);
-        return insertManager;
     }
 
     public ArelSelectManager from() {

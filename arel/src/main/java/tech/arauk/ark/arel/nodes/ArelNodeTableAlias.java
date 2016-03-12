@@ -1,20 +1,73 @@
 package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.ArelFactoryMethods;
+import tech.arauk.ark.arel.ArelFactoryMethodsInterface;
 import tech.arauk.ark.arel.ArelRelation;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
+import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
-public class ArelNodeTableAlias extends ArelNodeBinary implements ArelRelation {
+public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMethodsInterface, ArelRelation {
     public ArelNodeTableAlias(Object left, Object right) {
         super(left, right);
     }
 
     @Override
+    public ArelNodeAnd createAnd(List<Object> clauses) {
+        return ArelFactoryMethods.createAnd(clauses);
+    }
+
+    @Override
+    public ArelNodeFalse createFalse() {
+        return ArelFactoryMethods.createFalse();
+    }
+
+    @Override
+    public ArelNodeJoin createJoin(Object to) {
+        return ArelFactoryMethods.createJoin(this, to);
+    }
+
+    @Override
+    public ArelNodeJoin createJoin(Object to, Object constraint) {
+        return ArelFactoryMethods.createJoin(to, constraint);
+    }
+
+    @Override
+    public ArelNodeJoin createJoin(Object to, Object constraint, Class<? extends ArelNodeJoin> aClass) {
+        return ArelFactoryMethods.createJoin(to, constraint, aClass);
+    }
+
+    @Override
+    public ArelNodeOn createOn(Object expr) {
+        return ArelFactoryMethods.createOn(expr);
+    }
+
+    @Override
+    public ArelNodeJoin createStringJoin(String to) {
+        return ArelFactoryMethods.createStringJoin(to);
+    }
+
+    @Override
+    public ArelNodeTableAlias createTableAlias(Object relation, Object name) {
+        return ArelFactoryMethods.createTableAlias(relation, name);
+    }
+
+    @Override
+    public ArelNodeTrue createTrue() {
+        return ArelFactoryMethods.createTrue();
+    }
+
+    @Override
     public ArelAttribute get(String name) {
         return new ArelAttribute(this, name);
+    }
+
+    @Override
+    public ArelNodeGrouping grouping(Object expr) {
+        return ArelFactoryMethods.grouping(expr);
     }
 
     @Override

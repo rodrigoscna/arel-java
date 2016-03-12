@@ -1,6 +1,9 @@
 package tech.arauk.ark.arel.nodes;
 
-public class ArelNodeFunction extends ArelNode {
+import tech.arauk.ark.arel.ArelOrderPredications;
+import tech.arauk.ark.arel.ArelOrderPredicationsInterface;
+
+public class ArelNodeFunction extends ArelNode implements ArelOrderPredicationsInterface {
     public Object alias;
     public Object expressions;
 
@@ -13,6 +16,16 @@ public class ArelNodeFunction extends ArelNode {
         if (alias != null) {
             this.alias = new ArelNodeSqlLiteral(alias);
         }
+    }
+
+    @Override
+    public ArelNodeAscending asc() {
+        return ArelOrderPredications.asc(this);
+    }
+
+    @Override
+    public ArelNodeDescending desc() {
+        return ArelOrderPredications.desc(this);
     }
 
     public ArelNodeFunction as(Object alias) {

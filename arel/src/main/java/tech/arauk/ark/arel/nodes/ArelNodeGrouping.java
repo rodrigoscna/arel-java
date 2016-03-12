@@ -1,18 +1,20 @@
 package tech.arauk.ark.arel.nodes;
 
-import tech.arauk.ark.arel.ArelPredications;
+import tech.arauk.ark.arel.ArelOrderPredications;
+import tech.arauk.ark.arel.ArelOrderPredicationsInterface;
 
-public class ArelNodeGrouping extends ArelNodeUnary {
-    private ArelPredications mPredications;
-
+public class ArelNodeGrouping extends ArelNodeUnary implements ArelOrderPredicationsInterface {
     public ArelNodeGrouping(Object expr) {
         super(expr);
     }
 
-    private ArelPredications predications() {
-        if (this.mPredications == null) {
-            this.mPredications = new ArelPredications(this);
-        }
-        return this.mPredications;
+    @Override
+    public ArelNodeAscending asc() {
+        return ArelOrderPredications.asc(this);
+    }
+
+    @Override
+    public ArelNodeDescending desc() {
+        return ArelOrderPredications.desc(this);
     }
 }

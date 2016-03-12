@@ -2,23 +2,57 @@ package tech.arauk.ark.arel.attributes;
 
 import tech.arauk.ark.arel.*;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeAs;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeGreaterThan;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeIn;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeLessThan;
+import tech.arauk.ark.arel.nodes.binary.*;
 
 import java.util.Objects;
 
-public class ArelAttribute {
+public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
     public ArelRelation relation;
     public String name;
-
-    private ArelOrderPredications mOrderPredications;
-    private ArelPredications mPredications;
 
     public ArelAttribute(ArelRelation relation, String name) {
         this.relation = relation;
         this.name = name;
+    }
+
+    @Override
+    public ArelNodeAs as(Object other) {
+        return ArelAliasPredications.as(this, other);
+    }
+
+    @Override
+    public ArelNodeAscending asc() {
+        return ArelOrderPredications.asc(this);
+    }
+
+    @Override
+    public ArelNode between(Object begin, Object end) {
+        return ArelPredications.between(this, begin, end);
+    }
+
+    @Override
+    public ArelNode between(Object begin, Object end, boolean inclusive) {
+        return ArelPredications.between(this, begin, end, inclusive);
+    }
+
+    @Override
+    public ArelNodeCount count() {
+        return ArelExpressions.count(this);
+    }
+
+    @Override
+    public ArelNodeCount count(Boolean distinct) {
+        return ArelExpressions.count(this, distinct);
+    }
+
+    @Override
+    public ArelNodeDescending desc() {
+        return ArelOrderPredications.desc(this);
+    }
+
+    @Override
+    public ArelNodeEquality eq(Object other) {
+        return ArelPredications.eq(this, other);
     }
 
     @Override
@@ -30,50 +64,34 @@ public class ArelAttribute {
         }
     }
 
-    public ArelNode between(Object begin, Object end) {
-        return predications().between(begin, end);
-    }
-
-    public ArelNodeEquality eq(Object other) {
-        return predications().eq(other);
-    }
-
+    @Override
     public ArelNodeGreaterThan gt(Object right) {
-        return predications().gt(right);
+        return ArelPredications.gt(this, right);
     }
 
+    @Override
+    public ArelNodeGreaterThanOrEqual gteq(Object right) {
+        return ArelPredications.gteq(this, right);
+    }
+
+    @Override
     public ArelNodeLessThan lt(Object right) {
-        return predications().lt(right);
+        return ArelPredications.lt(this, right);
     }
 
+    @Override
+    public ArelNodeLessThanOrEqual lteq(Object right) {
+        return ArelPredications.lteq(this, right);
+    }
+
+    @Override
     public ArelNodeIn in(Object other) {
-        return predications().in(other);
+        return ArelPredications.in(this, other);
     }
 
-    public ArelNodeAs as(Object other) {
-        return ArelAliasPredications.as(this, other);
-    }
-
-    public ArelNodeCount count() {
-        return count(false);
-    }
-
-    public ArelNodeCount count(Boolean distinct) {
-        return ArelExpressions.count(this, distinct);
-    }
-
-    public ArelOrderPredications orderPredications() {
-        if (this.mOrderPredications == null) {
-            this.mOrderPredications = new ArelOrderPredications(this);
-        }
-        return this.mOrderPredications;
-    }
-
-    private ArelPredications predications() {
-        if (this.mPredications == null) {
-            this.mPredications = new ArelPredications(this);
-        }
-        return this.mPredications;
+    @Override
+    public ArelNodeNotIn notIn(Object other) {
+        return ArelPredications.notIn(this, other);
     }
 
     public boolean isAbleToTypeCast() {
@@ -86,14 +104,6 @@ public class ArelAttribute {
 
     public ArelNodeNamedFunction lower() {
         return this.relation.lower(this);
-    }
-
-    public ArelNodeAscending asc() {
-        return orderPredications().asc();
-    }
-
-    public ArelNodeDescending desc() {
-        return orderPredications().desc();
     }
 
     public interface Type {
