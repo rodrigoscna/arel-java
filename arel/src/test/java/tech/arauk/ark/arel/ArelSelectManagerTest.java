@@ -64,8 +64,8 @@ public class ArelSelectManagerTest {
             Object join = selectManager.createJoin("foo", "bar");
 
             assertSame(ArelNodeInnerJoin.class, join.getClass());
-            assertEquals("foo", ((ArelNodeJoin) join).left);
-            assertEquals("bar", ((ArelNodeJoin) join).right);
+            assertEquals("foo", ((ArelNodeJoin) join).left());
+            assertEquals("bar", ((ArelNodeJoin) join).right());
         }
 
         public void testJoinNodesWithFullOuterJoin() {
@@ -73,8 +73,8 @@ public class ArelSelectManagerTest {
             Object join = selectManager.createJoin("foo", "bar", ArelNodeFullOuterJoin.class);
 
             assertSame(ArelNodeFullOuterJoin.class, join.getClass());
-            assertEquals("foo", ((ArelNodeFullOuterJoin) join).left);
-            assertEquals("bar", ((ArelNodeFullOuterJoin) join).right);
+            assertEquals("foo", ((ArelNodeFullOuterJoin) join).left());
+            assertEquals("bar", ((ArelNodeFullOuterJoin) join).right());
         }
 
         public void testJoinNodesWithOuterJoin() {
@@ -82,8 +82,8 @@ public class ArelSelectManagerTest {
             Object join = selectManager.createJoin("foo", "bar", ArelNodeOuterJoin.class);
 
             assertSame(ArelNodeOuterJoin.class, join.getClass());
-            assertEquals("foo", ((ArelNodeOuterJoin) join).left);
-            assertEquals("bar", ((ArelNodeOuterJoin) join).right);
+            assertEquals("foo", ((ArelNodeOuterJoin) join).left());
+            assertEquals("bar", ((ArelNodeOuterJoin) join).right());
         }
 
         public void testJoinNodesWithRightOuterJoin() {
@@ -91,8 +91,8 @@ public class ArelSelectManagerTest {
             Object join = selectManager.createJoin("foo", "bar", ArelNodeRightOuterJoin.class);
 
             assertSame(ArelNodeRightOuterJoin.class, join.getClass());
-            assertEquals("foo", ((ArelNodeRightOuterJoin) join).left);
-            assertEquals("bar", ((ArelNodeRightOuterJoin) join).right);
+            assertEquals("foo", ((ArelNodeRightOuterJoin) join).left());
+            assertEquals("bar", ((ArelNodeRightOuterJoin) join).right());
         }
 
         public void testJoinSources() {
@@ -216,16 +216,16 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = new ArelSelectManager();
             ArelNodeTableAlias tableAlias = selectManager.as(Arel.sql("foo"));
 
-            assertSame(ArelNodeGrouping.class, tableAlias.left.getClass());
-            assertEquals(selectManager.ast, ((ArelNodeGrouping) tableAlias.left).expr);
-            assertEquals(Arel.sql("foo"), tableAlias.right);
+            assertSame(ArelNodeGrouping.class, tableAlias.left().getClass());
+            assertEquals(selectManager.ast, ((ArelNodeGrouping) tableAlias.left()).expr);
+            assertEquals(Arel.sql("foo"), tableAlias.right());
         }
 
         public void testAsConversionToSQLLiteral() {
             ArelSelectManager selectManager = new ArelSelectManager();
             ArelNodeTableAlias tableAlias = selectManager.as("foo");
 
-            assertSame(ArelNodeSqlLiteral.class, tableAlias.right.getClass());
+            assertSame(ArelNodeSqlLiteral.class, tableAlias.right().getClass());
         }
 
         public void testAsWithSubselect() {

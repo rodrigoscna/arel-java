@@ -111,10 +111,10 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     }
 
     public Object name() {
-        return right;
+        return right();
     }
 
     public Object relation() {
-        return left;
+        return left();
     }
 }

@@ -15,6 +15,6 @@ public class ArelNodeJoinSource extends ArelNodeBinary {
     }
 
     public boolean isEmpty() {
-        return (left == null) && (right == null || ((List<Object>) right).isEmpty());
+        return (left() == null) && (right() == null || ((List<Object>) right()).isEmpty());
     }
 }

@@ -28,12 +28,20 @@ public class ArelNodeSelectCore extends ArelNode {
     }
 
     public Object from() {
-        return source.left;
+        return source.left();
     }
 
     public ArelNodeSelectCore from(Object value) {
-        this.source.left = value;
+        this.source.left(value);
 
         return this;
+    }
+
+    public Object froms() {
+        return from();
+    }
+
+    public ArelNodeSelectCore froms(Object value) {
+        return from(value);
     }
 }

@@ -31,39 +31,39 @@ public class ArelTableTest extends TestCase {
         Object join = mRelation.createStringJoin("foo");
 
         assertSame(ArelNodeStringJoin.class, join.getClass());
-        assertEquals("foo", ((ArelNodeStringJoin) join).left);
+        assertEquals("foo", ((ArelNodeStringJoin) join).left());
     }
 
     public void testCreateInnerJoinNodes() {
         Object join = mRelation.createJoin("foo", "bar");
 
         assertSame(ArelNodeInnerJoin.class, join.getClass());
-        assertEquals("foo", ((ArelNodeInnerJoin) join).left);
-        assertEquals("bar", ((ArelNodeInnerJoin) join).right);
+        assertEquals("foo", ((ArelNodeInnerJoin) join).left());
+        assertEquals("bar", ((ArelNodeInnerJoin) join).right());
     }
 
     public void testCreateJoinNodesWithAFullOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeFullOuterJoin.class);
 
         assertSame(ArelNodeFullOuterJoin.class, join.getClass());
-        assertEquals("foo", ((ArelNodeFullOuterJoin) join).left);
-        assertEquals("bar", ((ArelNodeFullOuterJoin) join).right);
+        assertEquals("foo", ((ArelNodeFullOuterJoin) join).left());
+        assertEquals("bar", ((ArelNodeFullOuterJoin) join).right());
     }
 
     public void testCreateJoinNodesWithAnOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeOuterJoin.class);
 
         assertSame(ArelNodeOuterJoin.class, join.getClass());
-        assertEquals("foo", ((ArelNodeOuterJoin) join).left);
-        assertEquals("bar", ((ArelNodeOuterJoin) join).right);
+        assertEquals("foo", ((ArelNodeOuterJoin) join).left());
+        assertEquals("bar", ((ArelNodeOuterJoin) join).right());
     }
 
     public void testCreateJoinNodesWithARightOuterJoinClass() {
         Object join = mRelation.createJoin("foo", "bar", ArelNodeRightOuterJoin.class);
 
         assertSame(ArelNodeRightOuterJoin.class, join.getClass());
-        assertEquals("foo", ((ArelNodeRightOuterJoin) join).left);
-        assertEquals("bar", ((ArelNodeRightOuterJoin) join).right);
+        assertEquals("foo", ((ArelNodeRightOuterJoin) join).left());
+        assertEquals("bar", ((ArelNodeRightOuterJoin) join).right());
     }
 
     public void testInsertManager() {

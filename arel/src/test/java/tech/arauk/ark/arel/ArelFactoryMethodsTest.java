@@ -19,7 +19,7 @@ public class ArelFactoryMethodsTest extends TestCase {
         Object join = ArelFactoryMethods.createJoin("one", "two");
 
         assertSame(ArelNodeInnerJoin.class, join.getClass());
-        assertEquals("two", ((ArelNodeInnerJoin) join).right);
+        assertEquals("two", ((ArelNodeInnerJoin) join).right());
     }
 
     public void testCreateOn() {

@@ -92,9 +92,9 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeAs(Object object, ArelCollector collector) {
         ArelNodeAs as = (ArelNodeAs) object;
 
-        collector = visit(as.left, collector);
+        collector = visit(as.left(), collector);
         collector.append(AS);
-        collector = visit(as.right, collector);
+        collector = visit(as.right(), collector);
 
         return collector;
     }
@@ -111,14 +111,14 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeAssignment(Object object, ArelCollector collector) {
         ArelNodeAssignment assignment = (ArelNodeAssignment) object;
 
-        if (assignment.right instanceof ArelNodeUnqualifiedColumn || assignment.right instanceof ArelAttribute || assignment.right instanceof ArelNodeBindParam) {
-            collector = visit(assignment.left, collector);
+        if (assignment.right() instanceof ArelNodeUnqualifiedColumn || assignment.right() instanceof ArelAttribute || assignment.right() instanceof ArelNodeBindParam) {
+            collector = visit(assignment.left(), collector);
             collector.append(EQUALS);
-            collector = visit(assignment.right, collector);
+            collector = visit(assignment.right(), collector);
         } else {
-            collector = visit(assignment.left, collector);
+            collector = visit(assignment.left(), collector);
             collector.append(EQUALS);
-            collector.append(quote(assignment.right));
+            collector.append(quote(assignment.right()));
         }
 
         return collector;
@@ -127,9 +127,9 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeBetween(Object object, ArelCollector collector) {
         ArelNodeBetween between = (ArelNodeBetween) object;
 
-        collector = visit(between.left, collector);
+        collector = visit(between.left(), collector);
         collector.append(BETWEEN);
-        collector = visit(between.right, collector);
+        collector = visit(between.right(), collector);
 
         return collector;
     }
@@ -184,13 +184,13 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeEquality(Object object, ArelCollector collector) {
         ArelNodeEquality equality = (ArelNodeEquality) object;
 
-        collector = visit(equality.left, collector);
+        collector = visit(equality.left(), collector);
 
-        if (equality.right == null) {
+        if (equality.right() == null) {
             collector.append(IS_NULL);
         } else {
             collector.append(" = ");
-            visit(equality.right, collector);
+            visit(equality.right(), collector);
         }
 
         return collector;
@@ -240,9 +240,9 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeFullOuterJoin fullOuterJoin = (ArelNodeFullOuterJoin) object;
 
         collector.append(FULL_OUTER_JOIN);
-        collector = visit(fullOuterJoin.left, collector);
+        collector = visit(fullOuterJoin.left(), collector);
         collector.append(SPACE);
-        collector = visit(fullOuterJoin.right, collector);
+        collector = visit(fullOuterJoin.right(), collector);
 
         return collector;
     }
@@ -272,9 +272,9 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeGreaterThan(Object object, ArelCollector collector) {
         ArelNodeGreaterThan greaterThan = (ArelNodeGreaterThan) object;
 
-        collector = visit(greaterThan.left, collector);
+        collector = visit(greaterThan.left(), collector);
         collector.append(GREATER_THAN);
-        collector = visit(greaterThan.right, collector);
+        collector = visit(greaterThan.right(), collector);
 
         return collector;
     }
@@ -282,13 +282,13 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeIn(Object object, ArelCollector collector) {
         ArelNodeIn in = (ArelNodeIn) object;
 
-        if (in.right instanceof List && ((List<Object>) in.right).isEmpty()) {
+        if (in.right() instanceof List && ((List<Object>) in.right()).isEmpty()) {
             collector.append(ONE_EQUALS_ZERO);
         } else {
-            collector = visit(in.left, collector);
+            collector = visit(in.left(), collector);
             collector.append(IN);
             collector.append(GROUPING_OPEN);
-            collector = visit(in.right, collector);
+            collector = visit(in.right(), collector);
             collector.append(GROUPING_CLOSE);
         }
 
@@ -299,11 +299,11 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeInnerJoin innerJoin = (ArelNodeInnerJoin) object;
 
         collector.append(INNER_JOIN);
-        collector = visit(innerJoin.left, collector);
+        collector = visit(innerJoin.left(), collector);
 
-        if (innerJoin.right != null) {
+        if (innerJoin.right() != null) {
             collector.append(SPACE);
-            collector = visit(innerJoin.right, collector);
+            collector = visit(innerJoin.right(), collector);
         }
 
         return collector;
@@ -345,15 +345,15 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeJoinSource(Object object, ArelCollector collector) {
         ArelNodeJoinSource joinSource = (ArelNodeJoinSource) object;
 
-        if (joinSource.left != null) {
-            collector = visit(joinSource.left, collector);
+        if (joinSource.left() != null) {
+            collector = visit(joinSource.left(), collector);
         }
 
-        if (joinSource.right != null && ((List<Object>) joinSource.right).size() > 0) {
-            if (joinSource.left != null) {
+        if (joinSource.right() != null && ((List<Object>) joinSource.right()).size() > 0) {
+            if (joinSource.left() != null) {
                 collector.append(SPACE);
             }
-            collector = injectJoin(((List<Object>) joinSource.right), collector, SPACE);
+            collector = injectJoin(((List<Object>) joinSource.right()), collector, SPACE);
         }
 
         return collector;
@@ -362,9 +362,9 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeLessThan(Object object, ArelCollector collector) {
         ArelNodeLessThan lessThan = (ArelNodeLessThan) object;
 
-        collector = visit(lessThan.left, collector);
+        collector = visit(lessThan.left(), collector);
         collector.append(LESS_THAN);
-        collector = visit(lessThan.right, collector);
+        collector = visit(lessThan.right(), collector);
 
         return collector;
     }
@@ -421,9 +421,9 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeOuterJoin outerJoin = (ArelNodeOuterJoin) object;
 
         collector.append(LEFT_OUTER_JOIN);
-        collector = visit(outerJoin.left, collector);
+        collector = visit(outerJoin.left(), collector);
         collector.append(SPACE);
-        collector = visit(outerJoin.right, collector);
+        collector = visit(outerJoin.right(), collector);
 
         return collector;
     }
@@ -468,9 +468,9 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeRightOuterJoin rightOuterJoin = (ArelNodeRightOuterJoin) object;
 
         collector.append(RIGHT_OUTER_JOIN);
-        collector = visit(rightOuterJoin.left, collector);
+        collector = visit(rightOuterJoin.left(), collector);
         collector.append(SPACE);
-        collector = visit(rightOuterJoin.right, collector);
+        collector = visit(rightOuterJoin.right(), collector);
 
         return collector;
     }
@@ -612,7 +612,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeStringJoin(Object object, ArelCollector collector) {
         ArelNodeStringJoin stringJoin = (ArelNodeStringJoin) object;
 
-        collector = visit(stringJoin.left, collector);
+        collector = visit(stringJoin.left(), collector);
 
         return collector;
     }
@@ -815,9 +815,9 @@ public class ArelVisitorToSql extends ArelVisitor {
     private ArelCollector infixValue(Object object, ArelCollector collector, Object value) {
         ArelNodeBinary binary = (ArelNodeBinary) object;
 
-        collector = visit(binary.left, collector);
+        collector = visit(binary.left(), collector);
         collector.append(String.valueOf(value));
-        collector = visit(binary.right, collector);
+        collector = visit(binary.right(), collector);
 
         return collector;
     }

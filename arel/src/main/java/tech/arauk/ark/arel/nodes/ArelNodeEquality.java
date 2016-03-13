@@ -10,10 +10,10 @@ public class ArelNodeEquality extends ArelNodeBinary {
     }
 
     public Object operant1() {
-        return this.left;
+        return left();
     }
 
     public Object operant2() {
-        return this.right;
+        return right();
     }
 }

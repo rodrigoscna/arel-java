@@ -14,18 +14,18 @@ public class ArelNodeDeleteStatement extends ArelNodeBinary {
     }
 
     public Object relation() {
-        return this.left;
+        return this.left();
     }
 
-    public Object relation(Object left) {
-        return this.left = left;
+    public void relation(Object left) {
+        this.left(left);
     }
 
     public Object wheres() {
-        return this.right;
+        return this.right();
     }
 
-    public Object wheres(Object right) {
-        return this.right = right;
+    public void wheres(Object right) {
+        this.right(right);
     }
 }

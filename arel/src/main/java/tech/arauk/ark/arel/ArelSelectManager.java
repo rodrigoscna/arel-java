@@ -70,7 +70,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         List<Object> innerRight = new ArrayList<>();
         innerRight.add(new ArelNodeOn(collapse(exprs)));
 
-        ((ArelNodeBinary) right.get(right.size() - 1)).right = innerRight;
+        ((ArelNodeBinary) right.get(right.size() - 1)).right(innerRight);
 
         return this;
     }
@@ -87,7 +87,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         if (table instanceof ArelNodeJoin) {
             joinSources().add(table);
         } else {
-            this.ctx.source.left = table;
+            this.ctx.source.left(table);
         }
 
         return this;
@@ -286,7 +286,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public List<Object> joinSources() {
-        return (List<Object>) this.ctx.source.right;
+        return (List<Object>) this.ctx.source.right();
     }
 
     public ArelSelectManager lock() {
