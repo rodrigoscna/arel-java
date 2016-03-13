@@ -1,6 +1,8 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.attributes.ArelAttribute;
+import tech.arauk.ark.arel.interfaces.ArelFromInterface;
+import tech.arauk.ark.arel.interfaces.ArelWheresInterface;
 import tech.arauk.ark.arel.nodes.ArelNodeSelectStatement;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 
@@ -18,8 +20,8 @@ public abstract class ArelCrud {
             if (ast.limit != null) {
                 deleteManager.take(ast.limit.expr());
             }
-            deleteManager.wheres(holderNode.ctx().wheres);
-            deleteManager.from(holderNode.ctx().from());
+            deleteManager.wheres(((ArelWheresInterface) holderNode.ctx()).wheres());
+            deleteManager.from(((ArelFromInterface) holderNode.ctx()).from());
 
             return deleteManager;
         } else if (holder instanceof ArelTable) {
@@ -50,7 +52,7 @@ public abstract class ArelCrud {
 
             Object relation = null;
             if (values instanceof ArelNodeSqlLiteral) {
-                relation = holderNode.ctx().from();
+                relation = ((ArelFromInterface) holderNode.ctx()).from();
             } else {
                 Map<Object, Object> valuesMap = (Map<Object, Object>) values;
                 Iterator iterator = valuesMap.keySet().iterator();
@@ -66,7 +68,7 @@ public abstract class ArelCrud {
                 updateManager.take(ast.limit.expr());
             }
             updateManager.order(ast.orders);
-            updateManager.wheres(holderNode.ctx().wheres);
+            updateManager.wheres(((ArelWheresInterface) holderNode.ctx()).wheres());
 
             return updateManager;
         } else if (holder instanceof ArelTable) {

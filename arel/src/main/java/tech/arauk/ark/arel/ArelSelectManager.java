@@ -2,6 +2,7 @@ package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.collectors.ArelCollector;
+import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeExcept;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeIntersect;
@@ -87,7 +88,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         if (table instanceof ArelNodeJoin) {
             joinSources().add(table);
         } else {
-            ctx().source.left(table);
+            ((ArelSourceInterface) ctx()).source().left(table);
         }
 
         return this;
@@ -142,7 +143,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public ArelSelectManager having(Object expr) {
-        ctx().havings.add(expr);
+        ((ArelHavingsInterface) ctx()).havings().add(expr);
         return this;
     }
 
@@ -169,7 +170,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
                 column = new ArelNodeSqlLiteral(String.valueOf(column));
             }
 
-            ctx().groups.add(new ArelNodeGroup(column));
+            ((ArelGroupsInterface) ctx()).groups().add(new ArelNodeGroup(column));
         }
 
         return this;
@@ -199,7 +200,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
 
     public ArelSelectManager take(int limit) {
         ((ArelNodeSelectStatement) ast()).limit = new ArelNodeLimit(limit);
-        ctx().top = new ArelNodeTop(limit);
+        ((ArelTopInterface) ctx()).top(new ArelNodeTop(limit));
 
         return this;
     }
@@ -235,7 +236,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
                 projection = new ArelNodeSqlLiteral(String.valueOf(projection));
             }
 
-            ctx().projections.add(projection);
+            ((ArelProjectionsInterface) ctx()).projections().add(projection);
         }
 
         return this;
@@ -286,7 +287,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public List<Object> joinSources() {
-        return (List<Object>) ctx().source.right();
+        return (List<Object>) ((ArelSourceInterface) ctx()).source().right();
     }
 
     public ArelSelectManager lock() {
@@ -324,7 +325,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
 
     public ArelNodeWindow window(String name) {
         ArelNodeNamedWindow window = new ArelNodeNamedWindow(name);
-        ctx().windows.add(window);
+        ((ArelWindowsInterface) ctx()).windows().add(window);
 
         return window;
     }
@@ -335,7 +336,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public String whereSql(ArelVisitor visitor) {
-        if (ctx().wheres != null && !ctx().wheres.isEmpty()) {
+        if (((ArelWheresInterface) ctx()).wheres() != null && !((ArelWheresInterface) ctx()).wheres().isEmpty()) {
             ArelVisitor whereSqlVisitor = new ArelVisitorWhereSql(visitor.connection);
             return (new ArelNodeSqlLiteral(whereSqlVisitor.accept(ctx(), new ArelCollector()).getValue())).toString();
         }

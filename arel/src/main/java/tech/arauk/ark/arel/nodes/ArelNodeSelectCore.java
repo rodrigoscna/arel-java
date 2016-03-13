@@ -1,12 +1,13 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeJoinSource;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeTop;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArelNodeSelectCore extends ArelNode {
+public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, ArelGroupsInterface, ArelHavingsInterface, ArelProjectionsInterface, ArelSourceInterface, ArelTopInterface, ArelWheresInterface, ArelWindowsInterface {
     public ArelNodeJoinSource source;
     public ArelNodeTop top;
     public ArelNode setQuantifier;
@@ -27,14 +28,91 @@ public class ArelNodeSelectCore extends ArelNode {
         this.wheres = new ArrayList<>();
     }
 
+    @Override
     public Object from() {
         return source.left();
     }
 
+    @Override
     public ArelNodeSelectCore from(Object value) {
         this.source.left(value);
 
         return this;
+    }
+
+    @Override
+    public List<Object> groups() {
+        return this.groups;
+    }
+
+    @Override
+    public ArelNodeSelectCore groups(List<Object> groups) {
+        this.groups = groups;
+        return this;
+    }
+
+    @Override
+    public List<Object> havings() {
+        return this.havings;
+    }
+
+    @Override
+    public ArelNodeSelectCore havings(List<Object> havings) {
+        this.havings = havings;
+        return this;
+    }
+
+    @Override
+    public List<Object> projections() {
+        return this.projections;
+    }
+
+    @Override
+    public ArelNodeSelectCore projections(List<Object> projections) {
+        this.projections = projections;
+        return this;
+    }
+
+    @Override
+    public ArelNodeJoinSource source() {
+        return this.source;
+    }
+
+    @Override
+    public ArelNodeSelectCore source(ArelNodeJoinSource source) {
+        this.source = source;
+        return this;
+    }
+
+    @Override
+    public ArelNodeTop top() {
+        return this.top;
+    }
+
+    @Override
+    public ArelNodeSelectCore top(ArelNodeTop top) {
+        this.top = top;
+        return this;
+    }
+
+    @Override
+    public List<Object> wheres() {
+        return this.wheres;
+    }
+
+    @Override
+    public ArelNodeSelectCore wheres(List<Object> wheres) {
+        return null;
+    }
+
+    @Override
+    public List<Object> windows() {
+        return this.windows;
+    }
+
+    @Override
+    public ArelNodeSelectCore windows(List<Object> windows) {
+        return null;
     }
 
     public Object froms() {

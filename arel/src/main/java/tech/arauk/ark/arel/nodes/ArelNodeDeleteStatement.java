@@ -1,8 +1,11 @@
 package tech.arauk.ark.arel.nodes;
 
-import java.util.ArrayList;
+import tech.arauk.ark.arel.interfaces.ArelWheresInterface;
 
-public class ArelNodeDeleteStatement extends ArelNodeBinary {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArelNodeDeleteStatement extends ArelNodeBinary implements ArelWheresInterface {
     public Object limit;
 
     public ArelNodeDeleteStatement() {
@@ -13,16 +16,23 @@ public class ArelNodeDeleteStatement extends ArelNodeBinary {
         super(left, right);
     }
 
+    @Override
+    public List<Object> wheres() {
+        return (List<Object>) this.right();
+    }
+
+    @Override
+    public ArelNodeDeleteStatement wheres(List<Object> wheres) {
+        this.right(wheres);
+        return this;
+    }
+
     public Object relation() {
         return this.left();
     }
 
     public void relation(Object left) {
         this.left(left);
-    }
-
-    public Object wheres() {
-        return this.right();
     }
 
     public void wheres(Object right) {

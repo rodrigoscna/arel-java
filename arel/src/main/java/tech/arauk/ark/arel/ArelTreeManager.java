@@ -1,6 +1,7 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.collectors.ArelCollector;
+import tech.arauk.ark.arel.interfaces.ArelWheresInterface;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
@@ -12,9 +13,9 @@ public class ArelTreeManager implements ArelFactoryMethodsInterface {
     public Object engine;
     public List<Object> bindValues;
     private Object ast;
-    private ArelNodeSelectCore ctx;
+    private Object ctx;
 
-    public ArelTreeManager(ArelNode ast) {
+    public ArelTreeManager(Object ast) {
         this.ast = ast;
         this.bindValues = new ArrayList<>();
     }
@@ -82,11 +83,11 @@ public class ArelTreeManager implements ArelFactoryMethodsInterface {
         this.ast = ast;
     }
 
-    public ArelNodeSelectCore ctx() {
+    public Object ctx() {
         return this.ctx;
     }
 
-    public void ctx(ArelNodeSelectCore ctx) {
+    public void ctx(Object ctx) {
         this.ctx = ctx;
     }
 
@@ -106,7 +107,7 @@ public class ArelTreeManager implements ArelFactoryMethodsInterface {
             expr = ((ArelTreeManager) expr).ast;
         }
 
-        this.ctx.wheres.add(expr);
+        ((ArelWheresInterface) this.ctx).wheres().add(expr);
 
         return this;
     }

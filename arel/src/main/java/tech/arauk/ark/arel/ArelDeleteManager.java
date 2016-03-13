@@ -8,6 +8,8 @@ import java.util.List;
 public class ArelDeleteManager extends ArelTreeManager {
     public ArelDeleteManager() {
         super(new ArelNodeDeleteStatement());
+
+        ctx(ast());
     }
 
     public ArelDeleteManager from(Object relation) {
