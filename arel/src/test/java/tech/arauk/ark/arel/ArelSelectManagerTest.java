@@ -217,7 +217,7 @@ public class ArelSelectManagerTest {
             ArelNodeTableAlias tableAlias = selectManager.as(Arel.sql("foo"));
 
             assertSame(ArelNodeGrouping.class, tableAlias.left().getClass());
-            assertEquals(selectManager.ast, ((ArelNodeGrouping) tableAlias.left()).expr());
+            assertEquals(selectManager.ast(), ((ArelNodeGrouping) tableAlias.left()).expr());
             assertEquals(Arel.sql("foo"), tableAlias.right());
         }
 
@@ -570,7 +570,7 @@ public class ArelSelectManagerTest {
         public void testStatement() {
             ArelTable table = new ArelTable("users");
             ArelSelectManager selectManager = table.from();
-            assertNotNull(selectManager.ast);
+            assertNotNull(selectManager.ast());
         }
 
         public void testOrder() {

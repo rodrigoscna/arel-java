@@ -16,13 +16,13 @@ public class ArelUpdateManager extends ArelTreeManager {
     }
 
     public ArelUpdateManager key(Object key) {
-        ((ArelNodeUpdateStatement) this.ast).key = ArelNodes.buildQuoted(key);
+        ((ArelNodeUpdateStatement) ast()).key = ArelNodes.buildQuoted(key);
 
         return this;
     }
 
     public ArelUpdateManager table(Object table) {
-        ((ArelNodeUpdateStatement) this.ast).relation = table;
+        ((ArelNodeUpdateStatement) ast()).relation = table;
 
         return this;
     }
@@ -39,27 +39,27 @@ public class ArelUpdateManager extends ArelTreeManager {
             }
         }
 
-        ((ArelNodeUpdateStatement) this.ast).values = valuesList;
+        ((ArelNodeUpdateStatement) ast()).values = valuesList;
 
         return this;
     }
 
     public ArelUpdateManager take(Object limit) {
         if (limit != null) {
-            ((ArelNodeUpdateStatement) this.ast).limit = new ArelNodeLimit(ArelNodes.buildQuoted(limit));
+            ((ArelNodeUpdateStatement) ast()).limit = new ArelNodeLimit(ArelNodes.buildQuoted(limit));
         }
 
         return this;
     }
 
     public ArelUpdateManager order(List<Object> expr) {
-        ((ArelNodeUpdateStatement) this.ast).orders = expr;
+        ((ArelNodeUpdateStatement) ast()).orders = expr;
 
         return this;
     }
 
     public ArelUpdateManager wheres(List<Object> wheres) {
-        ((ArelNodeUpdateStatement) this.ast).wheres = wheres;
+        ((ArelNodeUpdateStatement) ast()).wheres = wheres;
 
         return this;
     }

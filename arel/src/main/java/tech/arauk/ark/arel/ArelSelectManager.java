@@ -21,17 +21,17 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     public ArelSelectManager() {
         super(new ArelNodeSelectStatement());
 
-        ArelNodeSelectCore[] cores = ((ArelNodeSelectStatement) this.ast).cores;
+        ArelNodeSelectCore[] cores = ((ArelNodeSelectStatement) ast()).cores;
 
-        this.ctx = cores[cores.length - 1];
+        ctx(cores[cores.length - 1]);
     }
 
     public ArelSelectManager(Object table) {
         super(new ArelNodeSelectStatement());
 
-        ArelNodeSelectCore[] cores = ((ArelNodeSelectStatement) this.ast).cores;
+        ArelNodeSelectCore[] cores = ((ArelNodeSelectStatement) ast()).cores;
 
-        this.ctx = cores[cores.length - 1];
+        ctx(cores[cores.length - 1]);
 
         from(table);
     }
@@ -62,7 +62,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public ArelNodeTableAlias as(Object other) {
-        return createTableAlias(ArelFactoryMethods.grouping(this.ast), new ArelNodeSqlLiteral(other));
+        return createTableAlias(ArelFactoryMethods.grouping(ast()), new ArelNodeSqlLiteral(other));
     }
 
     public ArelSelectManager on(Object... exprs) {
@@ -87,7 +87,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         if (table instanceof ArelNodeJoin) {
             joinSources().add(table);
         } else {
-            this.ctx.source.left(table);
+            ctx().source.left(table);
         }
 
         return this;
@@ -106,7 +106,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public ArelNodeOffset skip() {
-        return ((ArelNodeSelectStatement) this.ast).offset;
+        return ((ArelNodeSelectStatement) ast()).offset;
     }
 
     public ArelSelectManager skip(int amount) {
@@ -114,7 +114,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public ArelSelectManager skip(ArelNodeOffset amount) {
-        ((ArelNodeSelectStatement) this.ast).offset = amount;
+        ((ArelNodeSelectStatement) ast()).offset = amount;
         return this;
     }
 
@@ -142,7 +142,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public ArelSelectManager having(Object expr) {
-        this.ctx.havings.add(expr);
+        ctx().havings.add(expr);
         return this;
     }
 
@@ -169,14 +169,14 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
                 column = new ArelNodeSqlLiteral(String.valueOf(column));
             }
 
-            this.ctx.groups.add(new ArelNodeGroup(column));
+            ctx().groups.add(new ArelNodeGroup(column));
         }
 
         return this;
     }
 
     public ArelSelectManager order(Object... expr) {
-        ArelNodeSelectStatement selectStatement = (ArelNodeSelectStatement) this.ast;
+        ArelNodeSelectStatement selectStatement = (ArelNodeSelectStatement) ast();
 
         for (Object object : expr) {
             if (object instanceof String) {
@@ -190,22 +190,22 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public List<Object> orders() {
-        return ((ArelNodeSelectStatement) this.ast).orders;
+        return ((ArelNodeSelectStatement) ast()).orders;
     }
 
     public ArelNodeLimit take() {
-        return ((ArelNodeSelectStatement) this.ast).limit;
+        return ((ArelNodeSelectStatement) ast()).limit;
     }
 
     public ArelSelectManager take(int limit) {
-        ((ArelNodeSelectStatement) this.ast).limit = new ArelNodeLimit(limit);
-        this.ctx.top = new ArelNodeTop(limit);
+        ((ArelNodeSelectStatement) ast()).limit = new ArelNodeLimit(limit);
+        ctx().top = new ArelNodeTop(limit);
 
         return this;
     }
 
     public ArelSelectManager take(ArelNodeLimit limit) {
-        ((ArelNodeSelectStatement) this.ast).limit = limit;
+        ((ArelNodeSelectStatement) ast()).limit = limit;
         return this;
     }
 
@@ -235,31 +235,31 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
                 projection = new ArelNodeSqlLiteral(String.valueOf(projection));
             }
 
-            this.ctx.projections.add(projection);
+            ctx().projections.add(projection);
         }
 
         return this;
     }
 
     public ArelNodeExcept except(ArelSelectManager other) {
-        return new ArelNodeExcept(this.ast, other.ast);
+        return new ArelNodeExcept(ast(), other.ast());
     }
 
     public ArelNodeExists exists() {
-        return new ArelNodeExists(this.ast);
+        return new ArelNodeExists(ast());
     }
 
     public ArelNodeIntersect intersect(ArelSelectManager other) {
-        return new ArelNodeIntersect(this.ast, other.ast);
+        return new ArelNodeIntersect(ast(), other.ast());
     }
 
     public ArelNodeBinary union(ArelSelectManager other) {
-        return new ArelNodeUnion(this.ast, other.ast);
+        return new ArelNodeUnion(ast(), other.ast());
     }
 
     public ArelNodeBinary union(ArelSelectManager other, String operation) {
         if (Objects.equals("all", operation)) {
-            return new ArelNodeUnionAll(this.ast, other.ast);
+            return new ArelNodeUnionAll(ast(), other.ast());
         } else {
             return union(other);
         }
@@ -270,7 +270,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public ArelSelectManager with(List<Object> subqueries) {
-        ((ArelNodeSelectStatement) this.ast).with = new ArelNodeWith(subqueries);
+        ((ArelNodeSelectStatement) ast()).with = new ArelNodeWith(subqueries);
 
         return this;
     }
@@ -280,13 +280,13 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public ArelSelectManager withRecursive(List<Object> subqueries) {
-        ((ArelNodeSelectStatement) this.ast).with = new ArelNodeWithRecursive(subqueries);
+        ((ArelNodeSelectStatement) ast()).with = new ArelNodeWithRecursive(subqueries);
 
         return this;
     }
 
     public List<Object> joinSources() {
-        return (List<Object>) this.ctx.source.right();
+        return (List<Object>) ctx().source.right();
     }
 
     public ArelSelectManager lock() {
@@ -300,7 +300,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
             locking = Arel.sql(String.valueOf(locking));
         }
 
-        ((ArelNodeSelectStatement) this.ast).lock = new ArelNodeLock(locking);
+        ((ArelNodeSelectStatement) ast()).lock = new ArelNodeLock(locking);
 
         return this;
     }
@@ -308,7 +308,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     public List<Object> froms() {
         List<Object> froms = new ArrayList<>();
 
-        for (ArelNodeSelectCore selectCore : ((ArelNodeSelectStatement) this.ast).cores) {
+        for (ArelNodeSelectCore selectCore : ((ArelNodeSelectStatement) ast()).cores) {
             Object from = selectCore.from();
             if (from != null) {
                 froms.add(from);
@@ -324,7 +324,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
 
     public ArelNodeWindow window(String name) {
         ArelNodeNamedWindow window = new ArelNodeNamedWindow(name);
-        this.ctx.windows.add(window);
+        ctx().windows.add(window);
 
         return window;
     }
@@ -335,9 +335,9 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     public String whereSql(ArelVisitor visitor) {
-        if (this.ctx.wheres != null && !this.ctx.wheres.isEmpty()) {
+        if (ctx().wheres != null && !ctx().wheres.isEmpty()) {
             ArelVisitor whereSqlVisitor = new ArelVisitorWhereSql(visitor.connection);
-            return (new ArelNodeSqlLiteral(whereSqlVisitor.accept(this.ctx, new ArelCollector()).getValue())).toString();
+            return (new ArelNodeSqlLiteral(whereSqlVisitor.accept(ctx(), new ArelCollector()).getValue())).toString();
         }
 
         return "";

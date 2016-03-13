@@ -56,7 +56,7 @@ public abstract class ArelPredications {
 
     public static ArelNodeIn in(Object holder, Object other) {
         if (other instanceof ArelSelectManager) {
-            return new ArelNodeIn(holder, ((ArelSelectManager) other).ast);
+            return new ArelNodeIn(holder, ((ArelSelectManager) other).ast());
         } else if (other instanceof List) {
             return new ArelNodeIn(holder, quotedArray(holder, (List<Object>) other));
         } else {
@@ -66,7 +66,7 @@ public abstract class ArelPredications {
 
     public static ArelNodeNotIn notIn(Object holder, Object other) {
         if (other instanceof ArelSelectManager) {
-            return new ArelNodeNotIn(holder, ((ArelSelectManager) other).ast);
+            return new ArelNodeNotIn(holder, ((ArelSelectManager) other).ast());
         } else if (other instanceof List) {
             return new ArelNodeNotIn(holder, quotedArray(holder, (List<Object>) other));
         } else {

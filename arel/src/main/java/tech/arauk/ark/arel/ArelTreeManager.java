@@ -10,9 +10,9 @@ import java.util.List;
 
 public class ArelTreeManager implements ArelFactoryMethodsInterface {
     public Object engine;
-    public Object ast;
-    public ArelNodeSelectCore ctx;
     public List<Object> bindValues;
+    private Object ast;
+    private ArelNodeSelectCore ctx;
 
     public ArelTreeManager(ArelNode ast) {
         this.ast = ast;
@@ -72,6 +72,22 @@ public class ArelTreeManager implements ArelFactoryMethodsInterface {
     @Override
     public ArelNodeNamedFunction lower(Object column) {
         return ArelFactoryMethods.lower(column);
+    }
+
+    public Object ast() {
+        return this.ast;
+    }
+
+    public void ast(Object ast) {
+        this.ast = ast;
+    }
+
+    public ArelNodeSelectCore ctx() {
+        return this.ctx;
+    }
+
+    public void ctx(ArelNodeSelectCore ctx) {
+        this.ctx = ctx;
     }
 
     public String toSQL() {

@@ -16,7 +16,7 @@ public class ArelInsertManager extends ArelTreeManager {
     }
 
     public ArelInsertManager into(ArelTable table) {
-        ((ArelNodeInsertStatement) this.ast).relation = table;
+        ((ArelNodeInsertStatement) ast()).relation = table;
         return this;
     }
 
@@ -25,7 +25,7 @@ public class ArelInsertManager extends ArelTreeManager {
             return;
         }
 
-        ArelNodeInsertStatement insertStatement = (ArelNodeInsertStatement) this.ast;
+        ArelNodeInsertStatement insertStatement = (ArelNodeInsertStatement) ast();
 
         if (fields instanceof String) {
             insertStatement.values = new ArelNodeSqlLiteral(fields);
