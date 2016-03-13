@@ -61,7 +61,7 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     }
 
     @Override
-    public ArelInsertManager compileInsert(String values) {
+    public ArelInsertManager compileInsert(Object values) {
         return ArelCrud.compileInsert(values);
     }
 

@@ -5,7 +5,7 @@ import tech.arauk.ark.arel.attributes.ArelAttribute;
 public interface ArelCrudInterface {
     ArelDeleteManager compileDelete();
 
-    ArelInsertManager compileInsert(String values);
+    ArelInsertManager compileInsert(Object values);
 
     ArelUpdateManager compileUpdate(Object values, ArelAttribute pk);
 

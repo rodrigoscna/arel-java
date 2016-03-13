@@ -42,7 +42,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     }
 
     @Override
-    public ArelInsertManager compileInsert(String values) {
+    public ArelInsertManager compileInsert(Object values) {
         return ArelCrud.compileInsert(values);
     }
 

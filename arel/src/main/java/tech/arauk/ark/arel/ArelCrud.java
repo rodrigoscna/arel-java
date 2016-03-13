@@ -34,7 +34,7 @@ public abstract class ArelCrud {
         }
     }
 
-    public static ArelInsertManager compileInsert(String values) {
+    public static ArelInsertManager compileInsert(Object values) {
         ArelInsertManager insertManager = createInsert();
         insertManager.insert(values);
         return insertManager;
