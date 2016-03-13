@@ -9,10 +9,10 @@ public class ArelNodeUnqualifiedColumn extends ArelNodeUnary {
     }
 
     public ArelRelation relation() {
-        return ((ArelAttribute) this.expr).relation;
+        return ((ArelAttribute) this.expr()).relation;
     }
 
     public String name() {
-        return ((ArelAttribute) this.expr).name;
+        return ((ArelAttribute) this.expr()).name;
     }
 }

@@ -10,6 +10,6 @@ public class ArelNodeWith extends ArelNodeUnary {
     }
 
     public List<Object> children() {
-        return (List<Object>) expr;
+        return (List<Object>) expr();
     }
 }

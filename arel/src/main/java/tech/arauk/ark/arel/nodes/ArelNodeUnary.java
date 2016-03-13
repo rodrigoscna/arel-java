@@ -3,7 +3,7 @@ package tech.arauk.ark.arel.nodes;
 import java.util.Objects;
 
 public class ArelNodeUnary extends ArelNode {
-    public Object expr;
+    private Object expr;
 
     public ArelNodeUnary(Object expr) {
         this.expr = expr;
@@ -16,5 +16,13 @@ public class ArelNodeUnary extends ArelNode {
         } else {
             return super.equals(other);
         }
+    }
+
+    public Object expr() {
+        return this.expr;
+    }
+
+    public void expr(Object expr) {
+        this.expr = expr;
     }
 }

@@ -26,7 +26,7 @@ public class ArelFactoryMethodsTest extends TestCase {
         Object on = ArelFactoryMethods.createOn("one");
 
         assertSame(ArelNodeOn.class, on.getClass());
-        assertEquals("one", ((ArelNodeOn) on).expr);
+        assertEquals("one", ((ArelNodeOn) on).expr());
     }
 
     public void testCreateTrue() {
@@ -47,6 +47,6 @@ public class ArelFactoryMethodsTest extends TestCase {
         assertSame(ArelNodeNamedFunction.class, lower.getClass());
         assertEquals("LOWER", ((ArelNodeNamedFunction) lower).name);
         assertSame(ArelNodeQuoted.class, ((Object[]) ((ArelNodeNamedFunction) lower).expressions)[0].getClass());
-        assertEquals("one", ((ArelNodeQuoted) ((Object[]) ((ArelNodeNamedFunction) lower).expressions)[0]).expr);
+        assertEquals("one", ((ArelNodeQuoted) ((Object[]) ((ArelNodeNamedFunction) lower).expressions)[0]).expr());
     }
 }

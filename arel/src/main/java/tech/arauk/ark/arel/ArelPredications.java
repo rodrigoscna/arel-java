@@ -76,7 +76,7 @@ public abstract class ArelPredications {
 
     private static boolean equalsQuoted(Object maybeQuoted, Object value) {
         if (maybeQuoted instanceof ArelNodeQuoted) {
-            return Objects.equals(((ArelNodeQuoted) maybeQuoted).expr, value);
+            return Objects.equals(((ArelNodeQuoted) maybeQuoted).expr(), value);
         } else {
             return Objects.equals(maybeQuoted, value);
         }

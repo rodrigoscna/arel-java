@@ -16,7 +16,7 @@ public abstract class ArelCrud {
 
             ArelDeleteManager deleteManager = new ArelDeleteManager();
             if (ast.limit != null) {
-                deleteManager.take(ast.limit.expr);
+                deleteManager.take(ast.limit.expr());
             }
             deleteManager.wheres(holderNode.ctx.wheres);
             deleteManager.from(holderNode.ctx.from());
@@ -63,7 +63,7 @@ public abstract class ArelCrud {
             updateManager.table(relation);
             updateManager.set(values);
             if (ast.limit != null) {
-                updateManager.take(ast.limit.expr);
+                updateManager.take(ast.limit.expr());
             }
             updateManager.order(ast.orders);
             updateManager.wheres(holderNode.ctx.wheres);

@@ -102,7 +102,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeAscending(Object object, ArelCollector collector) {
         ArelNodeAscending ascending = (ArelNodeAscending) object;
 
-        collector = visit(ascending.expr, collector);
+        collector = visit(ascending.expr(), collector);
         collector.append(ASC);
 
         return collector;
@@ -175,7 +175,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeDescending(Object object, ArelCollector collector) {
         ArelNodeDescending descending = (ArelNodeDescending) object;
 
-        collector = visit(descending.expr, collector);
+        collector = visit(descending.expr(), collector);
         collector.append(DESC);
 
         return collector;
@@ -225,8 +225,8 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeFollowing(Object object, ArelCollector collector) {
         ArelNodeFollowing following = (ArelNodeFollowing) object;
 
-        if (following.expr != null) {
-            collector = visit(following.expr, collector);
+        if (following.expr() != null) {
+            collector = visit(following.expr(), collector);
         } else {
             collector.append(UNBOUNDED);
         }
@@ -250,7 +250,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeGroup(Object object, ArelCollector collector) {
         ArelNodeGroup group = (ArelNodeGroup) object;
 
-        collector = visit(group.expr, collector);
+        collector = visit(group.expr(), collector);
 
         return collector;
     }
@@ -258,11 +258,11 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeGrouping(Object object, ArelCollector collector) {
         ArelNodeGrouping grouping = (ArelNodeGrouping) object;
 
-        if (grouping.expr instanceof ArelNodeGrouping) {
-            collector = visit(grouping.expr, collector);
+        if (grouping.expr() instanceof ArelNodeGrouping) {
+            collector = visit(grouping.expr(), collector);
         } else {
             collector.append(GROUPING_OPEN);
-            collector = visit(grouping.expr, collector);
+            collector = visit(grouping.expr(), collector);
             collector.append(GROUPING_CLOSE);
         }
 
@@ -373,7 +373,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeLimit limit = (ArelNodeLimit) object;
 
         collector.append(LIMIT);
-        collector = visit(limit.expr, collector);
+        collector = visit(limit.expr(), collector);
 
         return collector;
     }
@@ -381,7 +381,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeLock(Object object, ArelCollector collector) {
         ArelNodeLock lock = (ArelNodeLock) object;
 
-        collector = visit(lock.expr, collector);
+        collector = visit(lock.expr(), collector);
 
         return collector;
     }
@@ -401,8 +401,8 @@ public class ArelVisitorToSql extends ArelVisitor {
 
         collector.append(OFFSET);
 
-        if (offset.expr != null) {
-            collector = visit(offset.expr, collector);
+        if (offset.expr() != null) {
+            collector = visit(offset.expr(), collector);
         }
 
         return collector;
@@ -412,7 +412,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeOn nodeOn = (ArelNodeOn) object;
 
         collector.append(ON);
-        collector = visit(nodeOn.expr, collector);
+        collector = visit(nodeOn.expr(), collector);
 
         return collector;
     }
@@ -431,8 +431,8 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodePreceding(Object object, ArelCollector collector) {
         ArelNodePreceding preceding = (ArelNodePreceding) object;
 
-        if (preceding.expr != null) {
-            collector = visit(preceding.expr, collector);
+        if (preceding.expr() != null) {
+            collector = visit(preceding.expr(), collector);
         } else {
             collector.append(UNBOUNDED);
         }
@@ -445,7 +445,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeQuoted(Object object, ArelCollector collector) {
         ArelNodeQuoted quoted = (ArelNodeQuoted) object;
 
-        collector.append(quoted(quoted.expr, null));
+        collector.append(quoted(quoted.expr(), null));
 
         return collector;
     }
@@ -453,10 +453,10 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeRange(Object object, ArelCollector collector) {
         ArelNodeRange range = (ArelNodeRange) object;
 
-        if (range.expr != null) {
+        if (range.expr() != null) {
             collector.append(RANGE);
             collector.append(SPACE);
-            collector = visit(range.expr, collector);
+            collector = visit(range.expr(), collector);
         } else {
             collector.append(RANGE);
         }
@@ -478,10 +478,10 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeRows(Object object, ArelCollector collector) {
         ArelNodeRows rows = (ArelNodeRows) object;
 
-        if (rows.expr != null) {
+        if (rows.expr() != null) {
             collector.append(ROWS);
             collector.append(SPACE);
-            collector = visit(rows.expr, collector);
+            collector = visit(rows.expr(), collector);
         } else {
             collector.append(ROWS);
         }

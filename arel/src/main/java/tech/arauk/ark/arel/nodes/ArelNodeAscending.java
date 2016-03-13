@@ -6,7 +6,7 @@ public class ArelNodeAscending extends ArelNodeUnary {
     }
 
     public ArelNodeDescending reverse() {
-        return new ArelNodeDescending(this.expr);
+        return new ArelNodeDescending(this.expr());
     }
 
     public String direction() {
