@@ -15,9 +15,12 @@ public class ArelInsertManager extends ArelTreeManager {
         super(new ArelNodeInsertStatement());
     }
 
-    public ArelInsertManager into(ArelTable table) {
-        ((ArelNodeInsertStatement) ast()).relation = table;
-        return this;
+    public List<Object> columns() {
+        return ((ArelNodeInsertStatement) ast()).columns;
+    }
+
+    public ArelNodeValues createValues(List<Object> values, List<Object> columns) {
+        return new ArelNodeValues(values, columns);
     }
 
     public void insert(Object fields) {
@@ -32,13 +35,19 @@ public class ArelInsertManager extends ArelTreeManager {
         } else if (fields instanceof ArelNodeSqlLiteral) {
             insertStatement.values = fields;
         } else {
-            Map<Object, Object> valuesMap;
+            Map<Object, Object> valuesMap = (Map<Object, Object>) fields;
+
+            if (valuesMap.isEmpty()) {
+                return;
+            }
+
             Iterator iterator;
 
-            valuesMap = (Map<Object, Object>) fields;
             iterator = valuesMap.keySet().iterator();
             if (iterator.hasNext()) {
                 insertStatement.relation = ((ArelAttribute) iterator.next()).relation;
+            } else {
+                return;
             }
 
             List<Object> values = new ArrayList<>();
@@ -48,7 +57,7 @@ public class ArelInsertManager extends ArelTreeManager {
                 Object column = iterator.next();
                 Object value = valuesMap.get(column);
 
-                insertStatement.columns.add(String.valueOf(column));
+                insertStatement.columns.add(column);
                 values.add(value);
             }
 
@@ -56,7 +65,16 @@ public class ArelInsertManager extends ArelTreeManager {
         }
     }
 
-    private Object createValues(List<Object> values, List<String> columns) {
-        return new ArelNodeValues(values, columns);
+    public ArelInsertManager into(ArelTable table) {
+        ((ArelNodeInsertStatement) ast()).relation = table;
+        return this;
+    }
+
+    public void select(Object select) {
+        ((ArelNodeInsertStatement) ast()).select = select;
+    }
+
+    public void values(ArelNodeValues values) {
+        ((ArelNodeInsertStatement) ast()).values = values;
     }
 }

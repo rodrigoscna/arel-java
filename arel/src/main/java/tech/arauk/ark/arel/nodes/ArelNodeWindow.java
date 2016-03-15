@@ -1,6 +1,5 @@
 package tech.arauk.ark.arel.nodes;
 
-import tech.arauk.ark.arel.nodes.unary.ArelNodeFollowing;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeRange;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeRows;
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArelNodeInsertStatement extends ArelNodeStatement {
-    public List<String> columns;
+    public List<Object> columns;
     public ArelRelation relation;
     public Object select;
     public Object values;

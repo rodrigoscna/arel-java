@@ -7,7 +7,11 @@ public interface ArelConnection {
 
     Object quote(Object value);
 
+    Object quote(Object value, Object column);
+
     String quoteColumnName(String columnName);
 
     String quoteTableName(String tableName);
+
+    SchemaCache schemaCache();
 }

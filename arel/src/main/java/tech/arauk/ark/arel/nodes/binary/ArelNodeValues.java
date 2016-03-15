@@ -2,7 +2,13 @@ package tech.arauk.ark.arel.nodes.binary;
 
 import tech.arauk.ark.arel.nodes.ArelNodeBinary;
 
+import java.util.ArrayList;
+
 public class ArelNodeValues extends ArelNodeBinary {
+    public ArelNodeValues(Object left) {
+        super(left, new ArrayList<>());
+    }
+
     public ArelNodeValues(Object left, Object right) {
         super(left, right);
     }
