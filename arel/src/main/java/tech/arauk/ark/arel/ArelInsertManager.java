@@ -34,6 +34,23 @@ public class ArelInsertManager extends ArelTreeManager {
             insertStatement.values = new ArelNodeSqlLiteral(fields);
         } else if (fields instanceof ArelNodeSqlLiteral) {
             insertStatement.values = fields;
+        } else if (fields instanceof Object[][]) {
+            Object[][] valuesObjects = (Object[][]) fields;
+
+            if (valuesObjects.length == 0) {
+                return;
+            }
+
+            insertStatement.relation = ((ArelAttribute) valuesObjects[0][0]).relation;
+
+            List<Object> values = new ArrayList<>();
+
+            for (Object[] object : valuesObjects) {
+                insertStatement.columns.add(object[0]);
+                values.add(object[1]);
+            }
+
+            insertStatement.values = createValues(values, insertStatement.columns);
         } else {
             Map<Object, Object> valuesMap = (Map<Object, Object>) fields;
 

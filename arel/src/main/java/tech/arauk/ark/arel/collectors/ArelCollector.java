@@ -1,17 +1,31 @@
 package tech.arauk.ark.arel.collectors;
 
+import tech.arauk.ark.arel.nodes.ArelNodeBindParam;
+
 public class ArelCollector {
-    public StringBuilder mBuilder;
+    private StringBuilder mBuilder;
+    private int mBindIndex;
 
     public ArelCollector() {
-        mBuilder = new StringBuilder();
+        this.mBuilder = new StringBuilder();
+        this.mBindIndex = 1;
+    }
+
+    public ArelCollector addBind(ArelNodeBindParam bindParam, ArelCollector.Bindable bindable) {
+        append(bindable.bind(this.mBindIndex));
+        this.mBindIndex++;
+        return this;
     }
 
     public void append(String string) {
-        mBuilder.append(string);
+        this.mBuilder.append(string);
     }
 
-    public String getValue() {
-        return mBuilder.toString();
+    public String value() {
+        return this.mBuilder.toString();
+    }
+
+    public interface Bindable {
+        String bind(int bindIndex);
     }
 }

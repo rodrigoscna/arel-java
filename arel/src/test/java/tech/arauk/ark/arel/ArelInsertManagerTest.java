@@ -4,7 +4,9 @@ import junit.framework.TestCase;
 import tech.arauk.ark.arel.nodes.binary.ArelNodeValues;
 import tech.arauk.ark.arel.support.FakeRecord;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class ArelInsertManagerTest {
     public static abstract class Base extends TestCase {
@@ -75,11 +77,8 @@ public class ArelInsertManagerTest {
 
             Date date = new Date();
 
-            Map<Object, Object> values = new LinkedHashMap<>();
-            values.put(table.get("created_at"), date);
-
             ArelInsertManager insertManager = new ArelInsertManager();
-            insertManager.insert(values);
+            insertManager.insert(new Object[][]{{table.get("created_at"), date}});
 
             assertEquals(String.format("INSERT INTO \"users\" (\"created_at\") VALUES (%s)", ArelTable.engine.connection.quote(date)), insertManager.toSQL());
         }
@@ -87,12 +86,8 @@ public class ArelInsertManagerTest {
         public void testInsertDefaultTable() {
             ArelTable table = new ArelTable("users");
 
-            Map<Object, Object> values = new LinkedHashMap<>();
-            values.put(table.get("id"), 1);
-            values.put(table.get("name"), "aaron");
-
             ArelInsertManager insertManager = new ArelInsertManager();
-            insertManager.insert(values);
+            insertManager.insert(new Object[][]{{table.get("id"), 1}, {table.get("name"), "aaron"}});
 
             assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSQL());
         }
@@ -100,12 +95,9 @@ public class ArelInsertManagerTest {
         public void testInsertEmptyOverwrite() {
             ArelTable table = new ArelTable("users");
 
-            Map<Object, Object> values = new LinkedHashMap<>();
-            values.put(table.get("id"), 1);
-
             ArelInsertManager insertManager = new ArelInsertManager();
-            insertManager.insert(values);
-            insertManager.insert(new LinkedHashMap<>());
+            insertManager.insert(new Object[][]{{table.get("id"), 1}});
+            insertManager.insert(new Object[][]{});
 
             assertEquals("INSERT INTO \"users\" (\"id\") VALUES (1)", insertManager.toSQL());
         }
@@ -114,24 +106,17 @@ public class ArelInsertManagerTest {
             ArelTable table = new ArelTable("users");
 
             ArelInsertManager insertManager = new ArelInsertManager();
-
-            Map<Object, Object> values = new LinkedHashMap<>();
-            values.put(table.get("bool"), false);
-            insertManager.insert(values);
+            insertManager.insert(new Object[][]{{table.get("bool"), false}});
 
             assertEquals("INSERT INTO \"users\" (\"bool\") VALUES ('f')", insertManager.toSQL());
         }
 
-        public void testInsertList() {
+        public void testInsertListsList() {
             ArelTable table = new ArelTable("users");
-
-            Map<Object, Object> values = new LinkedHashMap<>();
-            values.put(table.get("id"), 1);
-            values.put(table.get("name"), "aaron");
 
             ArelInsertManager insertManager = new ArelInsertManager();
             insertManager.into(table);
-            insertManager.insert(values);
+            insertManager.insert(new Object[][]{{table.get("id"), 1}, {table.get("name"), "aaron"}});
 
             assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSQL());
         }
@@ -140,10 +125,7 @@ public class ArelInsertManagerTest {
             ArelTable table = new ArelTable("users");
 
             ArelInsertManager insertManager = new ArelInsertManager();
-
-            Map<Object, Object> values = new LinkedHashMap<>();
-            values.put(table.get("id"), null);
-            insertManager.insert(values);
+            insertManager.insert(new Object[][]{{table.get("id"), null}});
 
             assertEquals("INSERT INTO \"users\" (\"id\") VALUES (NULL)", insertManager.toSQL());
         }
@@ -181,7 +163,7 @@ public class ArelInsertManagerTest {
 
     public static class New extends Base {
         public void testNew() {
-            new ArelInsertManager();
+            assertNotNull(new ArelInsertManager());
         }
     }
 

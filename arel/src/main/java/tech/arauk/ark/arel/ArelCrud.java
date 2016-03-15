@@ -50,15 +50,11 @@ public abstract class ArelCrud {
 
             ArelUpdateManager updateManager = new ArelUpdateManager();
 
-            Object relation = null;
+            Object relation;
             if (values instanceof ArelNodeSqlLiteral) {
                 relation = ((ArelFromInterface) holderNode.ctx()).from();
             } else {
-                Map<Object, Object> valuesMap = (Map<Object, Object>) values;
-                Iterator iterator = valuesMap.keySet().iterator();
-                if (iterator.hasNext()) {
-                    relation = ((ArelAttribute) iterator.next()).relation;
-                }
+                relation = getRelationFromValues(values);
             }
 
             updateManager.key(pk);
@@ -76,15 +72,11 @@ public abstract class ArelCrud {
 
             ArelUpdateManager updateManager = new ArelUpdateManager();
 
-            Object relation = null;
+            Object relation;
             if (values instanceof ArelNodeSqlLiteral) {
                 relation = holderNode.from();
             } else {
-                Map<Object, Object> valuesMap = (Map<Object, Object>) values;
-                Iterator iterator = valuesMap.keySet().iterator();
-                if (iterator.hasNext()) {
-                    relation = ((ArelAttribute) iterator.next()).relation;
-                }
+                relation = getRelationFromValues(values);
             }
 
             updateManager.key(pk);
@@ -99,5 +91,22 @@ public abstract class ArelCrud {
 
     public static ArelInsertManager createInsert() {
         return new ArelInsertManager();
+    }
+
+    private static Object getRelationFromValues(Object values) {
+        Object relation = null;
+
+        if (values instanceof Object[][]) {
+            Object[][] valuesObjects = (Object[][]) values;
+            relation = ((ArelAttribute) valuesObjects[0][0]).relation;
+        } else {
+            Map<Object, Object> valuesMap = (Map<Object, Object>) values;
+            Iterator iterator = valuesMap.keySet().iterator();
+            if (iterator.hasNext()) {
+                relation = ((ArelAttribute) iterator.next()).relation;
+            }
+        }
+
+        return relation;
     }
 }

@@ -99,7 +99,7 @@ public class ArelTreeManager implements ArelFactoryMethodsInterface {
     public String toSQL(ArelVisitor visitor) {
         ArelCollector collector = new ArelCollector();
         collector = visitor.connection.getVisitor().accept(this.ast, collector);
-        return collector.getValue();
+        return collector.value();
     }
 
     public ArelTreeManager where(Object expr) {

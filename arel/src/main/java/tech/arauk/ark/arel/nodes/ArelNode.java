@@ -81,6 +81,6 @@ public class ArelNode implements ArelFactoryMethodsInterface {
     public String toSQL(ArelVisitor visitor) {
         ArelCollector collector = new ArelCollector();
         collector = visitor.connection.getVisitor().accept(this, collector);
-        return collector.getValue();
+        return collector.value();
     }
 }

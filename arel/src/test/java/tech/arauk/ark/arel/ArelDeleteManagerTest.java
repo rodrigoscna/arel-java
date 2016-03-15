@@ -31,12 +31,6 @@ public class ArelDeleteManagerTest {
         }
     }
 
-    public static class New extends Base {
-        public void testNew() {
-            new ArelDeleteManager();
-        }
-    }
-
     public static class From extends Base {
         public void testFrom() {
             ArelTable table = new ArelTable("users");
@@ -51,6 +45,12 @@ public class ArelDeleteManagerTest {
             ArelDeleteManager deleteManager = new ArelDeleteManager();
 
             assertEquals(deleteManager, deleteManager.from(table));
+        }
+    }
+
+    public static class New extends Base {
+        public void testNew() {
+            assertNotNull(new ArelDeleteManager());
         }
     }
 

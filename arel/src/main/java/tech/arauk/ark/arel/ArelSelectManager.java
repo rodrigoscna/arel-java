@@ -338,7 +338,7 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
     public String whereSql(ArelVisitor visitor) {
         if (((ArelWheresInterface) ctx()).wheres() != null && !((ArelWheresInterface) ctx()).wheres().isEmpty()) {
             ArelVisitor whereSqlVisitor = new ArelVisitorWhereSql(visitor.connection);
-            return (new ArelNodeSqlLiteral(whereSqlVisitor.accept(ctx(), new ArelCollector()).getValue())).toString();
+            return (new ArelNodeSqlLiteral(whereSqlVisitor.accept(ctx(), new ArelCollector()).value())).toString();
         }
 
         return "";

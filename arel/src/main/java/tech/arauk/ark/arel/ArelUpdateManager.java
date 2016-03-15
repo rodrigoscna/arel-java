@@ -32,6 +32,10 @@ public class ArelUpdateManager extends ArelTreeManager {
 
         if (values instanceof String || values instanceof ArelNodeSqlLiteral) {
             valuesList.add(values);
+        } else if (values instanceof Object[][]) {
+            for (Object[] object : (Object[][]) values) {
+                valuesList.add(new ArelNodeAssignment(new ArelNodeUnqualifiedColumn(object[0]), object[1]));
+            }
         } else {
             Map<Object, Object> valuesMap = (Map<Object, Object>) values;
             for (Object column : valuesMap.keySet()) {
