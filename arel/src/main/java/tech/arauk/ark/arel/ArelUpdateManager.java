@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 import tech.arauk.ark.arel.nodes.ArelNodeUnqualifiedColumn;
 import tech.arauk.ark.arel.nodes.ArelNodeUpdateStatement;
@@ -13,16 +14,22 @@ import java.util.Map;
 public class ArelUpdateManager extends ArelTreeManager {
     public ArelUpdateManager() {
         super(new ArelNodeUpdateStatement());
+
+        ctx(ast());
+    }
+
+    public Object key() {
+        return ((ArelKeyInterface) ast()).key();
     }
 
     public ArelUpdateManager key(Object key) {
-        ((ArelNodeUpdateStatement) ast()).key = ArelNodes.buildQuoted(key);
+        ((ArelKeyInterface) ast()).key(ArelNodes.buildQuoted(key));
 
         return this;
     }
 
     public ArelUpdateManager table(Object table) {
-        ((ArelNodeUpdateStatement) ast()).relation = table;
+        ((ArelRelationInterface) ast()).relation(table);
 
         return this;
     }
@@ -43,27 +50,27 @@ public class ArelUpdateManager extends ArelTreeManager {
             }
         }
 
-        ((ArelNodeUpdateStatement) ast()).values = valuesList;
+        ((ArelValuesInterface) ast()).values(valuesList);
 
         return this;
     }
 
     public ArelUpdateManager take(Object limit) {
         if (limit != null) {
-            ((ArelNodeUpdateStatement) ast()).limit = new ArelNodeLimit(ArelNodes.buildQuoted(limit));
+            ((ArelLimitInterface) ast()).limit(new ArelNodeLimit(ArelNodes.buildQuoted(limit)));
         }
 
         return this;
     }
 
     public ArelUpdateManager order(List<Object> expr) {
-        ((ArelNodeUpdateStatement) ast()).orders = expr;
+        ((ArelOrdersInterface) ast()).orders(expr);
 
         return this;
     }
 
     public ArelUpdateManager wheres(List<Object> wheres) {
-        ((ArelNodeUpdateStatement) ast()).wheres = wheres;
+        ((ArelWheresInterface) ast()).wheres(wheres);
 
         return this;
     }

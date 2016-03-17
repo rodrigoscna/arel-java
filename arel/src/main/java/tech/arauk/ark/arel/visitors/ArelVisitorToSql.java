@@ -151,6 +151,19 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector visitArelNodeBindParam(Object object, ArelCollector collector) {
+        ArelNodeBindParam bindParam = (ArelNodeBindParam) object;
+
+        collector.addBind(bindParam, new ArelCollector.Bindable() {
+            @Override
+            public String bind(int bindIndex) {
+                return "?";
+            }
+        });
+
+        return collector;
+    }
+
     public ArelCollector visitArelNodeCasted(Object object, ArelCollector collector) {
         ArelNodeCasted casted = (ArelNodeCasted) object;
 
@@ -370,7 +383,7 @@ public class ArelVisitorToSql extends ArelVisitor {
             collector = visit(joinSource.left(), collector);
         }
 
-        if (joinSource.right() != null && ((List<Object>) joinSource.right()).size() > 0) {
+        if (joinSource.right() != null && !((List<Object>) joinSource.right()).isEmpty()) {
             if (joinSource.left() != null) {
                 collector.append(SPACE);
             }
@@ -684,22 +697,22 @@ public class ArelVisitorToSql extends ArelVisitor {
         ArelNodeUpdateStatement updateStatement = (ArelNodeUpdateStatement) object;
 
         collector.append(UPDATE);
-        collector = visit(updateStatement.relation, collector);
+        collector = visit(updateStatement.relation(), collector);
 
-        if (updateStatement.values != null && !updateStatement.values.isEmpty()) {
+        if (updateStatement.values() != null && !updateStatement.values().isEmpty()) {
             collector.append(SET);
-            collector = injectJoin(updateStatement.values, collector, COMMA);
+            collector = injectJoin(updateStatement.values(), collector, COMMA);
         }
 
         List<Object> wheres;
-        if ((updateStatement.orders == null || updateStatement.orders.isEmpty()) && updateStatement.limit == null) {
-            wheres = updateStatement.wheres;
+        if ((updateStatement.orders() == null || updateStatement.orders().isEmpty()) && updateStatement.limit() == null) {
+            wheres = updateStatement.wheres();
         } else {
             List<Object> in = new ArrayList<>();
-            in.add(buildSubselect(updateStatement.key, updateStatement));
+            in.add(buildSubselect(updateStatement.key(), updateStatement));
 
             wheres = new ArrayList<>();
-            wheres.add(new ArelNodeIn(updateStatement.key, in));
+            wheres.add(new ArelNodeIn(updateStatement.key(), in));
         }
 
         if (wheres != null && !wheres.isEmpty()) {
@@ -866,12 +879,12 @@ public class ArelVisitorToSql extends ArelVisitor {
         projections.add(key);
 
         ArelNodeSelectCore core = selectStatement.cores[0];
-        core.from(updateStatement.relation);
-        core.wheres = updateStatement.wheres;
+        core.from(updateStatement.relation());
+        core.wheres = updateStatement.wheres();
         core.projections = projections;
 
-        selectStatement.limit = updateStatement.limit;
-        selectStatement.orders = updateStatement.orders;
+        selectStatement.limit = updateStatement.limit();
+        selectStatement.orders = updateStatement.orders();
 
         return selectStatement;
     }
