@@ -14,8 +14,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     public ArelRelation relation;
     public String name;
 
-    public ArelAttribute(ArelRelation relation, String name) {
-        this.relation = relation;
+    public ArelAttribute(Object relation, String name) {
+        if (relation instanceof String) {
+            this.relation = new ArelTable((String) relation);
+        } else {
+            this.relation = (ArelRelation) relation;
+        }
         this.name = name;
     }
 
@@ -92,7 +96,8 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     @Override
     public boolean equals(Object other) {
         if (other instanceof ArelAttribute) {
-            return Objects.deepEquals(this.relation, ((ArelAttribute) other).relation) && Objects.deepEquals(this.name, ((ArelAttribute) other).name);
+            ArelAttribute attribute = (ArelAttribute) other;
+            return Objects.deepEquals(this.relation, attribute.relation) && Objects.deepEquals(this.name, attribute.name);
         }
 
         return super.equals(other);

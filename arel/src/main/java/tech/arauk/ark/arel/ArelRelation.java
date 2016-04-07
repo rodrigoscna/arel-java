@@ -10,9 +10,13 @@ public interface ArelRelation {
 
     ArelNodeNamedFunction lower(Object column);
 
-    Object typeCastForDatabase(String name, Object value);
-
     Object tableAlias();
 
+    ArelRelation tableAlias(Object tableAlias);
+
     Object tableName();
+
+    ArelRelation tableName(Object tableName);
+
+    Object typeCastForDatabase(String name, Object value);
 }

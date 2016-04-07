@@ -12,13 +12,13 @@ import java.util.Objects;
 
 public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface, ArelRelation {
     public static ArelVisitor engine;
-    public List<ArelNodeTableAlias> aliases;
+    private List<Object> mAliases;
     private String mName;
     private String mTableAlias;
     private ArelTypeCaster mTypeCaster;
 
     private ArelTable() {
-        this.aliases = new ArrayList<>();
+        this.mAliases = new ArrayList<>();
     }
 
     public ArelTable(String name) {
@@ -121,6 +121,17 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     }
 
     @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelTable) {
+            ArelTable table = (ArelTable) other;
+
+            return Objects.deepEquals(this.tableName(), table.tableName()) && Objects.deepEquals(this.mAliases, table.mAliases) && Objects.deepEquals(this.tableAlias(), table.tableAlias());
+        }
+
+        return super.equals(other);
+    }
+
+    @Override
     public ArelAttribute get(String name) {
         return new ArelAttribute(this, name);
     }
@@ -151,8 +162,20 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     }
 
     @Override
+    public ArelTable tableAlias(Object tableAlias) {
+        this.mTableAlias = String.valueOf(tableAlias);
+        return this;
+    }
+
+    @Override
     public String tableName() {
         return this.mName;
+    }
+
+    @Override
+    public ArelTable tableName(Object tableName) {
+        this.mName = String.valueOf(tableName);
+        return this;
     }
 
     public ArelNodeTableAlias alias() {
@@ -162,9 +185,18 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     public ArelNodeTableAlias alias(String name) {
         ArelNodeTableAlias alias = new ArelNodeTableAlias(this, name);
 
-        this.aliases.add(alias);
+        this.mAliases.add(alias);
 
         return alias;
+    }
+
+    public List<Object> aliases() {
+        return this.mAliases;
+    }
+
+    public ArelTable aliases(List<Object> aliases) {
+        this.mAliases = aliases;
+        return this;
     }
 
     public ArelSelectManager from() {
