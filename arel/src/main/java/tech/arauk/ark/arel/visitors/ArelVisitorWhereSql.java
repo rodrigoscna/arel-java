@@ -9,9 +9,7 @@ public class ArelVisitorWhereSql extends ArelVisitorToSql {
         super(arelConnection);
     }
 
-    public ArelCollector visitArelNodeSelectCore(Object object, ArelCollector collector) {
-        ArelNodeSelectCore selectCore = (ArelNodeSelectCore) object;
-
+    public ArelCollector visitArelNodeSelectCore(ArelNodeSelectCore selectCore, ArelCollector collector) {
         collector.append(WHERE);
         collector = injectJoin(selectCore.wheres, collector, AND);
 

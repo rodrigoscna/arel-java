@@ -27,7 +27,7 @@ public class ArelVisitor {
     public ArelCollector visit(Object object) {
         String methodName = this.mDispatch.get(object.getClass());
         try {
-            Method method = getClass().getMethod(methodName, Object.class);
+            Method method = getClass().getMethod(methodName, object.getClass());
             return (ArelCollector) method.invoke(this, object);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             throw new RuntimeException("Cannot " + methodName);
@@ -37,7 +37,7 @@ public class ArelVisitor {
     public ArelCollector visit(Object object, ArelCollector collector) {
         String methodName = this.mDispatch.get(object.getClass());
         try {
-            Method method = getClass().getMethod(methodName, Object.class, ArelCollector.class);
+            Method method = getClass().getMethod(methodName, object.getClass(), ArelCollector.class);
             return (ArelCollector) method.invoke(this, object, collector);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             throw new RuntimeException("Cannot " + methodName);

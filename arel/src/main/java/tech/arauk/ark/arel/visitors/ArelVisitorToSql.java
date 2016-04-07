@@ -13,10 +13,7 @@ import tech.arauk.ark.arel.nodes.binary.*;
 import tech.arauk.ark.arel.nodes.function.*;
 import tech.arauk.ark.arel.nodes.unary.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ArelVisitorToSql extends ArelVisitor {
     public static final String AND = " AND ";
@@ -114,9 +111,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelAttribute(Object object, ArelCollector collector) {
-        ArelAttribute attribute = (ArelAttribute) object;
-
+    public ArelCollector visitArelAttribute(ArelAttribute attribute, ArelCollector collector) {
         Object joinName = attribute.relation.tableAlias();
         if (joinName == null) {
             joinName = attribute.relation.tableName();
@@ -127,17 +122,13 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeAnd(Object object, ArelCollector collector) {
-        ArelNodeAnd and = (ArelNodeAnd) object;
-
+    public ArelCollector visitArelNodeAnd(ArelNodeAnd and, ArelCollector collector) {
         collector = injectJoin(and.children, collector, AND);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeAs(Object object, ArelCollector collector) {
-        ArelNodeAs as = (ArelNodeAs) object;
-
+    public ArelCollector visitArelNodeAs(ArelNodeAs as, ArelCollector collector) {
         collector = visit(as.left(), collector);
         collector.append(AS);
         collector = visit(as.right(), collector);
@@ -145,18 +136,14 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeAscending(Object object, ArelCollector collector) {
-        ArelNodeAscending ascending = (ArelNodeAscending) object;
-
+    public ArelCollector visitArelNodeAscending(ArelNodeAscending ascending, ArelCollector collector) {
         collector = visit(ascending.expr(), collector);
         collector.append(ASC);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeAssignment(Object object, ArelCollector collector) {
-        ArelNodeAssignment assignment = (ArelNodeAssignment) object;
-
+    public ArelCollector visitArelNodeAssignment(ArelNodeAssignment assignment, ArelCollector collector) {
         if (assignment.right() instanceof ArelNodeUnqualifiedColumn || assignment.right() instanceof ArelAttribute || assignment.right() instanceof ArelNodeBindParam) {
             collector = visit(assignment.left(), collector);
             collector.append(EQUALS);
@@ -170,17 +157,13 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeAvg(Object object, ArelCollector collector) {
-        ArelNodeAvg avg = (ArelNodeAvg) object;
-
+    public ArelCollector visitArelNodeAvg(ArelNodeAvg avg, ArelCollector collector) {
         collector = aggregate("AVG", avg, collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeBetween(Object object, ArelCollector collector) {
-        ArelNodeBetween between = (ArelNodeBetween) object;
-
+    public ArelCollector visitArelNodeBetween(ArelNodeBetween between, ArelCollector collector) {
         collector = visit(between.left(), collector);
         collector.append(BETWEEN);
         collector = visit(between.right(), collector);
@@ -188,9 +171,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeBindParam(Object object, ArelCollector collector) {
-        ArelNodeBindParam bindParam = (ArelNodeBindParam) object;
-
+    public ArelCollector visitArelNodeBindParam(ArelNodeBindParam bindParam, ArelCollector collector) {
         collector.addBind(bindParam, new ArelCollector.Bindable() {
             @Override
             public String bind(int bindIndex) {
@@ -201,31 +182,25 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeCasted(Object object, ArelCollector collector) {
-        ArelNodeCasted casted = (ArelNodeCasted) object;
-
+    public ArelCollector visitArelNodeCasted(ArelNodeCasted casted, ArelCollector collector) {
         collector.append(quoted(casted.val, casted.attribute));
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeCount(Object object, ArelCollector collector) {
-        ArelNodeCount count = (ArelNodeCount) object;
-
+    public ArelCollector visitArelNodeCount(ArelNodeCount count, ArelCollector collector) {
         collector = aggregate(COUNT, count, collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeCurrentRow(Object object, ArelCollector collector) {
+    public ArelCollector visitArelNodeCurrentRow(ArelNodeCurrentRow currentRow, ArelCollector collector) {
         collector.append(CURRENT_ROW);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeDeleteStatement(Object object, ArelCollector collector) {
-        ArelNodeDeleteStatement deleteStatement = (ArelNodeDeleteStatement) object;
-
+    public ArelCollector visitArelNodeDeleteStatement(ArelNodeDeleteStatement deleteStatement, ArelCollector collector) {
         collector.append(DELETE_FROM);
         collector = visit(deleteStatement.relation(), collector);
         if (!((List<Object>) deleteStatement.wheres()).isEmpty()) {
@@ -239,18 +214,14 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeDescending(Object object, ArelCollector collector) {
-        ArelNodeDescending descending = (ArelNodeDescending) object;
-
+    public ArelCollector visitArelNodeDescending(ArelNodeDescending descending, ArelCollector collector) {
         collector = visit(descending.expr(), collector);
         collector.append(DESC);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeDoesNotMatch(Object object, ArelCollector collector) {
-        ArelNodeDoesNotMatch doesNotMatch = (ArelNodeDoesNotMatch) object;
-
+    public ArelCollector visitArelNodeDoesNotMatch(ArelNodeDoesNotMatch doesNotMatch, ArelCollector collector) {
         collector = visit(doesNotMatch.left(), collector);
         collector.append(NOT_LIKE);
         collector = visit(doesNotMatch.right(), collector);
@@ -263,9 +234,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeEquality(Object object, ArelCollector collector) {
-        ArelNodeEquality equality = (ArelNodeEquality) object;
-
+    public ArelCollector visitArelNodeEquality(ArelNodeEquality equality, ArelCollector collector) {
         collector = visit(equality.left(), collector);
 
         if (Objects.equals(equality.right(), null)) {
@@ -278,9 +247,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeExcept(Object object, ArelCollector collector) {
-        ArelNodeExcept except = (ArelNodeExcept) object;
-
+    public ArelCollector visitArelNodeExcept(ArelNodeExcept except, ArelCollector collector) {
         collector.append(GROUPING_OPEN);
         collector = infixValue(except, collector, EXCEPT);
         collector.append(GROUPING_CLOSE);
@@ -288,9 +255,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeExists(Object object, ArelCollector collector) {
-        ArelNodeExists exists = (ArelNodeExists) object;
-
+    public ArelCollector visitArelNodeExists(ArelNodeExists exists, ArelCollector collector) {
         collector.append(EXISTS);
         collector.append(GROUPING_OPEN);
         collector = visit(exists.expressions, collector);
@@ -304,9 +269,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeFollowing(Object object, ArelCollector collector) {
-        ArelNodeFollowing following = (ArelNodeFollowing) object;
-
+    public ArelCollector visitArelNodeFollowing(ArelNodeFollowing following, ArelCollector collector) {
         if (following.expr() != null) {
             collector = visit(following.expr(), collector);
         } else {
@@ -318,9 +281,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeFullOuterJoin(Object object, ArelCollector collector) {
-        ArelNodeFullOuterJoin fullOuterJoin = (ArelNodeFullOuterJoin) object;
-
+    public ArelCollector visitArelNodeFullOuterJoin(ArelNodeFullOuterJoin fullOuterJoin, ArelCollector collector) {
         collector.append(FULL_OUTER_JOIN);
         collector = visit(fullOuterJoin.left(), collector);
         collector.append(SPACE);
@@ -329,17 +290,13 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeGroup(Object object, ArelCollector collector) {
-        ArelNodeGroup group = (ArelNodeGroup) object;
-
+    public ArelCollector visitArelNodeGroup(ArelNodeGroup group, ArelCollector collector) {
         collector = visit(group.expr(), collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeGrouping(Object object, ArelCollector collector) {
-        ArelNodeGrouping grouping = (ArelNodeGrouping) object;
-
+    public ArelCollector visitArelNodeGrouping(ArelNodeGrouping grouping, ArelCollector collector) {
         if (grouping.expr() instanceof ArelNodeGrouping) {
             collector = visit(grouping.expr(), collector);
         } else {
@@ -351,9 +308,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeGreaterThan(Object object, ArelCollector collector) {
-        ArelNodeGreaterThan greaterThan = (ArelNodeGreaterThan) object;
-
+    public ArelCollector visitArelNodeGreaterThan(ArelNodeGreaterThan greaterThan, ArelCollector collector) {
         collector = visit(greaterThan.left(), collector);
         collector.append(GREATER_THAN);
         collector = visit(greaterThan.right(), collector);
@@ -361,9 +316,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeGreaterThanOrEqual(Object object, ArelCollector collector) {
-        ArelNodeGreaterThanOrEqual greaterThanOrEqual = (ArelNodeGreaterThanOrEqual) object;
-
+    public ArelCollector visitArelNodeGreaterThanOrEqual(ArelNodeGreaterThanOrEqual greaterThanOrEqual, ArelCollector collector) {
         collector = visit(greaterThanOrEqual.left(), collector);
         collector.append(GREATER_THAN_OR_EQUAL);
         collector = visit(greaterThanOrEqual.right(), collector);
@@ -371,9 +324,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeIn(Object object, ArelCollector collector) {
-        ArelNodeIn in = (ArelNodeIn) object;
-
+    public ArelCollector visitArelNodeIn(ArelNodeIn in, ArelCollector collector) {
         if (in.right() instanceof List && ((List<Object>) in.right()).isEmpty()) {
             collector.append(ONE_EQUALS_ZERO);
         } else {
@@ -387,9 +338,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeInnerJoin(Object object, ArelCollector collector) {
-        ArelNodeInnerJoin innerJoin = (ArelNodeInnerJoin) object;
-
+    public ArelCollector visitArelNodeInnerJoin(ArelNodeInnerJoin innerJoin, ArelCollector collector) {
         collector.append(INNER_JOIN);
         collector = visit(innerJoin.left(), collector);
 
@@ -401,9 +350,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeInsertStatement(Object object, ArelCollector collector) {
-        ArelNodeInsertStatement insertStatement = (ArelNodeInsertStatement) object;
-
+    public ArelCollector visitArelNodeInsertStatement(ArelNodeInsertStatement insertStatement, ArelCollector collector) {
         collector.append(INSERT_INTO);
         collector = visit(insertStatement.relation, collector);
 
@@ -428,9 +375,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         }
     }
 
-    public ArelCollector visitArelNodeIntersect(Object object, ArelCollector collector) {
-        ArelNodeIntersect intersect = (ArelNodeIntersect) object;
-
+    public ArelCollector visitArelNodeIntersect(ArelNodeIntersect intersect, ArelCollector collector) {
         collector.append(GROUPING_OPEN);
         collector = infixValue(intersect, collector, INTERSECT);
         collector.append(GROUPING_CLOSE);
@@ -438,9 +383,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeJoinSource(Object object, ArelCollector collector) {
-        ArelNodeJoinSource joinSource = (ArelNodeJoinSource) object;
-
+    public ArelCollector visitArelNodeJoinSource(ArelNodeJoinSource joinSource, ArelCollector collector) {
         if (joinSource.left() != null) {
             collector = visit(joinSource.left(), collector);
         }
@@ -455,9 +398,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeLessThan(Object object, ArelCollector collector) {
-        ArelNodeLessThan lessThan = (ArelNodeLessThan) object;
-
+    public ArelCollector visitArelNodeLessThan(ArelNodeLessThan lessThan, ArelCollector collector) {
         collector = visit(lessThan.left(), collector);
         collector.append(LESS_THAN);
         collector = visit(lessThan.right(), collector);
@@ -465,9 +406,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeLessThanOrEqual(Object object, ArelCollector collector) {
-        ArelNodeLessThanOrEqual lessThanOrEqual = (ArelNodeLessThanOrEqual) object;
-
+    public ArelCollector visitArelNodeLessThanOrEqual(ArelNodeLessThanOrEqual lessThanOrEqual, ArelCollector collector) {
         collector = visit(lessThanOrEqual.left(), collector);
         collector.append(LESS_THAN_OR_EQUAL);
         collector = visit(lessThanOrEqual.right(), collector);
@@ -475,26 +414,20 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeLimit(Object object, ArelCollector collector) {
-        ArelNodeLimit limit = (ArelNodeLimit) object;
-
+    public ArelCollector visitArelNodeLimit(ArelNodeLimit limit, ArelCollector collector) {
         collector.append(LIMIT);
         collector = visit(limit.expr(), collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeLock(Object object, ArelCollector collector) {
-        ArelNodeLock lock = (ArelNodeLock) object;
-
+    public ArelCollector visitArelNodeLock(ArelNodeLock lock, ArelCollector collector) {
         collector = visit(lock.expr(), collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeMatches(Object object, ArelCollector collector) {
-        ArelNodeMatches matches = (ArelNodeMatches) object;
-
+    public ArelCollector visitArelNodeMatches(ArelNodeMatches matches, ArelCollector collector) {
         collector = visit(matches.left(), collector);
         collector.append(LIKE);
         collector = visit(matches.right(), collector);
@@ -507,35 +440,27 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeMax(Object object, ArelCollector collector) {
-        ArelNodeMax max = (ArelNodeMax) object;
-
+    public ArelCollector visitArelNodeMax(ArelNodeMax max, ArelCollector collector) {
         collector = aggregate(MAX, max, collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeMin(Object object, ArelCollector collector) {
-        ArelNodeMin min = (ArelNodeMin) object;
-
+    public ArelCollector visitArelNodeMin(ArelNodeMin min, ArelCollector collector) {
         collector = aggregate(MIN, min, collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeNamedWindow(Object object, ArelCollector collector) {
-        ArelNodeNamedWindow namedWindow = (ArelNodeNamedWindow) object;
-
+    public ArelCollector visitArelNodeNamedWindow(ArelNodeNamedWindow namedWindow, ArelCollector collector) {
         collector.append(quoteColumnName(namedWindow.name));
         collector.append(AS);
-        collector = visitArelNodeWindow(object, collector);
+        collector = visitArelNodeWindow(namedWindow, collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeNotEqual(Object object, ArelCollector collector) {
-        ArelNodeNotEqual notEqual = (ArelNodeNotEqual) object;
-
+    public ArelCollector visitArelNodeNotEqual(ArelNodeNotEqual notEqual, ArelCollector collector) {
         Object right = notEqual.right();
 
         collector = visit(notEqual.left(), collector);
@@ -552,9 +477,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeNotIn(Object object, ArelCollector collector) {
-        ArelNodeNotIn notIn = (ArelNodeNotIn) object;
-
+    public ArelCollector visitArelNodeNotIn(ArelNodeNotIn notIn, ArelCollector collector) {
         if (notIn.right() instanceof List && ((List<Object>) notIn.right()).isEmpty()) {
             collector.append(ONE_EQUALS_ONE);
         } else {
@@ -568,9 +491,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeOffset(Object object, ArelCollector collector) {
-        ArelNodeOffset offset = (ArelNodeOffset) object;
-
+    public ArelCollector visitArelNodeOffset(ArelNodeOffset offset, ArelCollector collector) {
         collector.append(OFFSET);
 
         if (offset.expr() != null) {
@@ -580,18 +501,14 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeOn(Object object, ArelCollector collector) {
-        ArelNodeOn nodeOn = (ArelNodeOn) object;
-
+    public ArelCollector visitArelNodeOn(ArelNodeOn nodeOn, ArelCollector collector) {
         collector.append(ON);
         collector = visit(nodeOn.expr(), collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeOr(Object object, ArelCollector collector) {
-        ArelNodeOr nodeOr = (ArelNodeOr) object;
-
+    public ArelCollector visitArelNodeOr(ArelNodeOr nodeOr, ArelCollector collector) {
         collector = visit(nodeOr.left(), collector);
         collector.append(OR);
         collector = visit(nodeOr.right(), collector);
@@ -599,9 +516,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeOuterJoin(Object object, ArelCollector collector) {
-        ArelNodeOuterJoin outerJoin = (ArelNodeOuterJoin) object;
-
+    public ArelCollector visitArelNodeOuterJoin(ArelNodeOuterJoin outerJoin, ArelCollector collector) {
         collector.append(LEFT_OUTER_JOIN);
         collector = visit(outerJoin.left(), collector);
         collector.append(SPACE);
@@ -610,9 +525,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodePreceding(Object object, ArelCollector collector) {
-        ArelNodePreceding preceding = (ArelNodePreceding) object;
-
+    public ArelCollector visitArelNodePreceding(ArelNodePreceding preceding, ArelCollector collector) {
         if (preceding.expr() != null) {
             collector = visit(preceding.expr(), collector);
         } else {
@@ -624,17 +537,13 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeQuoted(Object object, ArelCollector collector) {
-        ArelNodeQuoted quoted = (ArelNodeQuoted) object;
-
+    public ArelCollector visitArelNodeQuoted(ArelNodeQuoted quoted, ArelCollector collector) {
         collector.append(quoted(quoted.expr(), null));
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeRange(Object object, ArelCollector collector) {
-        ArelNodeRange range = (ArelNodeRange) object;
-
+    public ArelCollector visitArelNodeRange(ArelNodeRange range, ArelCollector collector) {
         if (range.expr() != null) {
             collector.append(RANGE);
             collector.append(SPACE);
@@ -646,9 +555,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeRightOuterJoin(Object object, ArelCollector collector) {
-        ArelNodeRightOuterJoin rightOuterJoin = (ArelNodeRightOuterJoin) object;
-
+    public ArelCollector visitArelNodeRightOuterJoin(ArelNodeRightOuterJoin rightOuterJoin, ArelCollector collector) {
         collector.append(RIGHT_OUTER_JOIN);
         collector = visit(rightOuterJoin.left(), collector);
         collector.append(SPACE);
@@ -657,9 +564,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeRows(Object object, ArelCollector collector) {
-        ArelNodeRows rows = (ArelNodeRows) object;
-
+    public ArelCollector visitArelNodeRows(ArelNodeRows rows, ArelCollector collector) {
         if (rows.expr() != null) {
             collector.append(ROWS);
             collector.append(SPACE);
@@ -671,9 +576,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeSelectStatement(Object object, ArelCollector collector) {
-        ArelNodeSelectStatement selectStatement = (ArelNodeSelectStatement) object;
-
+    public ArelCollector visitArelNodeSelectStatement(ArelNodeSelectStatement selectStatement, ArelCollector collector) {
         if (selectStatement.with != null) {
             collector = visit(selectStatement.with, collector);
             collector.append(SPACE);
@@ -697,14 +600,12 @@ public class ArelVisitorToSql extends ArelVisitor {
             }
         }
 
-        collector = visitArelNodeSelectOptions(object, collector);
+        collector = visitArelNodeSelectOptions(selectStatement, collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeSelectCore(Object object, ArelCollector collector) {
-        ArelNodeSelectCore selectCore = (ArelNodeSelectCore) object;
-
+    public ArelCollector visitArelNodeSelectCore(ArelNodeSelectCore selectCore, ArelCollector collector) {
         collector.append("SELECT");
 
         collector = maybeVisit(selectCore.top, collector);
@@ -777,9 +678,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeSelectOptions(Object object, ArelCollector collector) {
-        ArelNodeSelectStatement selectStatement = (ArelNodeSelectStatement) object;
-
+    public ArelCollector visitArelNodeSelectOptions(ArelNodeSelectStatement selectStatement, ArelCollector collector) {
         maybeVisit(selectStatement.limit, collector);
         maybeVisit(selectStatement.offset, collector);
         maybeVisit(selectStatement.lock, collector);
@@ -787,29 +686,23 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeSqlLiteral(Object object, ArelCollector collector) {
-        return literal(object, collector);
+    public ArelCollector visitArelNodeSqlLiteral(ArelNodeSqlLiteral sqlLiteral, ArelCollector collector) {
+        return literal(sqlLiteral, collector);
     }
 
-    public ArelCollector visitArelNodeStringJoin(Object object, ArelCollector collector) {
-        ArelNodeStringJoin stringJoin = (ArelNodeStringJoin) object;
-
+    public ArelCollector visitArelNodeStringJoin(ArelNodeStringJoin stringJoin, ArelCollector collector) {
         collector = visit(stringJoin.left(), collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeSum(Object object, ArelCollector collector) {
-        ArelNodeSum sum = (ArelNodeSum) object;
-
+    public ArelCollector visitArelNodeSum(ArelNodeSum sum, ArelCollector collector) {
         collector = aggregate(SUM, sum, collector);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeTableAlias(Object object, ArelCollector collector) {
-        ArelNodeTableAlias tableAlias = (ArelNodeTableAlias) object;
-
+    public ArelCollector visitArelNodeTableAlias(ArelNodeTableAlias tableAlias, ArelCollector collector) {
         collector = visit(tableAlias.relation(), collector);
         collector.append(SPACE);
         collector.append(quoteTableName(tableAlias.name()));
@@ -817,13 +710,11 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeTop(Object object, ArelCollector collector) {
+    public ArelCollector visitArelNodeTop(ArelNodeTop top, ArelCollector collector) {
         return collector;
     }
 
-    public ArelCollector visitArelNodeUnion(Object object, ArelCollector collector) {
-        ArelNodeUnion union = (ArelNodeUnion) object;
-
+    public ArelCollector visitArelNodeUnion(ArelNodeUnion union, ArelCollector collector) {
         collector.append(GROUPING_OPEN);
         collector = infixValue(union, collector, UNION);
         collector.append(GROUPING_CLOSE);
@@ -831,9 +722,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeUnionAll(Object object, ArelCollector collector) {
-        ArelNodeUnionAll unionAll = (ArelNodeUnionAll) object;
-
+    public ArelCollector visitArelNodeUnionAll(ArelNodeUnionAll unionAll, ArelCollector collector) {
         collector.append(GROUPING_OPEN);
         collector = infixValue(unionAll, collector, UNION_ALL);
         collector.append(GROUPING_CLOSE);
@@ -841,17 +730,13 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeUnqualifiedColumn(Object object, ArelCollector collector) {
-        ArelNodeUnqualifiedColumn unqualifiedColumn = (ArelNodeUnqualifiedColumn) object;
-
+    public ArelCollector visitArelNodeUnqualifiedColumn(ArelNodeUnqualifiedColumn unqualifiedColumn, ArelCollector collector) {
         collector.append(quoteColumnName(unqualifiedColumn.name()));
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeUpdateStatement(Object object, ArelCollector collector) {
-        ArelNodeUpdateStatement updateStatement = (ArelNodeUpdateStatement) object;
-
+    public ArelCollector visitArelNodeUpdateStatement(ArelNodeUpdateStatement updateStatement, ArelCollector collector) {
         collector.append(UPDATE);
         collector = visit(updateStatement.relation(), collector);
 
@@ -880,9 +765,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeValues(Object object, ArelCollector collector) {
-        ArelNodeValues values = (ArelNodeValues) object;
-
+    public ArelCollector visitArelNodeValues(ArelNodeValues values, ArelCollector collector) {
         collector.append(VALUES);
         collector.append(GROUPING_OPEN);
 
@@ -915,9 +798,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeWindow(Object object, ArelCollector collector) {
-        ArelNodeWindow window = (ArelNodeWindow) object;
-
+    public ArelCollector visitArelNodeWindow(ArelNodeWindow window, ArelCollector collector) {
         collector.append(GROUPING_OPEN);
 
         boolean partitions = false;
@@ -953,27 +834,21 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelNodeWith(Object object, ArelCollector collector) {
-        ArelNodeWith with = (ArelNodeWith) object;
-
+    public ArelCollector visitArelNodeWith(ArelNodeWith with, ArelCollector collector) {
         collector.append(WITH);
         collector = injectJoin(with.children(), collector, COMMA);
 
         return collector;
     }
 
-    public ArelCollector visitArelNodeWithRecursive(Object object, ArelCollector collector) {
-        ArelNodeWithRecursive withRecursive = (ArelNodeWithRecursive) object;
-
+    public ArelCollector visitArelNodeWithRecursive(ArelNodeWithRecursive withRecursive, ArelCollector collector) {
         collector.append(WITH_RECURSIVE);
         collector = injectJoin(withRecursive.children(), collector, COMMA);
 
         return collector;
     }
 
-    public ArelCollector visitArelSelectManager(Object object, ArelCollector collector) {
-        ArelSelectManager selectManager = (ArelSelectManager) object;
-
+    public ArelCollector visitArelSelectManager(ArelSelectManager selectManager, ArelCollector collector) {
         collector.append(GROUPING_OPEN);
         collector.append(selectManager.toSQL());
         collector.append(GROUPING_CLOSE);
@@ -981,9 +856,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArelTable(Object object, ArelCollector collector) {
-        ArelTable table = (ArelTable) object;
-
+    public ArelCollector visitArelTable(ArelTable table, ArelCollector collector) {
         if ((table.tableAlias() != null) && (table.tableAlias().length() > 0)) {
             collector.append(String.format("%s %s", quoteTableName(table.tableName()), quoteTableName(table.tableAlias())));
         } else {
@@ -992,29 +865,25 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    public ArelCollector visitArrayList(Object object, ArelCollector collector) {
-        return visitList(object, collector);
+    public ArelCollector visitArrayList(ArrayList arrayList, ArelCollector collector) {
+        return visitList(arrayList, collector);
     }
 
-    public ArelCollector visitInteger(Object object, ArelCollector collector) {
-        return literal(object, collector);
+    public ArelCollector visitInteger(Integer integer, ArelCollector collector) {
+        return literal(integer, collector);
     }
 
-    public ArelCollector visitLinkedList(Object object, ArelCollector collector) {
-        return visitList(object, collector);
+    public ArelCollector visitLinkedList(LinkedList linkedList, ArelCollector collector) {
+        return visitList(linkedList, collector);
     }
 
-    public ArelCollector visitList(Object object, ArelCollector collector) {
-        List<Object> list = (List<Object>) object;
-
+    public ArelCollector visitList(List list, ArelCollector collector) {
         collector = injectJoin(list, collector, COMMA);
 
         return collector;
     }
 
-    public ArelCollector visitObjectArray(Object object, ArelCollector collector) {
-        Object[] list = (Object[]) object;
-
+    public ArelCollector visitObjectArray(Object[] list, ArelCollector collector) {
         collector = injectJoin(list, collector, COMMA);
 
         return collector;
