@@ -4,49 +4,53 @@ import junit.framework.TestCase;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 
-public class ArelFactoryMethodsTest extends TestCase {
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+public class ArelFactoryMethodsTest {
+    public static abstract class Base extends TestCase {
+        @Override
+        protected void setUp() throws Exception {
+            super.setUp();
+        }
+
+        @Override
+        protected void tearDown() throws Exception {
+            super.tearDown();
+        }
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
+    public static class Factory extends Base {
+        public void testFactoryForFalse() {
+            Object aFalse = ArelFactoryMethods.createFalse();
 
-    public void testCreateJoin() {
-        Object join = ArelFactoryMethods.createJoin("one", "two");
+            assertSame(ArelNodeFalse.class, aFalse.getClass());
+        }
 
-        assertSame(ArelNodeInnerJoin.class, join.getClass());
-        assertEquals("two", ((ArelNodeInnerJoin) join).right());
-    }
+        public void testFactoryForJoin() {
+            Object join = ArelFactoryMethods.createJoin("one", "two");
 
-    public void testCreateOn() {
-        Object on = ArelFactoryMethods.createOn("one");
+            assertSame(ArelNodeInnerJoin.class, join.getClass());
+            assertEquals("two", ((ArelNodeInnerJoin) join).right());
+        }
 
-        assertSame(ArelNodeOn.class, on.getClass());
-        assertEquals("one", ((ArelNodeOn) on).expr());
-    }
+        public void testFactoryForOn() {
+            Object on = ArelFactoryMethods.createOn("one");
 
-    public void testCreateTrue() {
-        Object aTrue = ArelFactoryMethods.createTrue();
+            assertSame(ArelNodeOn.class, on.getClass());
+            assertEquals("one", ((ArelNodeOn) on).expr());
+        }
 
-        assertSame(ArelNodeTrue.class, aTrue.getClass());
-    }
+        public void testFactoryForTrue() {
+            Object aTrue = ArelFactoryMethods.createTrue();
 
-    public void testCreateFalse() {
-        Object aFalse = ArelFactoryMethods.createFalse();
+            assertSame(ArelNodeTrue.class, aTrue.getClass());
+        }
 
-        assertSame(ArelNodeFalse.class, aFalse.getClass());
-    }
+        public void testFactoryLower() {
+            Object lower = ArelFactoryMethods.lower("one");
 
-    public void testLower() {
-        Object lower = ArelFactoryMethods.lower("one");
-
-        assertSame(ArelNodeNamedFunction.class, lower.getClass());
-        assertEquals("LOWER", ((ArelNodeNamedFunction) lower).name);
-        assertSame(ArelNodeQuoted.class, ((Object[]) ((ArelNodeNamedFunction) lower).expressions)[0].getClass());
-        assertEquals("one", ((ArelNodeQuoted) ((Object[]) ((ArelNodeNamedFunction) lower).expressions)[0]).expr());
+            assertSame(ArelNodeNamedFunction.class, lower.getClass());
+            assertEquals("LOWER", ((ArelNodeNamedFunction) lower).name);
+            assertSame(ArelNodeQuoted.class, ((Object[]) ((ArelNodeNamedFunction) lower).expressions)[0].getClass());
+            assertEquals("one", ((ArelNodeQuoted) ((Object[]) ((ArelNodeNamedFunction) lower).expressions)[0]).expr());
+        }
     }
 }
