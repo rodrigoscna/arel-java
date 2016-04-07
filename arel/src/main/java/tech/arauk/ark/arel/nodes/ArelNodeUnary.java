@@ -12,10 +12,10 @@ public class ArelNodeUnary extends ArelNode {
     @Override
     public boolean equals(Object other) {
         if (other instanceof ArelNodeUnary) {
-            return Objects.equals(this.expr, ((ArelNodeUnary) other).expr);
-        } else {
-            return super.equals(other);
+            return Objects.deepEquals(this.expr, ((ArelNodeUnary) other).expr());
         }
+
+        return super.equals(other);
     }
 
     public Object expr() {

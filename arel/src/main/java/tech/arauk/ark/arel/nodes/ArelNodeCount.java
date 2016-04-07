@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel.nodes;
 
-public class ArelNodeCount extends ArelNodeFunction {
-    public Boolean distinct;
+import tech.arauk.ark.arel.interfaces.ArelDistinctInterface;
+
+public class ArelNodeCount extends ArelNodeFunction implements ArelDistinctInterface {
+    private Boolean distinct;
 
     public ArelNodeCount(Object expr) {
         super(expr);
@@ -21,5 +23,16 @@ public class ArelNodeCount extends ArelNodeFunction {
         super(expr, alias);
 
         this.distinct = distinct;
+    }
+
+    @Override
+    public Boolean distinct() {
+        return this.distinct;
+    }
+
+    @Override
+    public ArelDistinctInterface distinct(Boolean distinct) {
+        this.distinct = distinct;
+        return this;
     }
 }

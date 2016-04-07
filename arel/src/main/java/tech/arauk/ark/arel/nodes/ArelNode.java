@@ -66,11 +66,15 @@ public class ArelNode implements ArelFactoryMethodsInterface {
         return ArelFactoryMethods.lower(column);
     }
 
-    public ArelNode and(Object right) {
+    public ArelNodeAnd and(Object right) {
         List<Object> and = new ArrayList<>();
         and.add(this);
         and.add(right);
         return new ArelNodeAnd(and);
+    }
+
+    public ArelNodeGrouping or(Object right) {
+        return new ArelNodeGrouping(new ArelNodeOr(this, right));
     }
 
     public String toSQL() {

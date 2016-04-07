@@ -12,9 +12,9 @@ public class ArelNodeOffset extends ArelNodeUnary {
     @Override
     public boolean equals(Object other) {
         if (other instanceof ArelNodeOffset) {
-            return Objects.equals(this.expr(), ((ArelNodeOffset) other).expr());
-        } else {
-            return super.equals(other);
+            return Objects.deepEquals(this.expr(), ((ArelNodeOffset) other).expr());
         }
+
+        return super.equals(other);
     }
 }

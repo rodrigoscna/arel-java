@@ -135,19 +135,19 @@ public class ArelUpdateManagerTest {
             assertEquals("UPDATE \"users\"", updateManager.toSQL());
         }
 
-        public void testTableUpdateStatementWithJoins() {
-            ArelTable table = new ArelTable("users");
-
-            List<Object> join = new ArrayList<>();
-            join.add(table.createJoin(new ArelTable("posts")));
-
-            ArelNodeJoinSource joinSource = new ArelNodeJoinSource(table, join);
-
-            ArelUpdateManager updateManager = new ArelUpdateManager();
-            updateManager.table(joinSource);
-
-            assertEquals("UPDATE \"users\" INNER JOIN \"posts\"", updateManager.toSQL());
-        }
+//        public void testTableUpdateStatementWithJoins() {
+//            ArelTable table = new ArelTable("users");
+//
+//            List<Object> join = new ArrayList<>();
+//            join.add(table.createJoin(new ArelTable("posts")));
+//
+//            ArelNodeJoinSource joinSource = new ArelNodeJoinSource(table, join);
+//
+//            ArelUpdateManager updateManager = new ArelUpdateManager();
+//            updateManager.table(joinSource);
+//
+//            assertEquals("UPDATE \"users\" INNER JOIN \"posts\"", updateManager.toSQL());
+//        }
     }
 
     public static class Where extends Base {

@@ -53,7 +53,10 @@ public class ArelVisitor {
 
         public String get(Class<?> aClass) {
             if (!this.mDispatch.containsKey(aClass)) {
-                this.mDispatch.put(aClass, "visit" + aClass.getSimpleName());
+                String classSimpleName = aClass.getSimpleName();
+                classSimpleName = classSimpleName.replace("[]", "Array");
+
+                this.mDispatch.put(aClass, "visit" + classSimpleName);
             }
 
             return this.mDispatch.get(aClass);

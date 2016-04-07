@@ -1,5 +1,7 @@
 package tech.arauk.ark.arel.nodes;
 
+import java.util.Objects;
+
 public class ArelNodeBinary extends ArelNode {
     private Object left;
     private Object right;
@@ -8,6 +10,17 @@ public class ArelNodeBinary extends ArelNode {
         super();
         this.left = left;
         this.right = right;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeBinary) {
+            ArelNodeBinary binary = (ArelNodeBinary) other;
+
+            return Objects.deepEquals(this.left(), binary.left()) && Objects.deepEquals(this.right(), binary.right());
+        }
+
+        return super.equals(other);
     }
 
     public Object left() {
