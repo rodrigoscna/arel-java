@@ -18,6 +18,11 @@ public class ArelNodeUnary extends ArelNode {
         return super.equals(other);
     }
 
+    @Override
+    public int hashCode() {
+        return expr().hashCode();
+    }
+
     public Object expr() {
         return this.expr;
     }

@@ -31,7 +31,7 @@ public class ArelNodeCount extends ArelNodeFunction implements ArelDistinctInter
     }
 
     @Override
-    public ArelDistinctInterface distinct(Boolean distinct) {
+    public ArelNodeCount distinct(Boolean distinct) {
         this.distinct = distinct;
         return this;
     }

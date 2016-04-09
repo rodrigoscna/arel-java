@@ -5,9 +5,10 @@ import tech.arauk.ark.arel.nodes.binary.ArelNodeJoinSource;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeTop;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, ArelGroupsInterface, ArelHavingsInterface, ArelProjectionsInterface, ArelSourceInterface, ArelTopInterface, ArelWheresInterface, ArelWindowsInterface {
+public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, ArelGroupsInterface, ArelHavingsInterface, ArelProjectionsInterface, ArelSetQuantifierInterface, ArelSourceInterface, ArelTopInterface, ArelWheresInterface, ArelWindowsInterface {
     public ArelNodeJoinSource source;
     public ArelNodeTop top;
     public ArelNode setQuantifier;
@@ -52,6 +53,11 @@ public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, A
     }
 
     @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[]{source(), top(), setQuantifier(), projections(), wheres(), groups(), havings(), windows()});
+    }
+
+    @Override
     public List<Object> havings() {
         return this.havings;
     }
@@ -70,6 +76,17 @@ public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, A
     @Override
     public ArelNodeSelectCore projections(List<Object> projections) {
         this.projections = projections;
+        return this;
+    }
+
+    @Override
+    public ArelNode setQuantifier() {
+        return this.setQuantifier;
+    }
+
+    @Override
+    public ArelNodeSelectCore setQuantifier(ArelNode setQuantifier) {
+        this.setQuantifier = setQuantifier;
         return this;
     }
 
@@ -102,7 +119,8 @@ public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, A
 
     @Override
     public ArelNodeSelectCore wheres(List<Object> wheres) {
-        return null;
+        this.wheres = wheres;
+        return this;
     }
 
     @Override
@@ -112,7 +130,8 @@ public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, A
 
     @Override
     public ArelNodeSelectCore windows(List<Object> windows) {
-        return null;
+        this.windows = windows;
+        return this;
     }
 
     public Object froms() {

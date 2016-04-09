@@ -20,6 +20,11 @@ public class ArelNodeAnd extends ArelNode {
         return super.equals(other);
     }
 
+    @Override
+    public int hashCode() {
+        return children().hashCode();
+    }
+
     public List<Object> children() {
         return this.children;
     }

@@ -171,6 +171,12 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector visitArelNodeBin(ArelNodeBin bin, ArelCollector collector) {
+        collector = visit(bin.expr(), collector);
+
+        return collector;
+    }
+
     public ArelCollector visitArelNodeBindParam(ArelNodeBindParam bindParam, ArelCollector collector) {
         collector.addBind(bindParam, new ArelCollector.Bindable() {
             @Override

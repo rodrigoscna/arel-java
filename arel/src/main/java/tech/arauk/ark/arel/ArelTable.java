@@ -142,6 +142,11 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     }
 
     @Override
+    public int hashCode() {
+        return name().hashCode();
+    }
+
+    @Override
     public boolean isAbleToTypeCast() {
         return this.mTypeCaster != null;
     }
@@ -149,6 +154,17 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     @Override
     public ArelNodeNamedFunction lower(Object column) {
         return ArelFactoryMethods.lower(column);
+    }
+
+    @Override
+    public String name() {
+        return this.mName;
+    }
+
+    @Override
+    public ArelTable name(Object tableName) {
+        this.mName = String.valueOf(tableName);
+        return this;
     }
 
     @Override
@@ -169,13 +185,12 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
 
     @Override
     public String tableName() {
-        return this.mName;
+        return name();
     }
 
     @Override
     public ArelTable tableName(Object tableName) {
-        this.mName = String.valueOf(tableName);
-        return this;
+        return name(tableName);
     }
 
     public ArelNodeTableAlias alias() {

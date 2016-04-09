@@ -1,12 +1,15 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.interfaces.ArelFramingInterface;
+import tech.arauk.ark.arel.interfaces.ArelOrdersInterface;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeRange;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeRows;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class ArelNodeWindow extends ArelNode {
+public class ArelNodeWindow extends ArelNode implements ArelFramingInterface, ArelOrdersInterface {
     public List<Object> orders;
     public List<Object> partitions;
     public Object framing;
@@ -14,6 +17,33 @@ public class ArelNodeWindow extends ArelNode {
     public ArelNodeWindow() {
         this.orders = new ArrayList<>();
         this.partitions = new ArrayList<>();
+    }
+
+    @Override
+    public Object framing() {
+        return this.framing;
+    }
+
+    @Override
+    public ArelNodeWindow framing(Object framing) {
+        this.framing = framing;
+        return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[]{orders(), framing()});
+    }
+
+    @Override
+    public List<Object> orders() {
+        return this.orders;
+    }
+
+    @Override
+    public ArelNodeWindow orders(List<Object> orders) {
+        this.orders = orders;
+        return this;
     }
 
     public ArelNodeWindow order(Object... expr) {

@@ -10,6 +10,10 @@ public interface ArelRelation {
 
     ArelNodeNamedFunction lower(Object column);
 
+    Object name();
+
+    ArelRelation name(Object tableName);
+
     Object tableAlias();
 
     ArelRelation tableAlias(Object tableAlias);

@@ -86,6 +86,17 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     }
 
     @Override
+    public Object name() {
+        return right();
+    }
+
+    @Override
+    public ArelRelation name(Object name) {
+        right(name);
+        return this;
+    }
+
+    @Override
     public Object typeCastForDatabase(String name, Object value) {
         try {
             Method method = relation().getClass().getMethod("typeCastForDatabase", String.class, Object.class);
@@ -123,15 +134,6 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return name(tableName);
         }
-    }
-
-    public Object name() {
-        return right();
-    }
-
-    public ArelRelation name(Object name) {
-        right(name);
-        return this;
     }
 
     public Object relation() {

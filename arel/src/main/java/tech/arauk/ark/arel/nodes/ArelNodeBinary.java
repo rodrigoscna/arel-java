@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel.nodes;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class ArelNodeBinary extends ArelNode {
@@ -21,6 +22,11 @@ public class ArelNodeBinary extends ArelNode {
         }
 
         return super.equals(other);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[]{getClass(), left(), right()});
     }
 
     public Object left() {

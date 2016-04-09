@@ -4,6 +4,7 @@ import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKeyInterface, ArelLimitInterface, ArelOrdersInterface, ArelRelationInterface, ArelValuesInterface, ArelWheresInterface {
@@ -23,6 +24,11 @@ public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKe
         this.relation = null;
         this.values = new ArrayList<>();
         this.wheres = new ArrayList<>();
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[]{relation(), wheres(), values(), orders(), limit(), key()});
     }
 
     @Override
