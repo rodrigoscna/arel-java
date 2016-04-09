@@ -4,7 +4,6 @@ import tech.arauk.ark.arel.ArelFactoryMethods;
 import tech.arauk.ark.arel.ArelFactoryMethodsInterface;
 import tech.arauk.ark.arel.ArelTable;
 import tech.arauk.ark.arel.collectors.ArelCollector;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
 import java.util.ArrayList;

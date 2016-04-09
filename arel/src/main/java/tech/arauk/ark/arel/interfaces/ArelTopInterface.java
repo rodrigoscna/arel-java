@@ -1,6 +1,6 @@
 package tech.arauk.ark.arel.interfaces;
 
-import tech.arauk.ark.arel.nodes.unary.ArelNodeTop;
+import tech.arauk.ark.arel.nodes.ArelNodeTop;
 
 public interface ArelTopInterface {
     ArelNodeTop top();

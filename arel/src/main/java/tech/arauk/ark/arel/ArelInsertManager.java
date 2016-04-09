@@ -3,7 +3,7 @@ package tech.arauk.ark.arel;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.nodes.ArelNodeInsertStatement;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeValues;
+import tech.arauk.ark.arel.nodes.ArelNodeValues;
 
 import java.util.ArrayList;
 import java.util.Iterator;

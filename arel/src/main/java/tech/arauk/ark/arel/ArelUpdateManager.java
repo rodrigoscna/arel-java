@@ -4,8 +4,8 @@ import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 import tech.arauk.ark.arel.nodes.ArelNodeUnqualifiedColumn;
 import tech.arauk.ark.arel.nodes.ArelNodeUpdateStatement;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeAssignment;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
+import tech.arauk.ark.arel.nodes.ArelNodeAssignment;
+import tech.arauk.ark.arel.nodes.ArelNodeLimit;
 
 import java.util.ArrayList;
 import java.util.List;

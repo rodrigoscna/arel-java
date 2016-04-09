@@ -1,7 +1,6 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.binary.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

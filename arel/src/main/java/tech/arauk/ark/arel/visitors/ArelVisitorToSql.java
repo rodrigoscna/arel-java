@@ -9,9 +9,6 @@ import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.connection.SchemaCache;
 import tech.arauk.ark.arel.interfaces.ArelDistinctInterface;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.binary.*;
-import tech.arauk.ark.arel.nodes.function.*;
-import tech.arauk.ark.arel.nodes.unary.*;
 
 import java.util.*;
 

@@ -2,8 +2,6 @@ package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.interfaces.ArelFramingInterface;
 import tech.arauk.ark.arel.interfaces.ArelOrdersInterface;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeRange;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeRows;
 
 import java.util.ArrayList;
 import java.util.Arrays;

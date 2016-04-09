@@ -1,8 +1,6 @@
 package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.interfaces.*;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeJoinSource;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeTop;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,7 +1,6 @@
 package tech.arauk.ark.arel.nodes;
 
 import junit.framework.TestCase;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeNotEqual;
 
 import java.util.Objects;
 

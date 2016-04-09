@@ -4,7 +4,6 @@ import tech.arauk.ark.arel.ArelFactoryMethods;
 import tech.arauk.ark.arel.ArelFactoryMethodsInterface;
 import tech.arauk.ark.arel.ArelRelation;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -119,7 +118,7 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     @Override
     public Object tableName() {
         try {
-            Method method = relation().getClass().getMethod("name");
+            Method method = ArelRelation.class.getMethod("name");
             return method.invoke(this);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return name();
@@ -129,7 +128,7 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     @Override
     public ArelRelation tableName(Object tableName) {
         try {
-            Method method = relation().getClass().getMethod("name", Object.class);
+            Method method = ArelRelation.class.getMethod("name", Object.class);
             return (ArelRelation) method.invoke(this, tableName);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return name(tableName);
@@ -138,5 +137,9 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
 
     public Object relation() {
         return left();
+    }
+
+    public ArelNodeTableAlias relation(Object left) {
+        return (ArelNodeTableAlias) left(left);
     }
 }

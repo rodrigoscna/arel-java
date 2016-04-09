@@ -1,6 +1,6 @@
 package tech.arauk.ark.arel.interfaces;
 
-import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
+import tech.arauk.ark.arel.nodes.ArelNodeLimit;
 
 public interface ArelLimitInterface {
     ArelNodeLimit limit();

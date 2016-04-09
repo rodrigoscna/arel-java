@@ -2,11 +2,10 @@ package tech.arauk.ark.arel.attributes;
 
 import tech.arauk.ark.arel.*;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.binary.*;
-import tech.arauk.ark.arel.nodes.function.ArelNodeAvg;
-import tech.arauk.ark.arel.nodes.function.ArelNodeMax;
-import tech.arauk.ark.arel.nodes.function.ArelNodeMin;
-import tech.arauk.ark.arel.nodes.function.ArelNodeSum;
+import tech.arauk.ark.arel.nodes.ArelNodeAvg;
+import tech.arauk.ark.arel.nodes.ArelNodeMax;
+import tech.arauk.ark.arel.nodes.ArelNodeMin;
+import tech.arauk.ark.arel.nodes.ArelNodeSum;
 
 import java.util.Objects;
 

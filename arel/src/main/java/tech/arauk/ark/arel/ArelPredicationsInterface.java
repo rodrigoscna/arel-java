@@ -1,9 +1,6 @@
 package tech.arauk.ark.arel;
 
-import tech.arauk.ark.arel.nodes.ArelNode;
-import tech.arauk.ark.arel.nodes.ArelNodeEquality;
-import tech.arauk.ark.arel.nodes.ArelNodeGrouping;
-import tech.arauk.ark.arel.nodes.binary.*;
+import tech.arauk.ark.arel.nodes.*;
 
 public interface ArelPredicationsInterface {
     ArelNode between(Object begin, Object end);

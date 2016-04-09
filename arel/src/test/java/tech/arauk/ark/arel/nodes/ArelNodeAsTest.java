@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import tech.arauk.ark.arel.Arel;
 import tech.arauk.ark.arel.ArelTable;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeAs;
 
 import java.util.Objects;
 

@@ -4,11 +4,7 @@ import junit.framework.TestCase;
 import tech.arauk.ark.arel.interfaces.ArelKeyInterface;
 import tech.arauk.ark.arel.nodes.ArelNodeBindParam;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeJoinSource;
 import tech.arauk.ark.arel.support.FakeRecord;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ArelUpdateManagerTest {
     public static abstract class Base extends TestCase {

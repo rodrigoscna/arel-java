@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import tech.arauk.ark.arel.Arel;
 import tech.arauk.ark.arel.ArelTable;
 import tech.arauk.ark.arel.collectors.ArelCollector;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeBin;
 import tech.arauk.ark.arel.support.FakeRecord;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 import tech.arauk.ark.arel.visitors.ArelVisitorMySQL;

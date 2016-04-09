@@ -4,12 +4,11 @@ import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeExcept;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeIntersect;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeUnion;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeUnionAll;
-import tech.arauk.ark.arel.nodes.function.ArelNodeExists;
-import tech.arauk.ark.arel.nodes.unary.*;
+import tech.arauk.ark.arel.nodes.ArelNodeExcept;
+import tech.arauk.ark.arel.nodes.ArelNodeIntersect;
+import tech.arauk.ark.arel.nodes.ArelNodeUnion;
+import tech.arauk.ark.arel.nodes.ArelNodeUnionAll;
+import tech.arauk.ark.arel.nodes.ArelNodeExists;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 import tech.arauk.ark.arel.visitors.ArelVisitorWhereSql;
 

@@ -1,7 +1,7 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeAs;
+import tech.arauk.ark.arel.nodes.ArelNodeAs;
 
 public abstract class ArelAliasPredications {
     public static ArelNodeAs as(Object holder, Object other) {

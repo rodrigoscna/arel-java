@@ -3,7 +3,7 @@ package tech.arauk.ark.arel;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.connection.ArelTypeCaster;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
+import tech.arauk.ark.arel.nodes.ArelNodeOn;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
 import java.util.ArrayList;

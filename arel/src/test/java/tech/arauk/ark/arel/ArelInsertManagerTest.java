@@ -1,7 +1,7 @@
 package tech.arauk.ark.arel;
 
 import junit.framework.TestCase;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeValues;
+import tech.arauk.ark.arel.nodes.ArelNodeValues;
 import tech.arauk.ark.arel.support.FakeRecord;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.ArelNodeDeleteStatement;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
+import tech.arauk.ark.arel.nodes.ArelNodeLimit;
 
 import java.util.List;
 

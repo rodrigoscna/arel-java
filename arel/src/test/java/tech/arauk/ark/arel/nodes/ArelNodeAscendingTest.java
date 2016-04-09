@@ -57,7 +57,7 @@ public class ArelNodeAscendingTest {
         }
 
         public void testEqualityWithDifferentValues() {
-            assertFalse(!Objects.equals(new ArelNodeAscending("zomg"), new ArelNodeAscending("zomg!")));
+            assertFalse(Objects.equals(new ArelNodeAscending("zomg"), new ArelNodeAscending("zomg!")));
         }
     }
 }

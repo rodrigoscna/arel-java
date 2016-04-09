@@ -1,6 +1,6 @@
 package tech.arauk.ark.arel.interfaces;
 
-import tech.arauk.ark.arel.nodes.unary.ArelNodeLock;
+import tech.arauk.ark.arel.nodes.ArelNodeLock;
 
 public interface ArelLockInterface {
     ArelNodeLock lock();

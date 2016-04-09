@@ -2,7 +2,7 @@ package tech.arauk.ark.arel;
 
 import junit.framework.TestCase;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOn;
+import tech.arauk.ark.arel.nodes.ArelNodeOn;
 
 public class ArelFactoryMethodsTest {
     public static abstract class Base extends TestCase {

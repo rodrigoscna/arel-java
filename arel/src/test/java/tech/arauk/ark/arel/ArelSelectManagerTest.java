@@ -3,12 +3,12 @@ package tech.arauk.ark.arel;
 import junit.framework.TestCase;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeAs;
-import tech.arauk.ark.arel.nodes.binary.ArelNodeBetween;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeFollowing;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeLimit;
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
-import tech.arauk.ark.arel.nodes.unary.ArelNodePreceding;
+import tech.arauk.ark.arel.nodes.ArelNodeAs;
+import tech.arauk.ark.arel.nodes.ArelNodeBetween;
+import tech.arauk.ark.arel.nodes.ArelNodeFollowing;
+import tech.arauk.ark.arel.nodes.ArelNodeLimit;
+import tech.arauk.ark.arel.nodes.ArelNodeOffset;
+import tech.arauk.ark.arel.nodes.ArelNodePreceding;
 import tech.arauk.ark.arel.support.FakeRecord;
 
 import java.util.ArrayList;

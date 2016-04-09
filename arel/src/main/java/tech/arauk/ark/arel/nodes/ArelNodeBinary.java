@@ -33,15 +33,17 @@ public class ArelNodeBinary extends ArelNode {
         return this.left;
     }
 
-    public void left(Object left) {
+    public ArelNodeBinary left(Object left) {
         this.left = left;
+        return this;
     }
 
     public Object right() {
         return this.right;
     }
 
-    public void right(Object right) {
+    public ArelNodeBinary right(Object right) {
         this.right = right;
+        return this;
     }
 }

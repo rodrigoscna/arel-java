@@ -1,6 +1,6 @@
 package tech.arauk.ark.arel.interfaces;
 
-import tech.arauk.ark.arel.nodes.unary.ArelNodeOffset;
+import tech.arauk.ark.arel.nodes.ArelNodeOffset;
 
 public interface ArelOffsetInterface {
     ArelNodeOffset offset();

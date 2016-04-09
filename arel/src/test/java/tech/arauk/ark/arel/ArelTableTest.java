@@ -36,13 +36,13 @@ public class ArelTableTest {
 
             assertEquals(nodes, mRelation.aliases());
 
-            Object tableAlias = mRelation.alias();
-            nodes.add(tableAlias);
+            ArelNode node = mRelation.alias();
+            nodes.add(node);
 
-            assertSame(ArelNodeTableAlias.class, tableAlias.getClass());
+            assertSame(ArelNodeTableAlias.class, node.getClass());
             assertEquals(nodes, mRelation.aliases());
-            assertEquals("users_2", ((ArelNodeTableAlias) tableAlias).tableName());
-            assertEquals(tableAlias, ((ArelNodeTableAlias) tableAlias).get("id").relation);
+            assertEquals("users_2", ((ArelNodeTableAlias) node).tableName());
+            assertEquals(node, ((ArelNodeTableAlias) node).get("id").relation);
         }
     }
 
