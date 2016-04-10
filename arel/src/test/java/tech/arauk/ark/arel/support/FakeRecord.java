@@ -26,7 +26,7 @@ public class FakeRecord {
         private Map<String, Column[]> columns;
         private Map<String, Map<Object, Object>> columnsHash;
         private Map<String, String> primaryKeys;
-        private ArelVisitor visitor;
+        public ArelVisitor visitor;
 
         public Connection() {
             this(null);
