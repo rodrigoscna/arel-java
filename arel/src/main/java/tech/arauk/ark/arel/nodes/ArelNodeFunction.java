@@ -115,13 +115,13 @@ public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterf
     }
 
     @Override
-    public ArelNodeGrouping inAll(Object... other) {
-        return ArelPredications.inAll(this, other);
+    public ArelNodeGrouping inAll(Object... others) {
+        return ArelPredications.inAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping inAny(Object... other) {
-        return ArelPredications.inAny(this, other);
+    public ArelNodeGrouping inAny(Object... others) {
+        return ArelPredications.inAny(this, others);
     }
 
     @Override
@@ -200,13 +200,13 @@ public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterf
     }
 
     @Override
-    public ArelNodeGrouping notInAll(Object... other) {
-        return ArelPredications.notInAll(this, other);
+    public ArelNodeGrouping notInAll(Object... others) {
+        return ArelPredications.notInAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping notInAny(Object... other) {
-        return ArelPredications.notInAny(this, other);
+    public ArelNodeGrouping notInAny(Object... others) {
+        return ArelPredications.notInAny(this, others);
     }
 
     public ArelNodeFunction as(Object alias) {

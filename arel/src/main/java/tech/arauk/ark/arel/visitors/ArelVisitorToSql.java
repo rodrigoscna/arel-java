@@ -27,6 +27,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public static final String ESCAPE = " ESCAPE ";
     public static final String EXCEPT = " EXCEPT ";
     public static final String EXISTS = "EXISTS ";
+    public static final String EXTRACT = "EXTRACT";
     public static final String FOLLOWING = " FOLLOWING";
     public static final String FROM = " FROM ";
     public static final String FULL_OUTER_JOIN = "FULL OUTER JOIN ";
@@ -268,6 +269,17 @@ public class ArelVisitorToSql extends ArelVisitor {
             collector.append(AS);
             collector = visit(exists.alias, collector);
         }
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeExtract(ArelNodeExtract extract, ArelCollector collector) {
+        collector.append(EXTRACT);
+        collector.append(GROUPING_OPEN);
+        collector.append(extract.field().toString().toUpperCase());
+        collector.append(FROM);
+        collector = visit(extract.expr(), collector);
+        collector.append(GROUPING_CLOSE);
 
         return collector;
     }

@@ -63,14 +63,14 @@ public class ArelNodeEqualityTest {
             ArelAttribute attribute = new ArelTable("users").get("id");
             ArelNodeEquality node = attribute.eq(10);
 
-            assertEquals(node.right(), node.operant1());
+            assertEquals(node.left(), node.operant1());
         }
 
         public void testOperand2() {
             ArelAttribute attribute = new ArelTable("users").get("id");
             ArelNodeEquality node = attribute.eq(10);
 
-            assertEquals(node.left(), node.operant2());
+            assertEquals(node.right(), node.operant2());
         }
     }
 

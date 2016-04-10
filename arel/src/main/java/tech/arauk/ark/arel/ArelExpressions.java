@@ -1,10 +1,6 @@
 package tech.arauk.ark.arel;
 
-import tech.arauk.ark.arel.nodes.ArelNodeCount;
-import tech.arauk.ark.arel.nodes.ArelNodeAvg;
-import tech.arauk.ark.arel.nodes.ArelNodeMax;
-import tech.arauk.ark.arel.nodes.ArelNodeMin;
-import tech.arauk.ark.arel.nodes.ArelNodeSum;
+import tech.arauk.ark.arel.nodes.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +16,10 @@ public abstract class ArelExpressions {
 
     public static ArelNodeCount count(Object holder, Boolean distinct) {
         return new ArelNodeCount(objectToArray(holder), distinct);
+    }
+
+    public static ArelNodeExtract extract(Object holder, Object field) {
+        return new ArelNodeExtract(objectToArray(holder), field);
     }
 
     public static ArelNodeMax maximum(Object holder) {

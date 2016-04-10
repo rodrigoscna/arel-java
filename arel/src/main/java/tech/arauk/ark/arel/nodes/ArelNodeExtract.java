@@ -1,11 +1,32 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.ArelAliasPredications;
+import tech.arauk.ark.arel.ArelAliasPredicationsInterface;
 import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelPredicationsInterface;
 
-public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsInterface {
-    public ArelNodeGrouping(Object expr) {
+import java.util.Objects;
+
+public class ArelNodeExtract extends ArelNodeUnary implements ArelAliasPredicationsInterface, ArelPredicationsInterface {
+    private Object field;
+
+    public ArelNodeExtract(Object expr, Object field) {
         super(expr);
+        field(field);
+    }
+
+    public Object field() {
+        return this.field;
+    }
+
+    public ArelNodeExtract field(Object field) {
+        this.field = field;
+        return this;
+    }
+
+    @Override
+    public ArelNodeAs as(Object other) {
+        return ArelAliasPredications.as(this, other);
     }
 
     @Override
@@ -49,6 +70,16 @@ public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsI
     }
 
     @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeExtract) {
+            ArelNodeExtract extract = (ArelNodeExtract) other;
+            return super.equals(other) && Objects.equals(field(), extract.field());
+        }
+
+        return super.equals(other);
+    }
+
+    @Override
     public ArelNodeGreaterThan gt(Object right) {
         return ArelPredications.gt(this, right);
     }
@@ -76,6 +107,11 @@ public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsI
     @Override
     public ArelNodeGrouping gteqAny(Object... others) {
         return ArelPredications.gteqAny(this, others);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() ^ field().hashCode();
     }
 
     @Override

@@ -33,9 +33,9 @@ public interface ArelPredicationsInterface {
 
     ArelNodeIn in(Object other);
 
-    ArelNodeGrouping inAll(Object... other);
+    ArelNodeGrouping inAll(Object... others);
 
-    ArelNodeGrouping inAny(Object... other);
+    ArelNodeGrouping inAny(Object... others);
 
     ArelNodeLessThan lt(Object right);
 
@@ -67,7 +67,7 @@ public interface ArelPredicationsInterface {
 
     ArelNodeNotIn notIn(Object other);
 
-    ArelNodeGrouping notInAll(Object... other);
+    ArelNodeGrouping notInAll(Object... others);
 
-    ArelNodeGrouping notInAny(Object... other);
+    ArelNodeGrouping notInAny(Object... others);
 }

@@ -93,6 +93,11 @@ public class ArelNodeSqlLiteral implements ArelAliasPredicationsInterface, ArelE
     }
 
     @Override
+    public ArelNodeExtract extract(Object field) {
+        return ArelExpressions.extract(this, field);
+    }
+
+    @Override
     public ArelNodeGreaterThan gt(Object right) {
         return ArelPredications.gt(this, right);
     }
@@ -208,8 +213,8 @@ public class ArelNodeSqlLiteral implements ArelAliasPredicationsInterface, ArelE
     }
 
     @Override
-    public ArelNodeGrouping notEqAll(Object... other) {
-        return ArelPredications.notEqAll(this, other);
+    public ArelNodeGrouping notEqAll(Object... others) {
+        return ArelPredications.notEqAll(this, others);
     }
 
     @Override

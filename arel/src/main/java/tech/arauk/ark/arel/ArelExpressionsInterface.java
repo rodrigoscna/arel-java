@@ -1,10 +1,6 @@
 package tech.arauk.ark.arel;
 
-import tech.arauk.ark.arel.nodes.ArelNodeCount;
-import tech.arauk.ark.arel.nodes.ArelNodeAvg;
-import tech.arauk.ark.arel.nodes.ArelNodeMax;
-import tech.arauk.ark.arel.nodes.ArelNodeMin;
-import tech.arauk.ark.arel.nodes.ArelNodeSum;
+import tech.arauk.ark.arel.nodes.*;
 
 public interface ArelExpressionsInterface {
     ArelNodeAvg average();
@@ -12,6 +8,8 @@ public interface ArelExpressionsInterface {
     ArelNodeCount count();
 
     ArelNodeCount count(Boolean distinct);
+
+    ArelNodeExtract extract(Object field);
 
     ArelNodeMax maximum();
 

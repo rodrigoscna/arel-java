@@ -1,11 +1,33 @@
 package tech.arauk.ark.arel.nodes;
 
-import tech.arauk.ark.arel.ArelPredications;
-import tech.arauk.ark.arel.ArelPredicationsInterface;
+import tech.arauk.ark.arel.*;
 
-public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsInterface {
-    public ArelNodeGrouping(Object expr) {
-        super(expr);
+public class ArelNodeInfixOperation extends ArelNodeBinary implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelMathInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
+    private Object operator;
+
+    public ArelNodeInfixOperation(Object operator, Object left, Object right) {
+        super(left, right);
+        operator(operator);
+    }
+
+    @Override
+    public ArelNodeGrouping add(Object other) {
+        return ArelMath.add(this, other);
+    }
+
+    @Override
+    public ArelNodeAs as(Object other) {
+        return ArelAliasPredications.as(this, other);
+    }
+
+    @Override
+    public ArelNodeAscending asc() {
+        return ArelOrderPredications.asc(this);
+    }
+
+    @Override
+    public ArelNodeAvg average() {
+        return ArelExpressions.average(this);
     }
 
     @Override
@@ -16,6 +38,26 @@ public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsI
     @Override
     public ArelNode between(Object begin, Object end, boolean inclusive) {
         return ArelPredications.between(this, begin, end, inclusive);
+    }
+
+    @Override
+    public ArelNodeCount count() {
+        return ArelExpressions.count(this);
+    }
+
+    @Override
+    public ArelNodeCount count(Boolean distinct) {
+        return ArelExpressions.count(this, distinct);
+    }
+
+    @Override
+    public ArelNodeDescending desc() {
+        return ArelOrderPredications.desc(this);
+    }
+
+    @Override
+    public ArelNodeDivision divide(Object other) {
+        return ArelMath.divide(this, other);
     }
 
     @Override
@@ -46,6 +88,11 @@ public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsI
     @Override
     public ArelNodeGrouping eqAny(Object... others) {
         return ArelPredications.eqAny(this, others);
+    }
+
+    @Override
+    public ArelNodeExtract extract(Object field) {
+        return ArelExpressions.extract(this, field);
     }
 
     @Override
@@ -139,6 +186,21 @@ public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsI
     }
 
     @Override
+    public ArelNodeMax maximum() {
+        return ArelExpressions.maximum(this);
+    }
+
+    @Override
+    public ArelNodeMin minimum() {
+        return ArelExpressions.minimum(this);
+    }
+
+    @Override
+    public ArelNodeMultiplication multiply(Object other) {
+        return ArelMath.multiply(this, other);
+    }
+
+    @Override
     public ArelNode notBetween(Object begin, Object end) {
         return ArelPredications.notBetween(this, begin, end);
     }
@@ -176,5 +238,24 @@ public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsI
     @Override
     public ArelNodeGrouping notInAny(Object... others) {
         return ArelPredications.notInAny(this, others);
+    }
+
+    @Override
+    public ArelNodeGrouping subtract(Object other) {
+        return ArelMath.subtract(this, other);
+    }
+
+    @Override
+    public ArelNodeSum sum() {
+        return ArelExpressions.sum(this);
+    }
+
+    public Object operator() {
+        return this.operator;
+    }
+
+    public ArelNodeInfixOperation operator(Object operator) {
+        this.operator = operator;
+        return this;
     }
 }
