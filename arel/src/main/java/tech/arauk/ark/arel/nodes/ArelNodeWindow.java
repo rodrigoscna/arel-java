@@ -2,12 +2,14 @@ package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.interfaces.ArelFramingInterface;
 import tech.arauk.ark.arel.interfaces.ArelOrdersInterface;
+import tech.arauk.ark.arel.interfaces.ArelPartitionsInterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
-public class ArelNodeWindow extends ArelNode implements ArelFramingInterface, ArelOrdersInterface {
+public class ArelNodeWindow extends ArelNode implements ArelFramingInterface, ArelOrdersInterface, ArelPartitionsInterface {
     public List<Object> orders;
     public List<Object> partitions;
     public Object framing;
@@ -15,6 +17,19 @@ public class ArelNodeWindow extends ArelNode implements ArelFramingInterface, Ar
     public ArelNodeWindow() {
         this.orders = new ArrayList<>();
         this.partitions = new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeWindow) {
+            ArelNodeWindow window = (ArelNodeWindow) other;
+
+            return Objects.equals(this.orders(), window.orders())
+                    && Objects.equals(this.framing(), window.framing())
+                    && Objects.equals(this.partitions(), window.partitions());
+        }
+
+        return super.equals(other);
     }
 
     @Override
@@ -39,8 +54,19 @@ public class ArelNodeWindow extends ArelNode implements ArelFramingInterface, Ar
     }
 
     @Override
-    public ArelNodeWindow orders(List<Object> orders) {
-        this.orders = orders;
+    public ArelNodeWindow orders(Object orders) {
+        this.orders = objectToList(orders);
+        return this;
+    }
+
+    @Override
+    public List<Object> partitions() {
+        return this.partitions;
+    }
+
+    @Override
+    public ArelNodeWindow partitions(Object partitions) {
+        this.partitions = objectToList(partitions);
         return this;
     }
 

@@ -5,6 +5,7 @@ import tech.arauk.ark.arel.ArelRelation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ArelNodeInsertStatement extends ArelNodeStatement {
     public List<Object> columns;
@@ -19,6 +20,17 @@ public class ArelNodeInsertStatement extends ArelNodeStatement {
         this.columns = new ArrayList<>();
         this.values = null;
         this.select = null;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeInsertStatement) {
+            ArelNodeInsertStatement insertStatement = (ArelNodeInsertStatement) other;
+
+            return Objects.equals(this.relation(), insertStatement.relation()) && Objects.equals(this.columns(), insertStatement.columns()) && Objects.equals(this.select(), insertStatement.select()) && Objects.equals(this.values(), insertStatement.values());
+        }
+
+        return super.equals(other);
     }
 
     @Override

@@ -5,6 +5,7 @@ import tech.arauk.ark.arel.interfaces.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, ArelGroupsInterface, ArelHavingsInterface, ArelProjectionsInterface, ArelSetQuantifierInterface, ArelSourceInterface, ArelTopInterface, ArelWheresInterface, ArelWindowsInterface {
     public ArelNodeJoinSource source;
@@ -25,6 +26,23 @@ public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, A
         this.source = new ArelNodeJoinSource(null);
         this.windows = new ArrayList<>();
         this.wheres = new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeSelectCore) {
+            ArelNodeSelectCore selectCore = (ArelNodeSelectCore) other;
+
+            return Objects.equals(this.source(), selectCore.source())
+                    && Objects.equals(this.setQuantifier(), selectCore.setQuantifier())
+                    && Objects.equals(this.projections(), selectCore.projections())
+                    && Objects.equals(this.wheres(), selectCore.wheres())
+                    && Objects.equals(this.groups(), selectCore.groups())
+                    && Objects.equals(this.havings(), selectCore.havings())
+                    && Objects.equals(this.windows(), selectCore.windows());
+        }
+
+        return super.equals(other);
     }
 
     @Override
@@ -116,8 +134,8 @@ public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, A
     }
 
     @Override
-    public ArelNodeSelectCore wheres(List<Object> wheres) {
-        this.wheres = wheres;
+    public ArelNodeSelectCore wheres(Object wheres) {
+        this.wheres = objectToList(wheres);
         return this;
     }
 

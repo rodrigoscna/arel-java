@@ -2,11 +2,13 @@ package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelPredicationsInterface;
+import tech.arauk.ark.arel.ArelWindowPredications;
+import tech.arauk.ark.arel.ArelWindowPredicationsInterface;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterface {
+public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterface, ArelWindowPredicationsInterface {
     public Object alias;
     public Object expressions;
     public Boolean distinct;
@@ -207,6 +209,16 @@ public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterf
     @Override
     public ArelNodeGrouping notInAny(Object... others) {
         return ArelPredications.notInAny(this, others);
+    }
+
+    @Override
+    public ArelNodeOver over() {
+        return ArelWindowPredications.over(this);
+    }
+
+    @Override
+    public ArelNodeOver over(Object expr) {
+        return ArelWindowPredications.over(this, expr);
     }
 
     public ArelNodeFunction as(Object alias) {

@@ -5,5 +5,5 @@ import tech.arauk.ark.arel.nodes.ArelNodeLimit;
 public interface ArelLimitInterface {
     ArelNodeLimit limit();
 
-    ArelLimitInterface limit(ArelNodeLimit limit);
+    ArelLimitInterface limit(Object limit);
 }

@@ -2,6 +2,8 @@ package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.interfaces.ArelNameInterface;
 
+import java.util.Objects;
+
 public class ArelNodeNamedFunction extends ArelNodeFunction implements ArelNameInterface {
     public String name;
 
@@ -23,6 +25,17 @@ public class ArelNodeNamedFunction extends ArelNodeFunction implements ArelNameI
         this(expr, alias);
 
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeNamedFunction) {
+            ArelNodeNamedFunction namedFunction = (ArelNodeNamedFunction) other;
+
+            return super.equals(other) && Objects.equals(this.name(), namedFunction.name());
+        }
+
+        return super.equals(other);
     }
 
     @Override

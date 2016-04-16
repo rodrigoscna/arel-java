@@ -5,6 +5,7 @@ import tech.arauk.ark.arel.interfaces.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKeyInterface, ArelLimitInterface, ArelOrdersInterface, ArelRelationInterface, ArelValuesInterface, ArelWheresInterface {
     private Object relation;
@@ -23,6 +24,22 @@ public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKe
         this.relation = null;
         this.values = new ArrayList<>();
         this.wheres = new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeUpdateStatement) {
+            ArelNodeUpdateStatement updateStatement = (ArelNodeUpdateStatement) other;
+
+            return Objects.equals(this.relation(), updateStatement.relation())
+                    && Objects.equals(this.wheres(), updateStatement.wheres())
+                    && Objects.equals(this.values(), updateStatement.values())
+                    && Objects.equals(this.orders(), updateStatement.orders())
+                    && Objects.equals(this.limit(), updateStatement.limit())
+                    && Objects.equals(this.key(), updateStatement.key());
+        }
+
+        return super.equals(other);
     }
 
     @Override
@@ -47,8 +64,13 @@ public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKe
     }
 
     @Override
-    public ArelNodeUpdateStatement limit(ArelNodeLimit limit) {
-        this.limit = limit;
+    public ArelLimitInterface limit(Object limit) {
+        if (limit instanceof ArelNodeLimit) {
+            this.limit = (ArelNodeLimit) limit;
+        } else {
+            this.limit = new ArelNodeLimit(limit);
+        }
+
         return this;
     }
 
@@ -58,8 +80,8 @@ public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKe
     }
 
     @Override
-    public ArelNodeUpdateStatement orders(List<Object> orders) {
-        this.orders = orders;
+    public ArelNodeUpdateStatement orders(Object orders) {
+        this.orders = objectToList(orders);
         return this;
     }
 
@@ -80,8 +102,8 @@ public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKe
     }
 
     @Override
-    public ArelNodeUpdateStatement values(List<Object> values) {
-        this.values = values;
+    public ArelNodeUpdateStatement values(Object values) {
+        this.values = objectToList(values);
         return this;
     }
 
@@ -91,8 +113,8 @@ public class ArelNodeUpdateStatement extends ArelNodeStatement implements ArelKe
     }
 
     @Override
-    public ArelNodeUpdateStatement wheres(List<Object> wheres) {
-        this.wheres = wheres;
+    public ArelNodeUpdateStatement wheres(Object wheres) {
+        this.wheres = objectToList(wheres);
         return this;
     }
 }

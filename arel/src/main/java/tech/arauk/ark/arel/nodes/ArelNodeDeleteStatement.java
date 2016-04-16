@@ -22,8 +22,8 @@ public class ArelNodeDeleteStatement extends ArelNodeBinary implements ArelWhere
     }
 
     @Override
-    public ArelNodeDeleteStatement wheres(List<Object> wheres) {
-        this.right(wheres);
+    public ArelNodeDeleteStatement wheres(Object wheres) {
+        this.right(objectToList(wheres));
         return this;
     }
 
@@ -33,9 +33,5 @@ public class ArelNodeDeleteStatement extends ArelNodeBinary implements ArelWhere
 
     public void relation(Object left) {
         this.left(left);
-    }
-
-    public void wheres(Object right) {
-        this.right(right);
     }
 }

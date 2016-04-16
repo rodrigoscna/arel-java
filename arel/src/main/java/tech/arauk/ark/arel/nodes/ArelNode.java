@@ -7,9 +7,25 @@ import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ArelNode implements ArelFactoryMethodsInterface {
+    static List<Object> objectToList(Object object) {
+        List<Object> objects;
+
+        if (object instanceof List) {
+            objects = (List<Object>) object;
+        } else if (object instanceof Object[]) {
+            objects = Arrays.asList((Object[]) object);
+        } else {
+            objects = new ArrayList<>();
+            objects.add(object);
+        }
+
+        return objects;
+    }
+
     @Override
     public ArelNodeAnd createAnd(List<Object> clauses) {
         return ArelFactoryMethods.createAnd(clauses);
@@ -70,6 +86,10 @@ public class ArelNode implements ArelFactoryMethodsInterface {
         and.add(this);
         and.add(right);
         return new ArelNodeAnd(and);
+    }
+
+    public ArelNodeNot not() {
+        return new ArelNodeNot(this);
     }
 
     public ArelNodeGrouping or(Object right) {

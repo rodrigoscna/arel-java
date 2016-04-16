@@ -5,6 +5,7 @@ import tech.arauk.ark.arel.interfaces.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCoresInterface, ArelLimitInterface, ArelLockInterface, ArelOffsetInterface, ArelOrdersInterface, ArelWithInterface {
     public ArelNodeSelectCore[] cores;
@@ -37,6 +38,22 @@ public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCo
     }
 
     @Override
+    public boolean equals(Object other) {
+        if (other instanceof ArelNodeSelectStatement) {
+            ArelNodeSelectStatement selectStatement = (ArelNodeSelectStatement) other;
+
+            return Arrays.equals(this.cores(), selectStatement.cores())
+                    && Objects.equals(this.orders(), selectStatement.orders())
+                    && Objects.equals(this.limit(), selectStatement.limit())
+                    && Objects.equals(this.lock(), selectStatement.lock())
+                    && Objects.equals(this.offset(), selectStatement.offset())
+                    && Objects.equals(this.with(), selectStatement.with());
+        }
+
+        return super.equals(other);
+    }
+
+    @Override
     public int hashCode() {
         return Arrays.hashCode(new Object[]{cores(), orders(), limit(), lock(), offset(), with()});
     }
@@ -47,8 +64,13 @@ public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCo
     }
 
     @Override
-    public ArelNodeSelectStatement lock(ArelNodeLock lock) {
-        this.lock = lock;
+    public ArelNodeSelectStatement lock(Object lock) {
+        if (lock instanceof ArelNodeLock) {
+            this.lock = (ArelNodeLock) lock;
+        } else {
+            this.lock = new ArelNodeLock(lock);
+        }
+
         return this;
     }
 
@@ -58,8 +80,13 @@ public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCo
     }
 
     @Override
-    public ArelNodeSelectStatement limit(ArelNodeLimit limit) {
-        this.limit = limit;
+    public ArelNodeSelectStatement limit(Object limit) {
+        if (limit instanceof ArelNodeLimit) {
+            this.limit = (ArelNodeLimit) limit;
+        } else {
+            this.limit = new ArelNodeLimit(limit);
+        }
+
         return this;
     }
 
@@ -69,8 +96,13 @@ public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCo
     }
 
     @Override
-    public ArelNodeSelectStatement offset(ArelNodeOffset offset) {
-        this.offset = offset;
+    public ArelNodeSelectStatement offset(Object offset) {
+        if (offset instanceof ArelNodeOffset) {
+            this.offset = (ArelNodeOffset) offset;
+        } else {
+            this.offset = new ArelNodeOffset(offset);
+        }
+
         return this;
     }
 
@@ -80,8 +112,8 @@ public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCo
     }
 
     @Override
-    public ArelNodeSelectStatement orders(List<Object> orders) {
-        this.orders = orders;
+    public ArelNodeSelectStatement orders(Object orders) {
+        this.orders = objectToList(orders);
         return this;
     }
 
@@ -91,8 +123,13 @@ public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCo
     }
 
     @Override
-    public ArelNodeSelectStatement with(ArelNodeWith with) {
-        this.with = with;
+    public ArelNodeSelectStatement with(Object with) {
+        if (with instanceof ArelNodeWith) {
+            this.with = (ArelNodeWith) with;
+        } else {
+            this.with = new ArelNodeWith(with);
+        }
+
         return this;
     }
 }

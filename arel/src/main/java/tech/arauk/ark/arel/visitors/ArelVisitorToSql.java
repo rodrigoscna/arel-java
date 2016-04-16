@@ -7,7 +7,6 @@ import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.connection.SchemaCache;
-import tech.arauk.ark.arel.interfaces.ArelDistinctInterface;
 import tech.arauk.ark.arel.nodes.*;
 
 import java.util.*;
@@ -22,7 +21,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public static final String CURRENT_ROW = "CURRENT ROW";
     public static final String DELETE_FROM = "DELETE FROM ";
     public static final String DESC = " DESC";
-    public static final String DISTINCT = "DISTINCT ";
+    public static final String DISTINCT = "DISTINCT";
     public static final String EQUALS = " = ";
     public static final String ESCAPE = " ESCAPE ";
     public static final String EXCEPT = " EXCEPT ";
@@ -56,6 +55,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public static final String ON = "ON ";
     public static final String OR = " OR ";
     public static final String ORDER_BY = "ORDER BY ";
+    public static final String OVER = " OVER ";
     public static final String PARTITION_BY = "PARTITION BY ";
     public static final String PRECEDING = " PRECEDING";
     public static final String RANGE = "RANGE";
@@ -221,6 +221,12 @@ public class ArelVisitorToSql extends ArelVisitor {
     public ArelCollector visitArelNodeDescending(ArelNodeDescending descending, ArelCollector collector) {
         collector = visit(descending.expr(), collector);
         collector.append(DESC);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeDistinct(ArelNodeDistinct distinct, ArelCollector collector) {
+        collector.append(DISTINCT);
 
         return collector;
     }
@@ -536,6 +542,27 @@ public class ArelVisitorToSql extends ArelVisitor {
         collector = visit(outerJoin.left(), collector);
         collector.append(SPACE);
         collector = visit(outerJoin.right(), collector);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeOver(ArelNodeOver over, ArelCollector collector) {
+        Object right = over.right();
+
+        if (right == null) {
+            collector = visit(over.left(), collector);
+            collector.append(OVER);
+            collector.append(GROUPING_OPEN);
+            collector.append(GROUPING_CLOSE);
+        } else if (right instanceof ArelNodeSqlLiteral) {
+            collector = infixValue(over, collector, OVER);
+        } else if (right instanceof String) {
+            collector = visit(over.left(), collector);
+            collector.append(OVER);
+            collector.append(quoteColumnName(right));
+        } else {
+            collector = infixValue(over, collector, OVER);
+        }
 
         return collector;
     }
@@ -904,20 +931,21 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
-    private ArelCollector aggregate(String name, ArelNodeFunction object, ArelCollector collector) {
+    private ArelCollector aggregate(String name, ArelNodeFunction function, ArelCollector collector) {
         collector.append(name);
         collector.append(GROUPING_OPEN);
         try {
-            if (((ArelDistinctInterface) object).distinct()) {
+            if (function.distinct()) {
                 collector.append(DISTINCT);
+                collector.append(SPACE);
             }
         } catch (ClassCastException ignored) {
         }
-        collector = injectJoin(((List<Object>) object.expressions), collector, COMMA);
+        collector = injectJoin(((List<Object>) function.expressions), collector, COMMA);
         collector.append(GROUPING_CLOSE);
-        if (object.alias != null) {
+        if (function.alias != null) {
             collector.append(AS);
-            collector = visit(object.alias, collector);
+            collector = visit(function.alias, collector);
         }
 
         return collector;

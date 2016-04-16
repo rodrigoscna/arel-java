@@ -5,5 +5,5 @@ import java.util.List;
 public interface ArelOrdersInterface {
     List<Object> orders();
 
-    ArelOrdersInterface orders(List<Object> orders);
+    ArelOrdersInterface orders(Object orders);
 }

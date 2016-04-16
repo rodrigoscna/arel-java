@@ -5,5 +5,5 @@ import tech.arauk.ark.arel.nodes.ArelNodeWith;
 public interface ArelWithInterface {
     ArelNodeWith with();
 
-    ArelWithInterface with(ArelNodeWith with);
+    ArelWithInterface with(Object with);
 }

@@ -5,5 +5,5 @@ import tech.arauk.ark.arel.nodes.ArelNodeOffset;
 public interface ArelOffsetInterface {
     ArelNodeOffset offset();
 
-    ArelOffsetInterface offset(ArelNodeOffset offset);
+    ArelOffsetInterface offset(Object offset);
 }
