@@ -91,12 +91,12 @@ public class ArelTreeManager implements ArelFactoryMethodsInterface {
         this.ctx = ctx;
     }
 
-    public String toSQL() {
+    public String toSql() {
         ArelVisitor visitor = ArelTable.engine;
-        return toSQL(visitor);
+        return toSql(visitor);
     }
 
-    public String toSQL(ArelVisitor visitor) {
+    public String toSql(ArelVisitor visitor) {
         ArelCollector collector = new ArelCollector();
         collector = visitor.connection.getVisitor().accept(this.ast, collector);
         return collector.value();

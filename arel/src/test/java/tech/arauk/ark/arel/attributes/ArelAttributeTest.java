@@ -40,12 +40,12 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeAvg.class, relation.get("id").average().getClass());
             }
 
-            public void testAverageToSQL() {
+            public void testAverageToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id").average());
 
-                assertEquals("SELECT AVG(\"users\".\"id\") FROM \"users\"", selectManager.toSQL());
+                assertEquals("SELECT AVG(\"users\".\"id\") FROM \"users\"", selectManager.toSql());
             }
         }
 
@@ -56,13 +56,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeAscending.class, relation.get("id").asc().getClass());
             }
 
-            public void testAscToSQL() {
+            public void testAscToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.order(relation.get("id").asc());
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" ORDER BY \"users\".\"id\" ASC", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" ORDER BY \"users\".\"id\" ASC", selectManager.toSql());
             }
         }
 
@@ -153,12 +153,12 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeCount.class, relation.get("id").count().getClass());
             }
 
-            public void testCountToSQL() {
+            public void testCountToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id").count());
 
-                assertEquals("SELECT COUNT(\"users\".\"id\") FROM \"users\"", selectManager.toSQL());
+                assertEquals("SELECT COUNT(\"users\".\"id\") FROM \"users\"", selectManager.toSql());
             }
 
             public void testCountWithDistinct() {
@@ -167,12 +167,12 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeCount.class, relation.get("id").count(true).getClass());
             }
 
-            public void testCountWithDistinctToSQL() {
+            public void testCountWithDistinctToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id").count(true));
 
-                assertEquals("SELECT COUNT(DISTINCT \"users\".\"id\") FROM \"users\"", selectManager.toSQL());
+                assertEquals("SELECT COUNT(DISTINCT \"users\".\"id\") FROM \"users\"", selectManager.toSql());
             }
         }
 
@@ -183,13 +183,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeDescending.class, relation.get("id").desc().getClass());
             }
 
-            public void testDescToSQL() {
+            public void testDescToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.order(relation.get("id").desc());
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" ORDER BY \"users\".\"id\" DESC", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" ORDER BY \"users\".\"id\" DESC", selectManager.toSql());
             }
         }
 
@@ -200,13 +200,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeDoesNotMatch.class, relation.get("name").doesNotMatch("%bacon%").getClass());
             }
 
-            public void testDoesNotMatchToSQL() {
+            public void testDoesNotMatchToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").doesNotMatch("%bacon%"));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" NOT LIKE '%bacon%'", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" NOT LIKE '%bacon%'", selectManager.toSql());
             }
         }
 
@@ -217,13 +217,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("name").doesNotMatchAll("%bacon%").getClass());
             }
 
-            public void testDoesNotMatchAllToSQL() {
+            public void testDoesNotMatchAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").doesNotMatchAll(new Object[]{"%chunky%", "%bacon%"}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" NOT LIKE '%chunky%' AND \"users\".\"name\" NOT LIKE '%bacon%')", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" NOT LIKE '%chunky%' AND \"users\".\"name\" NOT LIKE '%bacon%')", selectManager.toSql());
             }
         }
 
@@ -234,13 +234,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("name").doesNotMatchAny("%bacon%").getClass());
             }
 
-            public void testDoesNotMatchAnyToSQL() {
+            public void testDoesNotMatchAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").doesNotMatchAny(new Object[]{"%chunky%", "%bacon%"}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" NOT LIKE '%chunky%' OR \"users\".\"name\" NOT LIKE '%bacon%')", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" NOT LIKE '%chunky%' OR \"users\".\"name\" NOT LIKE '%bacon%')", selectManager.toSql());
             }
         }
 
@@ -255,13 +255,13 @@ public class ArelAttributeTest {
                 assertEquals(ArelNodes.buildQuoted(1, attribute), ((ArelNodeEquality) equality).right());
             }
 
-            public void testEqToSQL() {
+            public void testEqToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").eq(10));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" = 10", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" = 10", selectManager.toSql());
             }
 
             public void testEqWithNull() {
@@ -270,7 +270,7 @@ public class ArelAttributeTest {
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").eq(null));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" IS NULL", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" IS NULL", selectManager.toSql());
             }
         }
 
@@ -281,13 +281,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").eqAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testEqAllToSQL() {
+            public void testEqAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").eqAll(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" = 1 AND \"users\".\"id\" = 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" = 1 AND \"users\".\"id\" = 2)", selectManager.toSql());
             }
         }
 
@@ -298,13 +298,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").eqAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testEqAnyToSQL() {
+            public void testEqAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").eqAny(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" = 1 OR \"users\".\"id\" = 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" = 1 OR \"users\".\"id\" = 2)", selectManager.toSql());
             }
         }
 
@@ -315,13 +315,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGreaterThan.class, relation.get("id").gt(10).getClass());
             }
 
-            public void testGtToSQL() {
+            public void testGtToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").gt(10));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" > 10", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" > 10", selectManager.toSql());
             }
 
             public void testGtWithSubquery() {
@@ -330,7 +330,7 @@ public class ArelAttributeTest {
                 ArelSelectManager average = users.project(users.get("karma").average());
                 ArelSelectManager selectManager = users.project(Arel.star()).where(users.get("karma").gt(average));
 
-                assertEquals("SELECT * FROM \"users\" WHERE \"users\".\"karma\" > (SELECT AVG(\"users\".\"karma\") FROM \"users\")", selectManager.toSQL());
+                assertEquals("SELECT * FROM \"users\" WHERE \"users\".\"karma\" > (SELECT AVG(\"users\".\"karma\") FROM \"users\")", selectManager.toSql());
             }
 
             public void testGtWithVariousDataTypes() {
@@ -339,12 +339,12 @@ public class ArelAttributeTest {
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").gt("fake_name"));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" > 'fake_name'", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" > 'fake_name'", selectManager.toSql());
 
                 Date currentTime = new Date();
                 selectManager.where(relation.get("created_at").gt(currentTime));
 
-                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" > 'fake_name' AND \"users\".\"created_at\" > %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSQL());
+                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" > 'fake_name' AND \"users\".\"created_at\" > %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSql());
             }
         }
 
@@ -355,13 +355,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").gtAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testGtAllToSQL() {
+            public void testGtAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").gtAll(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" > 1 AND \"users\".\"id\" > 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" > 1 AND \"users\".\"id\" > 2)", selectManager.toSql());
             }
         }
 
@@ -372,13 +372,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").gtAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testGtAnyToSQL() {
+            public void testGtAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").gtAny(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" > 1 OR \"users\".\"id\" > 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" > 1 OR \"users\".\"id\" > 2)", selectManager.toSql());
             }
         }
 
@@ -389,13 +389,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGreaterThanOrEqual.class, relation.get("id").gteq(10).getClass());
             }
 
-            public void testGtEqToSQL() {
+            public void testGtEqToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").gteq(10));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" >= 10", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" >= 10", selectManager.toSql());
             }
 
             public void testGtEqWithVariousDataTypes() {
@@ -404,12 +404,12 @@ public class ArelAttributeTest {
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").gteq("fake_name"));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" >= 'fake_name'", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" >= 'fake_name'", selectManager.toSql());
 
                 Date currentTime = new Date();
                 selectManager.where(relation.get("created_at").gteq(currentTime));
 
-                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" >= 'fake_name' AND \"users\".\"created_at\" >= %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSQL());
+                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" >= 'fake_name' AND \"users\".\"created_at\" >= %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSql());
             }
         }
 
@@ -420,13 +420,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").gteqAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testGtEqAllToSQL() {
+            public void testGtEqAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").gteqAll(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" >= 1 AND \"users\".\"id\" >= 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" >= 1 AND \"users\".\"id\" >= 2)", selectManager.toSql());
             }
         }
 
@@ -437,13 +437,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").gteqAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testGtEqAnyToSQL() {
+            public void testGtEqAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").gteqAny(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" >= 1 OR \"users\".\"id\" >= 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" >= 1 OR \"users\".\"id\" >= 2)", selectManager.toSql());
             }
         }
 
@@ -481,13 +481,13 @@ public class ArelAttributeTest {
                 assertEquals(new ArelNodeIn(attribute, selectManager.ast()), node);
             }
 
-            public void testInToSQL() {
+            public void testInToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").in(new Object[]{1, 2, 3}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" IN (1, 2, 3)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" IN (1, 2, 3)", selectManager.toSql());
             }
         }
 
@@ -498,13 +498,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").inAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testInAllToSQL() {
+            public void testInAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").inAll((Object[]) new Object[][]{{1, 2}, {3, 4}}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" IN (1, 2) AND \"users\".\"id\" IN (3, 4))", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" IN (1, 2) AND \"users\".\"id\" IN (3, 4))", selectManager.toSql());
             }
         }
 
@@ -515,13 +515,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").inAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testInAnyToSQL() {
+            public void testInAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").inAny((Object[]) new Object[][]{{1, 2}, {3, 4}}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" IN (1, 2) OR \"users\".\"id\" IN (3, 4))", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" IN (1, 2) OR \"users\".\"id\" IN (3, 4))", selectManager.toSql());
             }
         }
 
@@ -532,13 +532,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeLessThan.class, relation.get("id").lt(10).getClass());
             }
 
-            public void testLtToSQL() {
+            public void testLtToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").lt(10));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" < 10", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" < 10", selectManager.toSql());
             }
 
             public void testLtWithVariousDataTypes() {
@@ -547,12 +547,12 @@ public class ArelAttributeTest {
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").lt("fake_name"));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" < 'fake_name'", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" < 'fake_name'", selectManager.toSql());
 
                 Date currentTime = new Date();
                 selectManager.where(relation.get("created_at").lt(currentTime));
 
-                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" < 'fake_name' AND \"users\".\"created_at\" < %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSQL());
+                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" < 'fake_name' AND \"users\".\"created_at\" < %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSql());
             }
         }
 
@@ -563,13 +563,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").ltAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testLtAllToSQL() {
+            public void testLtAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").ltAll(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" < 1 AND \"users\".\"id\" < 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" < 1 AND \"users\".\"id\" < 2)", selectManager.toSql());
             }
         }
 
@@ -580,13 +580,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").ltAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testLtAnyToSQL() {
+            public void testLtAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").ltAny(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" < 1 OR \"users\".\"id\" < 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" < 1 OR \"users\".\"id\" < 2)", selectManager.toSql());
             }
         }
 
@@ -597,13 +597,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeLessThanOrEqual.class, relation.get("id").lteq(10).getClass());
             }
 
-            public void testLtEqToSQL() {
+            public void testLtEqToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").lteq(10));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" <= 10", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" <= 10", selectManager.toSql());
             }
 
             public void testLtEqWithVariousDataTypes() {
@@ -612,12 +612,12 @@ public class ArelAttributeTest {
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").lteq("fake_name"));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" <= 'fake_name'", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" <= 'fake_name'", selectManager.toSql());
 
                 Date currentTime = new Date();
                 selectManager.where(relation.get("created_at").lteq(currentTime));
 
-                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" <= 'fake_name' AND \"users\".\"created_at\" <= %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSQL());
+                assertEquals(String.format("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" <= 'fake_name' AND \"users\".\"created_at\" <= %s", ArelTable.engine.connection.quote(currentTime)), selectManager.toSql());
             }
         }
 
@@ -628,13 +628,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").lteqAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testLtEqAllToSQL() {
+            public void testLtEqAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").lteqAll(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" <= 1 AND \"users\".\"id\" <= 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" <= 1 AND \"users\".\"id\" <= 2)", selectManager.toSql());
             }
         }
 
@@ -645,13 +645,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").lteqAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testLtEqAnyToSQL() {
+            public void testLtEqAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").lteqAny(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" <= 1 OR \"users\".\"id\" <= 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" <= 1 OR \"users\".\"id\" <= 2)", selectManager.toSql());
             }
         }
 
@@ -662,13 +662,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeMatches.class, relation.get("name").matches("%bacon%").getClass());
             }
 
-            public void testMatchesToSQL() {
+            public void testMatchesToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").matches("%bacon%"));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" LIKE '%bacon%'", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"name\" LIKE '%bacon%'", selectManager.toSql());
             }
         }
 
@@ -679,13 +679,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("name").matchesAll("%bacon%").getClass());
             }
 
-            public void testMatchesAllToSQL() {
+            public void testMatchesAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").matchesAll(new Object[]{"%chunky%", "%bacon%"}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" LIKE '%chunky%' AND \"users\".\"name\" LIKE '%bacon%')", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" LIKE '%chunky%' AND \"users\".\"name\" LIKE '%bacon%')", selectManager.toSql());
             }
         }
 
@@ -696,13 +696,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("name").matchesAny("%bacon%").getClass());
             }
 
-            public void testMatchesAnyToSQL() {
+            public void testMatchesAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("name").matchesAny(new Object[]{"%chunky%", "%bacon%"}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" LIKE '%chunky%' OR \"users\".\"name\" LIKE '%bacon%')", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"name\" LIKE '%chunky%' OR \"users\".\"name\" LIKE '%bacon%')", selectManager.toSql());
             }
         }
 
@@ -713,12 +713,12 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeMax.class, relation.get("id").maximum().getClass());
             }
 
-            public void testMaximumToSQL() {
+            public void testMaximumToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id").maximum());
 
-                assertEquals("SELECT MAX(\"users\".\"id\") FROM \"users\"", selectManager.toSQL());
+                assertEquals("SELECT MAX(\"users\".\"id\") FROM \"users\"", selectManager.toSql());
             }
         }
 
@@ -729,12 +729,12 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeMin.class, relation.get("id").minimum().getClass());
             }
 
-            public void testMinimumToSQL() {
+            public void testMinimumToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id").minimum());
 
-                assertEquals("SELECT MIN(\"users\".\"id\") FROM \"users\"", selectManager.toSQL());
+                assertEquals("SELECT MIN(\"users\".\"id\") FROM \"users\"", selectManager.toSql());
             }
         }
 
@@ -795,13 +795,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeNotEqual.class, relation.get("id").notEq(10).getClass());
             }
 
-            public void testNotEqToSQL() {
+            public void testNotEqToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").notEq(10));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" != 10", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" != 10", selectManager.toSql());
             }
 
             public void testNotEqWithNull() {
@@ -810,7 +810,7 @@ public class ArelAttributeTest {
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").notEq(null));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" IS NOT NULL", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" IS NOT NULL", selectManager.toSql());
             }
         }
 
@@ -821,13 +821,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").notEqAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testNotEqAllToSQL() {
+            public void testNotEqAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").notEqAll(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" != 1 AND \"users\".\"id\" != 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" != 1 AND \"users\".\"id\" != 2)", selectManager.toSql());
             }
         }
 
@@ -838,13 +838,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").notEqAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testNotEqAnyToSQL() {
+            public void testNotEqAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").notEqAny(new Object[]{1, 2}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" != 1 OR \"users\".\"id\" != 2)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" != 1 OR \"users\".\"id\" != 2)", selectManager.toSql());
             }
         }
 
@@ -882,13 +882,13 @@ public class ArelAttributeTest {
                 assertEquals(new ArelNodeNotIn(attribute, selectManager.ast()), node);
             }
 
-            public void testNotInToSQL() {
+            public void testNotInToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").notIn(new Object[]{1, 2, 3}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" NOT IN (1, 2, 3)", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" NOT IN (1, 2, 3)", selectManager.toSql());
             }
         }
 
@@ -899,13 +899,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").notInAll(new Object[]{1, 2}).getClass());
             }
 
-            public void testNotInAllToSQL() {
+            public void testNotInAllToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").notInAll((Object[]) new Object[][]{{1, 2}, {3, 4}}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" NOT IN (1, 2) AND \"users\".\"id\" NOT IN (3, 4))", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" NOT IN (1, 2) AND \"users\".\"id\" NOT IN (3, 4))", selectManager.toSql());
             }
         }
 
@@ -916,13 +916,13 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeGrouping.class, relation.get("id").notInAny(new Object[]{1, 2}).getClass());
             }
 
-            public void testNotInAnyToSQL() {
+            public void testNotInAnyToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id"));
                 selectManager.where(relation.get("id").notInAny((Object[]) new Object[][]{{1, 2}, {3, 4}}));
 
-                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" NOT IN (1, 2) OR \"users\".\"id\" NOT IN (3, 4))", selectManager.toSQL());
+                assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE (\"users\".\"id\" NOT IN (1, 2) OR \"users\".\"id\" NOT IN (3, 4))", selectManager.toSql());
             }
         }
 
@@ -933,24 +933,24 @@ public class ArelAttributeTest {
                 assertSame(ArelNodeSum.class, relation.get("id").sum().getClass());
             }
 
-            public void testSumToSQL() {
+            public void testSumToSql() {
                 ArelTable relation = new ArelTable("users");
 
                 ArelSelectManager selectManager = relation.project(relation.get("id").sum());
 
-                assertEquals("SELECT SUM(\"users\".\"id\") FROM \"users\"", selectManager.toSQL());
+                assertEquals("SELECT SUM(\"users\".\"id\") FROM \"users\"", selectManager.toSql());
             }
         }
     }
 
     public static class Equality {
-        public static class ToSQL extends Base {
-            public void testToSQL() {
+        public static class ToSql extends Base {
+            public void testToSql() {
                 ArelTable table = new ArelTable("users");
 
                 ArelNode condition = table.get("id").eq(1);
 
-                assertEquals("\"users\".\"id\" = 1", condition.toSQL());
+                assertEquals("\"users\".\"id\" = 1", condition.toSql());
             }
         }
     }
@@ -961,7 +961,7 @@ public class ArelAttributeTest {
             ArelNode condition = table.get("id").eq("1");
 
             assertFalse(table.isAbleToTypeCast());
-            assertEquals("\"foo\".\"id\" = '1'", condition.toSQL());
+            assertEquals("\"foo\".\"id\" = '1'", condition.toSql());
         }
 
         public void testTypeCastingWitbExplicitCaster() {
@@ -980,7 +980,7 @@ public class ArelAttributeTest {
             ArelNode condition = table.get("id").eq("1").and(table.get("other_id").eq("2"));
 
             assertTrue(table.isAbleToTypeCast());
-            assertEquals("\"foo\".\"id\" = 1 AND \"foo\".\"other_id\" = '2'", condition.toSQL());
+            assertEquals("\"foo\".\"id\" = 1 AND \"foo\".\"other_id\" = '2'", condition.toSql());
         }
 
         public void testTypeCastingWithFallbackCaster() {
@@ -988,7 +988,7 @@ public class ArelAttributeTest {
             ArelNode condition = table.get("id").eq("1");
 
             assertFalse(table.isAbleToTypeCast());
-            assertEquals("\"users\".\"id\" = '1'", condition.toSQL());
+            assertEquals("\"users\".\"id\" = '1'", condition.toSql());
         }
     }
 }

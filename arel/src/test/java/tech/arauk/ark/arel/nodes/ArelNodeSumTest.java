@@ -37,7 +37,7 @@ public class ArelNodeSumTest {
         public void testSumAlias() {
             ArelTable table = new ArelTable("users");
 
-            assertEquals("SUM(\"users\".\"id\") AS foo", table.get("id").sum().as("foo").toSQL());
+            assertEquals("SUM(\"users\".\"id\") AS foo", table.get("id").sum().as("foo").toSql());
         }
     }
 }

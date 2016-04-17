@@ -33,7 +33,7 @@ public class ArelInsertManagerTest {
             insertManager.into(table);
             insertManager.columns().add(table.get("id"));
 
-            assertEquals("INSERT INTO \"users\" (\"id\")", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"id\")", insertManager.toSql());
         }
     }
 
@@ -51,7 +51,7 @@ public class ArelInsertManagerTest {
             insertManager.columns().add(table.get("id"));
             insertManager.columns().add(table.get("name"));
 
-            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSql());
         }
     }
 
@@ -80,7 +80,7 @@ public class ArelInsertManagerTest {
             ArelInsertManager insertManager = new ArelInsertManager();
             insertManager.insert(new Object[][]{{table.get("created_at"), date}});
 
-            assertEquals(String.format("INSERT INTO \"users\" (\"created_at\") VALUES (%s)", ArelTable.engine.connection.quote(date)), insertManager.toSQL());
+            assertEquals(String.format("INSERT INTO \"users\" (\"created_at\") VALUES (%s)", ArelTable.engine.connection.quote(date)), insertManager.toSql());
         }
 
         public void testInsertDefaultTable() {
@@ -89,7 +89,7 @@ public class ArelInsertManagerTest {
             ArelInsertManager insertManager = new ArelInsertManager();
             insertManager.insert(new Object[][]{{table.get("id"), 1}, {table.get("name"), "aaron"}});
 
-            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSql());
         }
 
         public void testInsertEmptyOverwrite() {
@@ -99,7 +99,7 @@ public class ArelInsertManagerTest {
             insertManager.insert(new Object[][]{{table.get("id"), 1}});
             insertManager.insert(new Object[][]{});
 
-            assertEquals("INSERT INTO \"users\" (\"id\") VALUES (1)", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"id\") VALUES (1)", insertManager.toSql());
         }
 
         public void testInsertFalse() {
@@ -108,7 +108,7 @@ public class ArelInsertManagerTest {
             ArelInsertManager insertManager = new ArelInsertManager();
             insertManager.insert(new Object[][]{{table.get("bool"), false}});
 
-            assertEquals("INSERT INTO \"users\" (\"bool\") VALUES ('f')", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"bool\") VALUES ('f')", insertManager.toSql());
         }
 
         public void testInsertListsList() {
@@ -118,7 +118,7 @@ public class ArelInsertManagerTest {
             insertManager.into(table);
             insertManager.insert(new Object[][]{{table.get("id"), 1}, {table.get("name"), "aaron"}});
 
-            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") VALUES (1, 'aaron')", insertManager.toSql());
         }
 
         public void testInsertNull() {
@@ -127,7 +127,7 @@ public class ArelInsertManagerTest {
             ArelInsertManager insertManager = new ArelInsertManager();
             insertManager.insert(new Object[][]{{table.get("id"), null}});
 
-            assertEquals("INSERT INTO \"users\" (\"id\") VALUES (NULL)", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"id\") VALUES (NULL)", insertManager.toSql());
         }
 
         public void testInsertSQLLiterals() {
@@ -140,7 +140,7 @@ public class ArelInsertManagerTest {
             insertManager.into(new ArelTable("users"));
             insertManager.values(insertManager.createValues(values, columns));
 
-            assertEquals("INSERT INTO \"users\" VALUES (*)", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" VALUES (*)", insertManager.toSql());
         }
     }
 
@@ -151,13 +151,13 @@ public class ArelInsertManagerTest {
             assertEquals(insertManager, insertManager.into(new ArelTable("users")));
         }
 
-        public void testIntoToSQL() {
+        public void testIntoToSql() {
             ArelTable table = new ArelTable("users");
 
             ArelInsertManager insertManager = new ArelInsertManager();
             insertManager.into(table);
 
-            assertEquals("INSERT INTO \"users\"", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\"", insertManager.toSql());
         }
     }
 
@@ -182,7 +182,7 @@ public class ArelInsertManagerTest {
             insertManager.columns().add(table.get("id"));
             insertManager.columns().add(table.get("name"));
 
-            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") (SELECT 1, \"aaron\")", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" (\"id\", \"name\") (SELECT 1, \"aaron\")", insertManager.toSql());
         }
     }
 
@@ -197,7 +197,7 @@ public class ArelInsertManagerTest {
             insertManager.into(table);
             insertManager.values(new ArelNodeValues(values));
 
-            assertEquals("INSERT INTO \"users\" VALUES (1)", insertManager.toSQL());
+            assertEquals("INSERT INTO \"users\" VALUES (1)", insertManager.toSql());
         }
     }
 }

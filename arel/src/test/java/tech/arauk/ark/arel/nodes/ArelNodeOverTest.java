@@ -38,32 +38,32 @@ public class ArelNodeOverTest {
         public void testOverAlias() {
             ArelTable table = new ArelTable("users");
 
-            assertEquals("COUNT(\"users\".\"id\") OVER () AS foo", table.get("id").count().over().as("foo").toSQL());
+            assertEquals("COUNT(\"users\".\"id\") OVER () AS foo", table.get("id").count().over().as("foo").toSql());
         }
 
         public void testOverWithExpression() {
             ArelTable table = new ArelTable("users");
             ArelNodeWindow window = new ArelNodeWindow().order(table.get("foo"));
 
-            assertEquals("COUNT(\"users\".\"id\") OVER (ORDER BY \"users\".\"foo\")", table.get("id").count().over(window).toSQL());
+            assertEquals("COUNT(\"users\".\"id\") OVER (ORDER BY \"users\".\"foo\")", table.get("id").count().over(window).toSql());
         }
 
         public void testOverWithLiteral() {
             ArelTable table = new ArelTable("users");
 
-            assertEquals("COUNT(\"users\".\"id\") OVER \"foo\"", table.get("id").count().over("foo").toSQL());
+            assertEquals("COUNT(\"users\".\"id\") OVER \"foo\"", table.get("id").count().over("foo").toSql());
         }
 
         public void testOverWithNoExpression() {
             ArelTable table = new ArelTable("users");
 
-            assertEquals("COUNT(\"users\".\"id\") OVER ()", table.get("id").count().over().toSQL());
+            assertEquals("COUNT(\"users\".\"id\") OVER ()", table.get("id").count().over().toSql());
         }
 
         public void testOverWithSQLLiteral() {
             ArelTable table = new ArelTable("users");
 
-            assertEquals("COUNT(\"users\".\"id\") OVER foo", table.get("id").count().over(Arel.sql("foo")).toSQL());
+            assertEquals("COUNT(\"users\".\"id\") OVER foo", table.get("id").count().over(Arel.sql("foo")).toSql());
         }
     }
 }

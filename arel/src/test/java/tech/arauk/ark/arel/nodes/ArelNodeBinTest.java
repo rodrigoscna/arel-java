@@ -35,14 +35,14 @@ public class ArelNodeBinTest {
             assertSame(ArelNodeBin.class, bin.getClass());
         }
 
-        public void testBinToSQL() {
+        public void testBinToSql() {
             ArelVisitor visitor = new ArelVisitorToSql(ArelTable.engine.connection);
             ArelNode node = new ArelNodeBin(Arel.sql("zomg"));
 
             assertEquals("zomg", visitor.accept(node, new ArelCollector()).value());
         }
 
-        public void testBinToSQLWithMySQL() {
+        public void testBinToSqlWithMySQL() {
             ArelVisitor visitor = new ArelVisitorMySQL(ArelTable.engine.connection);
             ArelNode node = new ArelNodeBin(Arel.sql("zomg"));
 

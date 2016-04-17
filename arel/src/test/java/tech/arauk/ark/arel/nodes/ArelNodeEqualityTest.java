@@ -87,8 +87,8 @@ public class ArelNodeEqualityTest {
         }
     }
 
-    public static class ToSQL extends Base {
-        public void testToSQLWithEngine() {
+    public static class ToSql extends Base {
+        public void testToSqlWithEngine() {
             QuoteCountConnection connection = new QuoteCountConnection();
 
             ArelVisitor engine = new FakeRecord.Base();
@@ -99,7 +99,7 @@ public class ArelNodeEqualityTest {
 
             ArelAttribute attribute = new ArelTable("users").get("id");
             ArelNodeEquality node = attribute.eq(10);
-            node.toSQL(engine);
+            node.toSql(engine);
 
             assertEquals(3, ((QuoteCountConnection) engine.connection).quoteCount);
         }

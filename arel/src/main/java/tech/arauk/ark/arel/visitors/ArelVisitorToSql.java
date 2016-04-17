@@ -892,7 +892,7 @@ public class ArelVisitorToSql extends ArelVisitor {
 
     public ArelCollector visitArelSelectManager(ArelSelectManager selectManager, ArelCollector collector) {
         collector.append(GROUPING_OPEN);
-        collector.append(selectManager.toSQL());
+        collector.append(selectManager.toSql());
         collector.append(GROUPING_CLOSE);
 
         return collector;

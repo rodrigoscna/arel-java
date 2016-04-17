@@ -38,7 +38,7 @@ public class ArelNodeGroupingTest {
         public void testGrouping() {
             ArelNodeGrouping grouping = new ArelNodeGrouping(ArelNodes.buildQuoted("foo"));
 
-            assertEquals("('foo') = 'foo'", grouping.eq("foo").toSQL());
+            assertEquals("('foo') = 'foo'", grouping.eq("foo").toSql());
         }
     }
 }

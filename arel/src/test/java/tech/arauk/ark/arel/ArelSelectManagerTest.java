@@ -39,7 +39,7 @@ public class ArelSelectManagerTest {
             assertEquals(Arel.sql("foo"), tableAlias.right());
         }
 
-        public void testAsConversionToSQLLiteral() {
+        public void testAsConversionToSqlLiteral() {
             ArelSelectManager selectManager = new ArelSelectManager();
             ArelNodeTableAlias tableAlias = selectManager.as("foo");
 
@@ -58,7 +58,7 @@ public class ArelSelectManagerTest {
             selectManager.project(Arel.sql("name"));
             selectManager.from(tableAlias);
 
-            assertEquals("SELECT name FROM (SELECT * FROM zomg) foo", selectManager.toSQL());
+            assertEquals("SELECT name FROM (SELECT * FROM zomg) foo", selectManager.toSql());
         }
     }
 
@@ -71,7 +71,7 @@ public class ArelSelectManagerTest {
 
             ArelDeleteManager deleteManager = selectManager.compileDelete();
 
-            assertEquals("DELETE FROM \"users\"", deleteManager.toSQL());
+            assertEquals("DELETE FROM \"users\"", deleteManager.toSql());
         }
 
         public void testDeleteFromWithWhere() {
@@ -83,7 +83,7 @@ public class ArelSelectManagerTest {
 
             ArelDeleteManager deleteManager = selectManager.compileDelete();
 
-            assertEquals("DELETE FROM \"users\" WHERE \"users\".\"id\" = 10", deleteManager.toSQL());
+            assertEquals("DELETE FROM \"users\" WHERE \"users\".\"id\" = 10", deleteManager.toSql());
         }
     }
 
@@ -153,7 +153,7 @@ public class ArelSelectManagerTest {
         public void testExceptWithTwoManagers() {
             ArelNode node = mSelectManager1.except(mSelectManager2);
 
-            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" BETWEEN 18 AND 60 EXCEPT SELECT * FROM \"users\" WHERE \"users\".\"age\" BETWEEN 40 AND 99)", node.toSQL());
+            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" BETWEEN 18 AND 60 EXCEPT SELECT * FROM \"users\" WHERE \"users\".\"age\" BETWEEN 40 AND 99)", node.toSql());
         }
     }
 
@@ -167,7 +167,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager2 = new ArelSelectManager(selectManager.engine);
             selectManager2.project(selectManager.exists());
 
-            assertEquals(String.format("SELECT EXISTS (%s)", selectManager.toSQL()), selectManager2.toSQL());
+            assertEquals(String.format("SELECT EXISTS (%s)", selectManager.toSql()), selectManager2.toSql());
         }
 
         public void testExistsWithAlias() {
@@ -179,7 +179,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager2 = new ArelSelectManager(selectManager.engine);
             selectManager2.project(selectManager.exists().as("foo"));
 
-            assertEquals(String.format("SELECT EXISTS (%s) AS foo", selectManager.toSQL()), selectManager2.toSQL());
+            assertEquals(String.format("SELECT EXISTS (%s) AS foo", selectManager.toSql()), selectManager2.toSql());
         }
     }
 
@@ -191,7 +191,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.project(table.get("id"));
 
-            assertEquals("SELECT \"users\".\"id\" FROM \"users\"", selectManager.toSQL());
+            assertEquals("SELECT \"users\".\"id\" FROM \"users\"", selectManager.toSql());
         }
 
         public void testFromForAnyAst() {
@@ -207,7 +207,7 @@ public class ArelSelectManagerTest {
             ArelNodeTableAlias tableAlias = selectManager2.as(Arel.sql("omg"));
             selectManager1.from(tableAlias);
 
-            assertEquals("SELECT lol FROM (SELECT * FROM \"users\") omg", selectManager1.toSQL());
+            assertEquals("SELECT lol FROM (SELECT * FROM \"users\") omg", selectManager1.toSql());
         }
 
         public void testFromMethodChain() {
@@ -216,7 +216,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = new ArelSelectManager();
 
             assertEquals(selectManager, selectManager.from(table).project(table.get("id")));
-            assertEquals("SELECT \"users\".\"id\" FROM \"users\"", selectManager.toSQL());
+            assertEquals("SELECT \"users\".\"id\" FROM \"users\"", selectManager.toSql());
         }
 
         public void testFromWithStringEqualToTableName() {
@@ -227,7 +227,7 @@ public class ArelSelectManagerTest {
             selectManager.from("users");
             selectManager.project(table.get("id"));
 
-            assertEquals("SELECT \"users\".\"id\" FROM users", selectManager.toSQL());
+            assertEquals("SELECT \"users\".\"id\" FROM users", selectManager.toSql());
         }
     }
 
@@ -239,7 +239,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.group("foo");
 
-            assertEquals("SELECT FROM \"users\" GROUP BY foo", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" GROUP BY foo", selectManager.toSql());
         }
 
         public void testGroupMethodChain() {
@@ -257,7 +257,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.group(table.get("id"), table.get("name"));
 
-            assertEquals("SELECT FROM \"users\" GROUP BY \"users\".\"id\", \"users\".\"name\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" GROUP BY \"users\".\"id\", \"users\".\"name\"", selectManager.toSql());
         }
 
         public void testGroupWithAnAttribute() {
@@ -267,18 +267,18 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.group(table.get("id"));
 
-            assertEquals("SELECT FROM \"users\" GROUP BY \"users\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" GROUP BY \"users\".\"id\"", selectManager.toSql());
         }
     }
 
     public static class Having extends Base {
-        public void testHavingConversionToSQLLiteral() {
+        public void testHavingConversionToSqlLiteral() {
             ArelTable table = new ArelTable("users");
 
             ArelSelectManager selectManager = table.from();
             selectManager.having(Arel.sql("foo"));
 
-            assertEquals("SELECT FROM \"users\" HAVING foo", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" HAVING foo", selectManager.toSql());
         }
 
         public void testHavingToReceiveAnyNode() {
@@ -287,7 +287,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.having(new ArelNodeAnd(TestUtils.objectsToList(Arel.sql("foo"), Arel.sql("bar"))));
 
-            assertEquals("SELECT FROM \"users\" HAVING foo AND bar", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" HAVING foo AND bar", selectManager.toSql());
         }
 
         public void testHavingToReceiveMultipleItems() {
@@ -297,7 +297,7 @@ public class ArelSelectManagerTest {
             selectManager.having(Arel.sql("foo"));
             selectManager.having(Arel.sql("bar"));
 
-            assertEquals("SELECT FROM \"users\" HAVING foo AND bar", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" HAVING foo AND bar", selectManager.toSql());
         }
     }
 
@@ -308,7 +308,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.skip(10);
 
-            assertEquals("SELECT FROM \"users\" \"foo\" OFFSET 10", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" \"foo\" OFFSET 10", selectManager.toSql());
         }
     }
 
@@ -334,7 +334,7 @@ public class ArelSelectManagerTest {
         public void testIntersectWithTwoManagers() {
             ArelNode node = mSelectManager1.intersect(mSelectManager2);
 
-            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" > 18 INTERSECT SELECT * FROM \"users\" WHERE \"users\".\"age\" < 99)", node.toSQL());
+            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" > 18 INTERSECT SELECT * FROM \"users\" WHERE \"users\".\"age\" < 99)", node.toSql());
         }
     }
 
@@ -348,7 +348,7 @@ public class ArelSelectManagerTest {
             selectManager.from(left);
             selectManager.join(right).on(predicate);
 
-            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
 
         public void testJoinWithClass() {
@@ -360,7 +360,7 @@ public class ArelSelectManagerTest {
             selectManager.from(left);
             selectManager.join(right, ArelNodeOuterJoin.class).on(predicate);
 
-            assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
 
         public void testJoinWithFullOuter() {
@@ -372,7 +372,7 @@ public class ArelSelectManagerTest {
             selectManager.from(left);
             selectManager.join(right, ArelNodeFullOuterJoin.class).on(predicate);
 
-            assertEquals("SELECT FROM \"users\" FULL OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" FULL OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
 
         public void testJoinWithNull() {
@@ -390,7 +390,7 @@ public class ArelSelectManagerTest {
             selectManager.from(left);
             selectManager.join(right, ArelNodeRightOuterJoin.class).on(predicate);
 
-            assertEquals("SELECT FROM \"users\" RIGHT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" RIGHT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
     }
 
@@ -402,7 +402,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.from(new ArelNodeInnerJoin(alias, table.get("id").eq(alias.get("id"))));
 
-            assertEquals("SELECT FROM INNER JOIN \"users\" \"users_2\" \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM INNER JOIN \"users\" \"users_2\" \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
 
         public void testJoinWithSelf() {
@@ -414,14 +414,14 @@ public class ArelSelectManagerTest {
             selectManager.project(new ArelNodeSqlLiteral("*"));
 
             assertEquals(selectManager, selectManager.on(predicate));
-            assertEquals("SELECT * FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT * FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
 
         public void testJoinWithString() {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.from(new ArelNodeStringJoin(ArelNodes.buildQuoted("hello")));
 
-            assertEquals("SELECT FROM 'hello'", selectManager.toSQL());
+            assertEquals("SELECT FROM 'hello'", selectManager.toSql());
         }
 
         public void testJoinWithTable() {
@@ -432,7 +432,7 @@ public class ArelSelectManagerTest {
 
             ArelSelectManager joins = users.join(counts).on(counts.get("user_id").eq(10));
 
-            assertEquals("SELECT FROM \"users\" INNER JOIN (SELECT \"comments\".\"user_id\" AS user_id, COUNT(\"comments\".\"user_id\") AS count FROM \"comments\" GROUP BY \"comments\".\"user_id\") counts ON counts.\"user_id\" = 10", joins.toSQL());
+            assertEquals("SELECT FROM \"users\" INNER JOIN (SELECT \"comments\".\"user_id\" AS user_id, COUNT(\"comments\".\"user_id\") AS count FROM \"comments\" GROUP BY \"comments\".\"user_id\") counts ON counts.\"user_id\" = 10", joins.toSql());
         }
 
         public void testOuterJoin() {
@@ -442,7 +442,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.from(new ArelNodeOuterJoin(alias, table.get("id").eq(alias.get("id"))));
 
-            assertEquals("SELECT FROM LEFT OUTER JOIN \"users\" \"users_2\" \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM LEFT OUTER JOIN \"users\" \"users_2\" \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
     }
 
@@ -453,7 +453,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.lock();
 
-            assertEquals("SELECT FROM \"users\" FOR UPDATE", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" FOR UPDATE", selectManager.toSql());
         }
     }
 
@@ -464,7 +464,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.offset(10);
 
-            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.toSql());
         }
 
         public void testOffsetAccessor() {
@@ -482,16 +482,16 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.offset(10);
 
-            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.toSql());
 
             selectManager.offset(null);
 
-            assertEquals("SELECT FROM \"users\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\"", selectManager.toSql());
         }
     }
 
     public static class On extends Base {
-        public void testOnConversionToSQLLiteral() {
+        public void testOnConversionToSqlLiteral() {
             ArelTable table = new ArelTable("users");
 
             ArelRelation right = table.alias();
@@ -499,10 +499,10 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.join(right).on("omg");
 
-            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON omg", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON omg", selectManager.toSql());
         }
 
-        public void testOnConversionToSQLLiteralWithMultipleItems() {
+        public void testOnConversionToSqlLiteralWithMultipleItems() {
             ArelTable table = new ArelTable("users");
 
             ArelRelation right = table.alias();
@@ -510,7 +510,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.join(right).on("omg", "123");
 
-            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON omg AND 123", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON omg AND 123", selectManager.toSql());
         }
 
         public void testOnWithThreeParams() {
@@ -522,7 +522,7 @@ public class ArelSelectManagerTest {
             selectManager.from(left);
             selectManager.join(right).on(predicate, predicate, left.get("name").eq(right.get("name")));
 
-            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"name\" = \"users_2\".\"name\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"name\" = \"users_2\".\"name\"", selectManager.toSql());
         }
 
         public void testOnWithTwoParams() {
@@ -534,7 +534,7 @@ public class ArelSelectManagerTest {
             selectManager.from(left);
             selectManager.join(right).on(predicate, predicate);
 
-            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" INNER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\" AND \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
     }
 
@@ -547,7 +547,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.order(table.get("id"));
 
-            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\"", selectManager.toSql());
         }
 
         public void testOrderAssignment() {
@@ -558,7 +558,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.order("foo");
 
-            assertEquals("SELECT * FROM \"users\" ORDER BY foo", selectManager.toSQL());
+            assertEquals("SELECT * FROM \"users\" ORDER BY foo", selectManager.toSql());
         }
 
         public void testOrderAttributes() {
@@ -569,7 +569,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.order(table.get("id").desc());
 
-            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\" DESC", selectManager.toSQL());
+            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\" DESC", selectManager.toSql());
         }
 
         public void testOrderMethodChain() {
@@ -588,7 +588,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.order(table.get("id"), table.get("name"));
 
-            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\", \"users\".\"name\"", selectManager.toSQL());
+            assertEquals("SELECT * FROM \"users\" ORDER BY \"users\".\"id\", \"users\".\"name\"", selectManager.toSql());
         }
     }
 
@@ -613,7 +613,7 @@ public class ArelSelectManagerTest {
             selectManager.from(left);
             selectManager.outerJoin(right).on(predicate);
 
-            assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" LEFT OUTER JOIN \"users\" \"users_2\" ON \"users\".\"id\" = \"users_2\".\"id\"", selectManager.toSql());
         }
 
         public void testOuterJoinWithNull() {
@@ -631,28 +631,28 @@ public class ArelSelectManagerTest {
             selectManager.project("id");
             selectManager.from(table);
 
-            assertEquals("SELECT id FROM \"users\"", selectManager.toSQL());
+            assertEquals("SELECT id FROM \"users\"", selectManager.toSql());
         }
 
         public void testProjectWithMultipleParameters() {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.project(new ArelNodeSqlLiteral("foo"), new ArelNodeSqlLiteral("bar"));
 
-            assertEquals("SELECT foo, bar", selectManager.toSQL());
+            assertEquals("SELECT foo, bar", selectManager.toSql());
         }
 
         public void testProjectWithSqlLiterals() {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.project(new ArelNodeSqlLiteral("*"));
 
-            assertEquals("SELECT *", selectManager.toSQL());
+            assertEquals("SELECT *", selectManager.toSql());
         }
 
         public void testProjectWithString() {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.project("*");
 
-            assertEquals("SELECT *", selectManager.toSQL());
+            assertEquals("SELECT *", selectManager.toSql());
         }
     }
 
@@ -669,7 +669,7 @@ public class ArelSelectManagerTest {
             selectManager.project(Arel.sql("foo"), Arel.sql("bar"));
             selectManager.projections(new Object[]{Arel.sql("bar")});
 
-            assertEquals("SELECT bar", selectManager.toSQL());
+            assertEquals("SELECT bar", selectManager.toSql());
         }
     }
 
@@ -735,7 +735,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.joinSources().add(new ArelNodeStringJoin(ArelNodes.buildQuoted("foo")));
 
-            assertEquals("SELECT FROM 'foo'", selectManager.toSQL());
+            assertEquals("SELECT FROM 'foo'", selectManager.toSql());
         }
 
         public void testSelectManagerStoresBindValues() {
@@ -756,7 +756,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = table.from();
             selectManager.skip(10);
 
-            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.toSql());
         }
 
         public void testSkipMethodChain() {
@@ -764,7 +764,7 @@ public class ArelSelectManagerTest {
 
             ArelSelectManager selectManager = table.from();
 
-            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.skip(10).toSQL());
+            assertEquals("SELECT FROM \"users\" OFFSET 10", selectManager.skip(10).toSql());
         }
     }
 
@@ -793,7 +793,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.order(new ArelNodeAscending(Arel.sql("foo")));
 
-            assertEquals("SELECT * FROM \"users\" ORDER BY foo ASC", selectManager.toSQL());
+            assertEquals("SELECT * FROM \"users\" ORDER BY foo ASC", selectManager.toSql());
         }
     }
 
@@ -806,7 +806,7 @@ public class ArelSelectManagerTest {
             selectManager.where(table.get("id").eq(1));
             selectManager.take(1);
 
-            assertEquals("SELECT  \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" = 1 LIMIT 1", selectManager.toSQL());
+            assertEquals("SELECT  \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" = 1 LIMIT 1", selectManager.toSql());
         }
 
         public void testTakeMethodChain() {
@@ -819,11 +819,11 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = new ArelSelectManager();
             selectManager.limit(10);
 
-            assertEquals("SELECT  LIMIT 10", selectManager.toSQL());
+            assertEquals("SELECT  LIMIT 10", selectManager.toSql());
 
             selectManager.limit(null);
 
-            assertFalse(Objects.equals("SELECT  LIMIT 10", selectManager.toSQL()));
+            assertFalse(Objects.equals("SELECT  LIMIT 10", selectManager.toSql()));
         }
     }
 
@@ -858,13 +858,13 @@ public class ArelSelectManagerTest {
         public void testUnionAllWithTwoManagers() {
             ArelNode node = mSelectManager1.union(mSelectManager2, "all");
 
-            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" < 18 UNION ALL SELECT * FROM \"users\" WHERE \"users\".\"age\" > 99)", node.toSQL());
+            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" < 18 UNION ALL SELECT * FROM \"users\" WHERE \"users\".\"age\" > 99)", node.toSql());
         }
 
         public void testUnionWithTwoManagers() {
             ArelNode node = mSelectManager1.union(mSelectManager2);
 
-            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" < 18 UNION SELECT * FROM \"users\" WHERE \"users\".\"age\" > 99)", node.toSQL());
+            assertEquals("(SELECT * FROM \"users\" WHERE \"users\".\"age\" < 18 UNION SELECT * FROM \"users\" WHERE \"users\".\"age\" > 99)", node.toSql());
         }
     }
 
@@ -880,7 +880,7 @@ public class ArelSelectManagerTest {
 
             ArelUpdateManager updateManager = selectManager.compileUpdate(values, new ArelAttribute(table, "id"));
 
-            assertEquals("UPDATE \"users\" SET \"id\" = 1", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET \"id\" = 1", updateManager.toSql());
         }
 
         public void testUpdateWithLimit() {
@@ -893,7 +893,7 @@ public class ArelSelectManagerTest {
             ArelUpdateManager updateManager = selectManager.compileUpdate(new ArelNodeSqlLiteral("foo = bar"), new ArelAttribute(table, "id"));
             updateManager.key(table.get("id"));
 
-            assertEquals("UPDATE \"users\" SET foo = bar WHERE \"users\".\"id\" IN (SELECT \"users\".\"id\" FROM \"users\" LIMIT 1)", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET foo = bar WHERE \"users\".\"id\" IN (SELECT \"users\".\"id\" FROM \"users\" LIMIT 1)", updateManager.toSql());
         }
 
         public void testUpdateWithOrder() {
@@ -906,7 +906,7 @@ public class ArelSelectManagerTest {
             ArelUpdateManager updateManager = selectManager.compileUpdate(new ArelNodeSqlLiteral("foo = bar"), new ArelAttribute(table, "id"));
             updateManager.key(table.get("id"));
 
-            assertEquals("UPDATE \"users\" SET foo = bar WHERE \"users\".\"id\" IN (SELECT \"users\".\"id\" FROM \"users\" ORDER BY foo)", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET foo = bar WHERE \"users\".\"id\" IN (SELECT \"users\".\"id\" FROM \"users\" ORDER BY foo)", updateManager.toSql());
         }
 
         public void testUpdateWithString() {
@@ -917,7 +917,7 @@ public class ArelSelectManagerTest {
 
             ArelUpdateManager updateManager = selectManager.compileUpdate(new ArelNodeSqlLiteral("foo = bar"), new ArelAttribute(table, "id"));
 
-            assertEquals("UPDATE \"users\" SET foo = bar", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET foo = bar", updateManager.toSql());
         }
 
         public void testUpdateWithWhere() {
@@ -932,7 +932,7 @@ public class ArelSelectManagerTest {
 
             ArelUpdateManager updateManager = selectManager.compileUpdate(values, new ArelAttribute(table, "id"));
 
-            assertEquals("UPDATE \"users\" SET \"id\" = 1 WHERE \"users\".\"id\" = 10", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET \"id\" = 1 WHERE \"users\".\"id\" = 10", updateManager.toSql());
         }
 
         public void testUpdateWithWhereAndLimit() {
@@ -948,7 +948,7 @@ public class ArelSelectManagerTest {
 
             ArelUpdateManager updateManager = selectManager.compileUpdate(values, new ArelAttribute(table, "id"));
 
-            assertEquals("UPDATE \"users\" SET \"id\" = 1 WHERE \"users\".\"id\" IN (SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"foo\" = 10 LIMIT 42)", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET \"id\" = 1 WHERE \"users\".\"id\" IN (SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"foo\" = 10 LIMIT 42)", updateManager.toSql());
         }
     }
 
@@ -960,7 +960,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table).project(table.get("id"));
             selectManager.where(table.get("id").eq(1));
 
-            assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" = 1", selectManager.toSQL());
+            assertEquals("SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"id\" = 1", selectManager.toSql());
         }
 
         public void testWhereMethodChain() {
@@ -1002,7 +1002,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window");
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS ()", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS ()", selectManager.toSql());
         }
 
         public void testWindowWithBoundedFollowingRange() {
@@ -1012,7 +1012,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").range(new ArelNodeFollowing(5));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE 5 FOLLOWING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE 5 FOLLOWING)", selectManager.toSql());
         }
 
         public void testWindowWithBoundedFollowingRows() {
@@ -1022,7 +1022,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").rows(new ArelNodeFollowing(5));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS 5 FOLLOWING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS 5 FOLLOWING)", selectManager.toSql());
         }
 
         public void testWindowWithBoundedPrecedingRange() {
@@ -1032,7 +1032,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").range(new ArelNodePreceding(5));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE 5 PRECEDING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE 5 PRECEDING)", selectManager.toSql());
         }
 
         public void testWindowWithBoundedPrecedingRows() {
@@ -1042,7 +1042,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").rows(new ArelNodePreceding(5));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS 5 PRECEDING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS 5 PRECEDING)", selectManager.toSql());
         }
 
         public void testWindowWithCurrentRow() {
@@ -1052,7 +1052,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").rows(new ArelNodeCurrentRow());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS CURRENT ROW)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS CURRENT ROW)", selectManager.toSql());
         }
 
         public void testWindowWithCurrentRowRange() {
@@ -1062,7 +1062,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").range(new ArelNodeCurrentRow());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE CURRENT ROW)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE CURRENT ROW)", selectManager.toSql());
         }
 
         public void testWindowWithOrder() {
@@ -1072,7 +1072,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").order(table.get("foo").asc());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ORDER BY \"users\".\"foo\" ASC)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ORDER BY \"users\".\"foo\" ASC)", selectManager.toSql());
         }
 
         public void testWindowWithOrderWithMultipleItems() {
@@ -1082,7 +1082,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").order(table.get("foo").asc(), table.get("bar").desc());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ORDER BY \"users\".\"foo\" ASC, \"users\".\"bar\" DESC)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ORDER BY \"users\".\"foo\" ASC, \"users\".\"bar\" DESC)", selectManager.toSql());
         }
 
         public void testWindowWithPartition() {
@@ -1092,7 +1092,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").partition(table.get("bar"));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (PARTITION BY \"users\".\"bar\")", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (PARTITION BY \"users\".\"bar\")", selectManager.toSql());
         }
 
         public void testWindowWithPartitionAndOrder() {
@@ -1102,7 +1102,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").partition(table.get("foo")).order(table.get("foo").asc());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (PARTITION BY \"users\".\"foo\" ORDER BY \"users\".\"foo\" ASC)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (PARTITION BY \"users\".\"foo\" ORDER BY \"users\".\"foo\" ASC)", selectManager.toSql());
         }
 
         public void testWindowWithPartitionWithMultipleItems() {
@@ -1112,7 +1112,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").partition(table.get("bar"), table.get("baz"));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (PARTITION BY \"users\".\"bar\", \"users\".\"baz\")", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (PARTITION BY \"users\".\"bar\", \"users\".\"baz\")", selectManager.toSql());
         }
 
         public void testWindowWithTwoRangeDelimiters() {
@@ -1124,7 +1124,7 @@ public class ArelSelectManagerTest {
             ArelNodeWindow window = selectManager.window("a_window");
             window.frame(new ArelNodeBetween(window.range(), new ArelNodeAnd(TestUtils.objectsToList(new ArelNodePreceding(), new ArelNodeCurrentRow()))));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)", selectManager.toSql());
         }
 
         public void testWindowWithTwoRowsDelimiters() {
@@ -1136,7 +1136,7 @@ public class ArelSelectManagerTest {
             ArelNodeWindow window = selectManager.window("a_window");
             window.frame(new ArelNodeBetween(window.rows(), new ArelNodeAnd(TestUtils.objectsToList(new ArelNodePreceding(), new ArelNodeCurrentRow()))));
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)", selectManager.toSql());
         }
 
         public void testWindowWithUnboundedFollowingRange() {
@@ -1146,7 +1146,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").range(new ArelNodeFollowing());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE UNBOUNDED FOLLOWING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE UNBOUNDED FOLLOWING)", selectManager.toSql());
         }
 
         public void testWindowWithUnboundedFollowingRows() {
@@ -1156,7 +1156,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").rows(new ArelNodeFollowing());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS UNBOUNDED FOLLOWING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS UNBOUNDED FOLLOWING)", selectManager.toSql());
         }
 
         public void testWindowWithUnboundedPrecedingRange() {
@@ -1166,7 +1166,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").range(new ArelNodePreceding());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE UNBOUNDED PRECEDING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (RANGE UNBOUNDED PRECEDING)", selectManager.toSql());
         }
 
         public void testWindowWithUnboundedPrecedingRows() {
@@ -1176,7 +1176,7 @@ public class ArelSelectManagerTest {
             selectManager.from(table);
             selectManager.window("a_window").rows(new ArelNodePreceding());
 
-            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS UNBOUNDED PRECEDING)", selectManager.toSQL());
+            assertEquals("SELECT FROM \"users\" WINDOW \"a_window\" AS (ROWS UNBOUNDED PRECEDING)", selectManager.toSql());
         }
     }
 
@@ -1192,7 +1192,7 @@ public class ArelSelectManagerTest {
             ArelSelectManager selectManager = comments.project(Arel.star()).with(usersAs);
             selectManager = selectManager.where(comments.get("author_id").in(usersTop.project(usersTop.get("id"))));
 
-            assertEquals("WITH \"users_top\" AS (SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"karma\" > 100) SELECT * FROM \"comments\" WHERE \"comments\".\"author_id\" IN (SELECT \"users_top\".\"id\" FROM \"users_top\")", selectManager.toSQL());
+            assertEquals("WITH \"users_top\" AS (SELECT \"users\".\"id\" FROM \"users\" WHERE \"users\".\"karma\" > 100) SELECT * FROM \"comments\" WHERE \"comments\".\"author_id\" IN (SELECT \"users_top\".\"id\" FROM \"users_top\")", selectManager.toSql());
         }
 
         public void testWithRecursive() {
@@ -1221,7 +1221,7 @@ public class ArelSelectManagerTest {
                     "UNION " +
                     "SELECT \"comments\".\"id\", \"comments\".\"parent_id\" FROM \"comments\" INNER JOIN \"replies\" ON \"comments\".\"parent_id\" = \"replies\".\"id\"" +
                     ") " +
-                    "SELECT * FROM \"replies\"", selectManager.toSQL());
+                    "SELECT * FROM \"replies\"", selectManager.toSql());
         }
     }
 }

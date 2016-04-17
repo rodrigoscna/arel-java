@@ -96,12 +96,12 @@ public class ArelNode implements ArelFactoryMethodsInterface {
         return new ArelNodeGrouping(new ArelNodeOr(this, right));
     }
 
-    public String toSQL() {
+    public String toSql() {
         ArelVisitor visitor = ArelTable.engine;
-        return toSQL(visitor);
+        return toSql(visitor);
     }
 
-    public String toSQL(ArelVisitor visitor) {
+    public String toSql(ArelVisitor visitor) {
         ArelCollector collector = new ArelCollector();
         collector = visitor.connection.getVisitor().accept(this, collector);
         return collector.value();

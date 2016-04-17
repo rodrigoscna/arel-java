@@ -27,7 +27,7 @@ public class ArelDeleteManagerTest {
             deleteManager.take(10);
             deleteManager.from(table);
 
-            assertEquals("DELETE FROM \"users\" LIMIT 10", deleteManager.toSQL());
+            assertEquals("DELETE FROM \"users\" LIMIT 10", deleteManager.toSql());
         }
     }
 
@@ -37,7 +37,7 @@ public class ArelDeleteManagerTest {
             ArelDeleteManager deleteManager = new ArelDeleteManager();
             deleteManager.from(table);
 
-            assertEquals("DELETE FROM \"users\"", deleteManager.toSQL());
+            assertEquals("DELETE FROM \"users\"", deleteManager.toSql());
         }
 
         public void testFromMethodChain() {
@@ -61,7 +61,7 @@ public class ArelDeleteManagerTest {
             deleteManager.from(table);
             deleteManager.where(table.get("id").eq(10));
 
-            assertEquals("DELETE FROM \"users\" WHERE \"users\".\"id\" = 10", deleteManager.toSQL());
+            assertEquals("DELETE FROM \"users\" WHERE \"users\".\"id\" = 10", deleteManager.toSql());
         }
 
         public void testWhereMethodChain() {

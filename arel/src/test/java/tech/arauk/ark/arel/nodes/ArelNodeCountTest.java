@@ -27,7 +27,7 @@ public class ArelNodeCountTest {
         public void testAs() {
             ArelTable table = new ArelTable("users");
 
-            assertEquals("COUNT(\"users\".\"id\") AS foo", table.get("id").count().as("foo").toSQL());
+            assertEquals("COUNT(\"users\".\"id\") AS foo", table.get("id").count().as("foo").toSql());
         }
     }
 
@@ -35,7 +35,7 @@ public class ArelNodeCountTest {
         public void testEq() {
             ArelTable table = new ArelTable("users");
 
-            assertEquals("COUNT(\"users\".\"id\") = 2", table.get("id").count().eq(2).toSQL());
+            assertEquals("COUNT(\"users\".\"id\") = 2", table.get("id").count().eq(2).toSql());
         }
     }
 

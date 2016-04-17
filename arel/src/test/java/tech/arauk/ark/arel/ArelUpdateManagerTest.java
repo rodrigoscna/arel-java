@@ -33,7 +33,7 @@ public class ArelUpdateManagerTest {
             updateManager.table(table);
             updateManager.set(new Object[][]{{table.get("name"), null}});
 
-            assertEquals("UPDATE \"users\" SET \"name\" = NULL WHERE 'id' IN (SELECT 'id' FROM \"users\" LIMIT 10)", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET \"name\" = NULL WHERE 'id' IN (SELECT 'id' FROM \"users\" LIMIT 10)", updateManager.toSql());
         }
 
         public void testUpdateManagerSQLLiterals() {
@@ -43,7 +43,7 @@ public class ArelUpdateManagerTest {
             updateManager.table(table);
             updateManager.set(new Object[][]{{table.get("name"), new ArelNodeBindParam()}});
 
-            assertEquals("UPDATE \"users\" SET \"name\" = ?", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET \"name\" = ?", updateManager.toSql());
         }
     }
 
@@ -91,7 +91,7 @@ public class ArelUpdateManagerTest {
             updateManager.table(table);
             updateManager.set(new Object[][]{{table.get("id"), 1}, {table.get("name"), "hello"}});
 
-            assertEquals("UPDATE \"users\" SET \"id\" = 1, \"name\" = 'hello'", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET \"id\" = 1, \"name\" = 'hello'", updateManager.toSql());
         }
 
         public void testSetWithNull() {
@@ -103,7 +103,7 @@ public class ArelUpdateManagerTest {
 
             updateManager.set(new Object[][]{{table.get("name"), null}});
 
-            assertEquals("UPDATE \"users\" SET \"name\" = NULL", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET \"name\" = NULL", updateManager.toSql());
         }
 
         public void testSetWithString() {
@@ -113,7 +113,7 @@ public class ArelUpdateManagerTest {
             updateManager.table(table);
             updateManager.set(new ArelNodeSqlLiteral("foo = bar"));
 
-            assertEquals("UPDATE \"users\" SET foo = bar", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" SET foo = bar", updateManager.toSql());
         }
     }
 
@@ -128,7 +128,7 @@ public class ArelUpdateManagerTest {
             ArelUpdateManager updateManager = new ArelUpdateManager();
             updateManager.table(new ArelTable("users"));
 
-            assertEquals("UPDATE \"users\"", updateManager.toSQL());
+            assertEquals("UPDATE \"users\"", updateManager.toSql());
         }
 
 //        public void testTableUpdateStatementWithJoins() {
@@ -142,7 +142,7 @@ public class ArelUpdateManagerTest {
 //            ArelUpdateManager updateManager = new ArelUpdateManager();
 //            updateManager.table(joinSource);
 //
-//            assertEquals("UPDATE \"users\" INNER JOIN \"posts\"", updateManager.toSQL());
+//            assertEquals("UPDATE \"users\" INNER JOIN \"posts\"", updateManager.toSql());
 //        }
     }
 
@@ -154,7 +154,7 @@ public class ArelUpdateManagerTest {
             updateManager.table(table);
             updateManager.where(table.get("id").eq(1));
 
-            assertEquals("UPDATE \"users\" WHERE \"users\".\"id\" = 1", updateManager.toSQL());
+            assertEquals("UPDATE \"users\" WHERE \"users\".\"id\" = 1", updateManager.toSql());
         }
 
         public void testWhereMethodChain() {

@@ -30,7 +30,7 @@ public class ArelNodeExtractTest {
             ArelAttribute attribute = table.get("timestamp");
             ArelNode extract = attribute.extract("date").as("foo");
 
-            assertEquals("EXTRACT(DATE FROM \"users\".\"timestamp\") AS foo", extract.toSQL());
+            assertEquals("EXTRACT(DATE FROM \"users\".\"timestamp\") AS foo", extract.toSql());
         }
 
         public void testAsMutation() {
@@ -61,7 +61,7 @@ public class ArelNodeExtractTest {
             ArelAttribute attribute = table.get("timestamp");
             ArelNode extract = attribute.extract("date");
 
-            assertEquals("EXTRACT(DATE FROM \"users\".\"timestamp\")", extract.toSQL());
+            assertEquals("EXTRACT(DATE FROM \"users\".\"timestamp\")", extract.toSql());
         }
     }
 }
