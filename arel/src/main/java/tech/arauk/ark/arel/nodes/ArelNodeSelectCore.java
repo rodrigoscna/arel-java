@@ -90,8 +90,8 @@ public class ArelNodeSelectCore extends ArelNode implements ArelFromInterface, A
     }
 
     @Override
-    public ArelNodeSelectCore projections(List<Object> projections) {
-        this.projections = projections;
+    public ArelNodeSelectCore projections(Object projections) {
+        this.projections = objectToList(projections);
         return this;
     }
 

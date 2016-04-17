@@ -4,11 +4,6 @@ import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.ArelNodeExcept;
-import tech.arauk.ark.arel.nodes.ArelNodeIntersect;
-import tech.arauk.ark.arel.nodes.ArelNodeUnion;
-import tech.arauk.ark.arel.nodes.ArelNodeUnionAll;
-import tech.arauk.ark.arel.nodes.ArelNodeExists;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 import tech.arauk.ark.arel.visitors.ArelVisitorWhereSql;
 
@@ -65,14 +60,36 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         return createTableAlias(ArelFactoryMethods.grouping(ast()), new ArelNodeSqlLiteral(other));
     }
 
-    public ArelSelectManager on(Object... exprs) {
-        List<Object> right = joinSources();
-        List<Object> innerRight = new ArrayList<>();
-        innerRight.add(new ArelNodeOn(collapse(exprs)));
+    public ArelSelectManager distinct() {
+        return distinct(true);
+    }
 
-        ((ArelNodeBinary) right.get(right.size() - 1)).right(innerRight);
+    public ArelSelectManager distinct(Boolean value) {
+        if (value == null || Boolean.FALSE.equals(value)) {
+            ((ArelSetQuantifierInterface) ctx()).setQuantifier(null);
+        } else {
+            ((ArelSetQuantifierInterface) ctx()).setQuantifier(new ArelNodeDistinct());
+        }
 
         return this;
+    }
+
+    public ArelSelectManager distinctOn(Object value) {
+        if (value == null || Boolean.FALSE.equals(value)) {
+            ((ArelSetQuantifierInterface) ctx()).setQuantifier(null);
+        } else {
+            ((ArelSetQuantifierInterface) ctx()).setQuantifier(new ArelNodeDistinctOn(value));
+        }
+
+        return this;
+    }
+
+    public ArelNodeExcept except(ArelSelectManager other) {
+        return new ArelNodeExcept(ast(), other.ast());
+    }
+
+    public ArelNodeExists exists() {
+        return new ArelNodeExists(ast());
     }
 
     public ArelSelectManager from(Object object) {
@@ -93,29 +110,38 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         return this;
     }
 
-    public ArelNodeOffset offset() {
-        return skip();
+    public List<Object> froms() {
+        List<Object> froms = new ArrayList<>();
+
+        for (ArelNodeSelectCore selectCore : ((ArelNodeSelectStatement) ast()).cores) {
+            Object from = selectCore.from();
+            if (from != null) {
+                froms.add(from);
+            }
+        }
+
+        return froms;
     }
 
-    public ArelSelectManager offset(int amount) {
-        return skip(amount);
-    }
+    public ArelSelectManager group(Object... columns) {
+        for (Object column : columns) {
+            if (column instanceof String) {
+                column = new ArelNodeSqlLiteral(String.valueOf(column));
+            }
 
-    public ArelSelectManager offset(ArelNodeOffset amount) {
-        return skip(amount);
-    }
+            ((ArelGroupsInterface) ctx()).groups().add(new ArelNodeGroup(column));
+        }
 
-    public ArelNodeOffset skip() {
-        return ((ArelNodeSelectStatement) ast()).offset;
-    }
-
-    public ArelSelectManager skip(int amount) {
-        return skip(new ArelNodeOffset(amount));
-    }
-
-    public ArelSelectManager skip(ArelNodeOffset amount) {
-        ((ArelNodeSelectStatement) ast()).offset = amount;
         return this;
+    }
+
+    public ArelSelectManager having(Object expr) {
+        ((ArelHavingsInterface) ctx()).havings().add(expr);
+        return this;
+    }
+
+    public ArelNodeIntersect intersect(ArelSelectManager other) {
+        return new ArelNodeIntersect(ast(), other.ast());
     }
 
     public ArelSelectManager join(Object relation) {
@@ -141,36 +167,56 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         return this;
     }
 
-    public ArelSelectManager having(Object expr) {
-        ((ArelHavingsInterface) ctx()).havings().add(expr);
+    public List<Object> joinSources() {
+        return (List<Object>) ((ArelSourceInterface) ctx()).source().right();
+    }
+
+    public ArelNodeLimit limit() {
+        return take();
+    }
+
+    public ArelSelectManager limit(ArelNodeLimit limit) {
+        return take(limit);
+    }
+
+    public ArelSelectManager limit(int limit) {
+        return take(limit);
+    }
+
+    public ArelSelectManager lock() {
+        return lock(Arel.sql("FOR UPDATE"));
+    }
+
+    public ArelSelectManager lock(Object locking) {
+        if (locking instanceof Boolean && (Boolean) locking) {
+            locking = Arel.sql("FOR UPDATE");
+        } else if (locking instanceof String) {
+            locking = Arel.sql(String.valueOf(locking));
+        }
+
+        ((ArelNodeSelectStatement) ast()).lock = new ArelNodeLock(locking);
+
         return this;
     }
 
-    private Object collapse(Object... exprs) {
-        Object object;
-
-        for (int i = 0; i < exprs.length; i++) {
-            object = exprs[i];
-            if (object instanceof String) {
-                exprs[i] = Arel.sql(String.valueOf(object));
-            }
-        }
-
-        if (exprs.length == 1) {
-            return exprs[0];
-        } else {
-            return createAnd(Arrays.asList(exprs));
-        }
+    public ArelNodeOffset offset() {
+        return skip();
     }
 
-    public ArelSelectManager group(Object... columns) {
-        for (Object column : columns) {
-            if (column instanceof String) {
-                column = new ArelNodeSqlLiteral(String.valueOf(column));
-            }
+    public ArelSelectManager offset(ArelNodeOffset amount) {
+        return skip(amount);
+    }
 
-            ((ArelGroupsInterface) ctx()).groups().add(new ArelNodeGroup(column));
-        }
+    public ArelSelectManager offset(int amount) {
+        return skip(amount);
+    }
+
+    public ArelSelectManager on(Object... exprs) {
+        List<Object> right = joinSources();
+        List<Object> innerRight = new ArrayList<>();
+        innerRight.add(new ArelNodeOn(collapse(exprs)));
+
+        ((ArelNodeBinary) right.get(right.size() - 1)).right(innerRight);
 
         return this;
     }
@@ -193,40 +239,8 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         return ((ArelNodeSelectStatement) ast()).orders;
     }
 
-    public ArelNodeLimit take() {
-        return ((ArelNodeSelectStatement) ast()).limit;
-    }
-
-    public ArelSelectManager take(int limit) {
-        ((ArelNodeSelectStatement) ast()).limit = new ArelNodeLimit(limit);
-        ((ArelTopInterface) ctx()).top(new ArelNodeTop(limit));
-
-        return this;
-    }
-
-    public ArelSelectManager take(ArelNodeLimit limit) {
-        ((ArelNodeSelectStatement) ast()).limit = limit;
-        return this;
-    }
-
-    public ArelNodeLimit taken() {
-        return take();
-    }
-
-    public ArelNodeLimit limit() {
-        return take();
-    }
-
-    public ArelSelectManager limit(int limit) {
-        return take(limit);
-    }
-
-    public ArelSelectManager limit(ArelNodeLimit limit) {
-        return take(limit);
-    }
-
-    public ArelSelectManager project(Object... projections) {
-        return project(Arrays.asList(projections));
+    public ArelSelectManager outerJoin(Object relation) {
+        return join(relation, ArelNodeOuterJoin.class);
     }
 
     public ArelSelectManager project(List<Object> projections) {
@@ -241,16 +255,55 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         return this;
     }
 
-    public ArelNodeExcept except(ArelSelectManager other) {
-        return new ArelNodeExcept(ast(), other.ast());
+    public ArelSelectManager project(Object... projections) {
+        return project(Arrays.asList(projections));
     }
 
-    public ArelNodeExists exists() {
-        return new ArelNodeExists(ast());
+    public List<Object> projections() {
+        return ((ArelProjectionsInterface) ctx()).projections();
     }
 
-    public ArelNodeIntersect intersect(ArelSelectManager other) {
-        return new ArelNodeIntersect(ast(), other.ast());
+    public ArelSelectManager projections(Object projections) {
+        ((ArelProjectionsInterface) ctx()).projections(projections);
+
+        return this;
+    }
+
+    public ArelNodeOffset skip() {
+        return ((ArelNodeSelectStatement) ast()).offset;
+    }
+
+    public ArelSelectManager skip(ArelNodeOffset amount) {
+        ((ArelNodeSelectStatement) ast()).offset = amount;
+        return this;
+    }
+
+    public ArelSelectManager skip(int amount) {
+        return skip(new ArelNodeOffset(amount));
+    }
+
+    public ArelNodeJoinSource source() {
+        return ((ArelSourceInterface) ctx()).source();
+    }
+
+    public ArelNodeLimit take() {
+        return ((ArelNodeSelectStatement) ast()).limit;
+    }
+
+    public ArelSelectManager take(ArelNodeLimit limit) {
+        ((ArelNodeSelectStatement) ast()).limit = limit;
+        return this;
+    }
+
+    public ArelSelectManager take(int limit) {
+        ((ArelNodeSelectStatement) ast()).limit = new ArelNodeLimit(limit);
+        ((ArelTopInterface) ctx()).top(new ArelNodeTop(limit));
+
+        return this;
+    }
+
+    public ArelNodeLimit taken() {
+        return take();
     }
 
     public ArelNodeBinary union(ArelSelectManager other) {
@@ -265,70 +318,6 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         }
     }
 
-    public ArelSelectManager with(Object... subqueries) {
-        return with(Arrays.asList(subqueries));
-    }
-
-    public ArelSelectManager with(List<Object> subqueries) {
-        ((ArelNodeSelectStatement) ast()).with = new ArelNodeWith(subqueries);
-
-        return this;
-    }
-
-    public ArelSelectManager withRecursive(Object... subqueries) {
-        return withRecursive(Arrays.asList(subqueries));
-    }
-
-    public ArelSelectManager withRecursive(List<Object> subqueries) {
-        ((ArelNodeSelectStatement) ast()).with = new ArelNodeWithRecursive(subqueries);
-
-        return this;
-    }
-
-    public List<Object> joinSources() {
-        return (List<Object>) ((ArelSourceInterface) ctx()).source().right();
-    }
-
-    public ArelSelectManager lock() {
-        return lock(Arel.sql("FOR UPDATE"));
-    }
-
-    public ArelSelectManager lock(Object locking) {
-        if (locking instanceof Boolean && (Boolean) locking) {
-            locking = Arel.sql("FOR UPDATE");
-        } else if (locking instanceof String) {
-            locking = Arel.sql(String.valueOf(locking));
-        }
-
-        ((ArelNodeSelectStatement) ast()).lock = new ArelNodeLock(locking);
-
-        return this;
-    }
-
-    public List<Object> froms() {
-        List<Object> froms = new ArrayList<>();
-
-        for (ArelNodeSelectCore selectCore : ((ArelNodeSelectStatement) ast()).cores) {
-            Object from = selectCore.from();
-            if (from != null) {
-                froms.add(from);
-            }
-        }
-
-        return froms;
-    }
-
-    public ArelSelectManager outerJoin(Object relation) {
-        return join(relation, ArelNodeOuterJoin.class);
-    }
-
-    public ArelNodeWindow window(String name) {
-        ArelNodeNamedWindow window = new ArelNodeNamedWindow(name);
-        ((ArelWindowsInterface) ctx()).windows().add(window);
-
-        return window;
-    }
-
     public String whereSql() {
         ArelVisitor visitor = ArelTable.engine;
         return whereSql(visitor);
@@ -341,5 +330,49 @@ public class ArelSelectManager extends ArelTreeManager implements ArelCrudInterf
         }
 
         return "";
+    }
+
+    public ArelNodeWindow window(String name) {
+        ArelNodeNamedWindow window = new ArelNodeNamedWindow(name);
+        ((ArelWindowsInterface) ctx()).windows().add(window);
+
+        return window;
+    }
+
+    public ArelSelectManager with(List<Object> subqueries) {
+        ((ArelNodeSelectStatement) ast()).with = new ArelNodeWith(subqueries);
+
+        return this;
+    }
+
+    public ArelSelectManager with(Object... subqueries) {
+        return with(Arrays.asList(subqueries));
+    }
+
+    public ArelSelectManager withRecursive(List<Object> subqueries) {
+        ((ArelNodeSelectStatement) ast()).with = new ArelNodeWithRecursive(subqueries);
+
+        return this;
+    }
+
+    public ArelSelectManager withRecursive(Object... subqueries) {
+        return withRecursive(Arrays.asList(subqueries));
+    }
+
+    private Object collapse(Object... exprs) {
+        Object object;
+
+        for (int i = 0; i < exprs.length; i++) {
+            object = exprs[i];
+            if (object instanceof String) {
+                exprs[i] = Arel.sql(String.valueOf(object));
+            }
+        }
+
+        if (exprs.length == 1) {
+            return exprs[0];
+        } else {
+            return createAnd(Arrays.asList(exprs));
+        }
     }
 }
