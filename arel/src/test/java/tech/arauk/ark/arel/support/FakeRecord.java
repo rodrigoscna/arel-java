@@ -1,6 +1,5 @@
 package tech.arauk.ark.arel.support;
 
-import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.connection.ArelTypeCaster;
 import tech.arauk.ark.arel.connection.SchemaCache;
@@ -24,11 +23,11 @@ public class FakeRecord {
     }
 
     public static class Connection implements ArelConnection, SchemaCache {
+        public ArelVisitor visitor;
         private List<String> tables;
         private Map<String, Column[]> columns;
         private Map<String, Map<Object, Object>> columnsHash;
         private Map<String, String> primaryKeys;
-        public ArelVisitor visitor;
 
         public Connection() {
             this(null);
@@ -168,17 +167,6 @@ public class FakeRecord {
         public ConnectionPool() {
             this.connection = new Connection();
             this.connection.visitor = new ArelVisitorToSql(this.connection);
-        }
-    }
-
-    public static class TypeCaster implements ArelTypeCaster {
-        @Override
-        public Object typeCastForDatabase(Object attributeName, Object value) {
-            if ("id".equals(attributeName)) {
-                return Integer.valueOf(String.valueOf(value));
-            } else {
-                return value;
-            }
         }
     }
 

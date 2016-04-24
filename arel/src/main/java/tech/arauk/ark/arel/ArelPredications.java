@@ -29,7 +29,7 @@ public abstract class ArelPredications {
             Object right = quotedNode(holder, end);
             return new ArelNodeBetween(holder, ((ArelNode) left).and(right));
         } else {
-            return gt(holder, begin).and(lt(holder, end));
+            return gteq(holder, begin).and(lt(holder, end));
         }
     }
 

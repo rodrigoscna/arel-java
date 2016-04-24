@@ -78,7 +78,7 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     public boolean isAbleToTypeCast() {
         try {
             Method method = relation().getClass().getMethod("isAbleToTypeCast");
-            return (boolean) method.invoke(this);
+            return (boolean) method.invoke(relation());
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return false;
         }
@@ -103,8 +103,8 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     @Override
     public Object typeCastForDatabase(Object name, Object value) {
         try {
-            Method method = relation().getClass().getMethod("typeCastForDatabase", String.class, Object.class);
-            return method.invoke(this, name, value);
+            Method method = relation().getClass().getMethod("typeCastForDatabase", Object.class, Object.class);
+            return method.invoke(relation(), name, value);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return value;
         }
@@ -123,8 +123,8 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     @Override
     public Object tableName() {
         try {
-            Method method = ArelRelation.class.getMethod("name");
-            return method.invoke(this);
+            Method method = relation().getClass().getMethod("name");
+            return method.invoke(relation());
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return name();
         }
@@ -133,8 +133,8 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     @Override
     public ArelRelation tableName(Object tableName) {
         try {
-            Method method = ArelRelation.class.getMethod("name", Object.class);
-            return (ArelRelation) method.invoke(this, tableName);
+            Method method = relation().getClass().getMethod("name", Object.class);
+            return (ArelRelation) method.invoke(relation(), tableName);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException exception) {
             return name(tableName);
         }

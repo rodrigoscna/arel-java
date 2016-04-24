@@ -5,7 +5,7 @@ import tech.arauk.ark.arel.nodes.*;
 
 import java.util.Objects;
 
-public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
+public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelMathInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
     public ArelRelation relation;
     public Object name;
 
@@ -16,6 +16,11 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
             this.relation = (ArelRelation) relation;
         }
         this.name = name;
+    }
+
+    @Override
+    public ArelNodeGrouping add(Object other) {
+        return ArelMath.add(this, other);
     }
 
     @Override
@@ -56,6 +61,11 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     @Override
     public ArelNodeDescending desc() {
         return ArelOrderPredications.desc(this);
+    }
+
+    @Override
+    public ArelNodeDivision divide(Object other) {
+        return ArelMath.divide(this, other);
     }
 
     @Override
@@ -234,6 +244,11 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
+    public ArelNodeMultiplication multiply(Object other) {
+        return ArelMath.multiply(this, other);
+    }
+
+    @Override
     public ArelNode notBetween(Object begin, Object end) {
         return ArelPredications.notBetween(this, begin, end);
     }
@@ -271,6 +286,11 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     @Override
     public ArelNodeGrouping notInAny(Object others) {
         return ArelPredications.notInAny(this, others);
+    }
+
+    @Override
+    public ArelNodeGrouping subtract(Object other) {
+        return ArelMath.subtract(this, other);
     }
 
     @Override

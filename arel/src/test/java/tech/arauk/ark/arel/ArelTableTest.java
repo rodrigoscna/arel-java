@@ -41,7 +41,7 @@ public class ArelTableTest {
 
             assertSame(ArelNodeTableAlias.class, node.getClass());
             assertEquals(nodes, mRelation.aliases());
-            assertEquals("users_2", ((ArelNodeTableAlias) node).tableName());
+            assertEquals("users_2", ((ArelNodeTableAlias) node).name());
             assertEquals(node, ((ArelNodeTableAlias) node).get("id").relation);
         }
     }

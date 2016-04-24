@@ -17,8 +17,9 @@ public class ArelCollector {
         return this;
     }
 
-    public void append(String string) {
+    public ArelCollector append(String string) {
         this.mBuilder.append(string);
+        return this;
     }
 
     public String value() {
