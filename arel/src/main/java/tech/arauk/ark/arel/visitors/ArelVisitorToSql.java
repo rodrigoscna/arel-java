@@ -3,12 +3,14 @@ package tech.arauk.ark.arel.visitors;
 import tech.arauk.ark.arel.ArelSelectManager;
 import tech.arauk.ark.arel.ArelTable;
 import tech.arauk.ark.arel.ArelUtils;
-import tech.arauk.ark.arel.attributes.ArelAttribute;
+import tech.arauk.ark.arel.attributes.*;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.connection.SchemaCache;
 import tech.arauk.ark.arel.nodes.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 public class ArelVisitorToSql extends ArelVisitor {
@@ -48,6 +50,7 @@ public class ArelVisitorToSql extends ArelVisitor {
     public static final String LIMIT = "LIMIT ";
     public static final String MAX = "MAX";
     public static final String MIN = "MIN";
+    public static final String NOT = "NOT";
     public static final String NOT_EQUALS = " != ";
     public static final String NOT_IN = " NOT IN ";
     public static final String NOT_LIKE = " NOT LIKE ";
@@ -95,6 +98,16 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector injectJoin(Object object, ArelCollector collector, String joinStr) {
+        if (object instanceof List) {
+            return injectJoin((List<Object>) object, collector, joinStr);
+        } else if (object instanceof Object[]) {
+            return injectJoin((Object[]) object, collector, joinStr);
+        } else {
+            return collector;
+        }
+    }
+
     public ArelCollector injectJoin(Object[] list, ArelCollector collector, String joinStr) {
         int len = list.length - 1;
 
@@ -118,6 +131,30 @@ public class ArelVisitorToSql extends ArelVisitor {
         collector.append(quoteTableName(joinName) + "." + quoteColumnName(attribute.name));
 
         return collector;
+    }
+
+    public ArelCollector visitArelAttributeBoolean(ArelAttributeBoolean attribute, ArelCollector collector) {
+        return visitArelAttribute(attribute, collector);
+    }
+
+    public ArelCollector visitArelAttributeDecimal(ArelAttributeDecimal attribute, ArelCollector collector) {
+        return visitArelAttribute(attribute, collector);
+    }
+
+    public ArelCollector visitArelAttributeFloat(ArelAttributeFloat attribute, ArelCollector collector) {
+        return visitArelAttribute(attribute, collector);
+    }
+
+    public ArelCollector visitArelAttributeInteger(ArelAttributeInteger attribute, ArelCollector collector) {
+        return visitArelAttribute(attribute, collector);
+    }
+
+    public ArelCollector visitArelAttributeString(ArelAttributeString attribute, ArelCollector collector) {
+        return visitArelAttribute(attribute, collector);
+    }
+
+    public ArelCollector visitArelAttributeTime(ArelAttributeTime attribute, ArelCollector collector) {
+        return visitArelAttribute(attribute, collector);
     }
 
     public ArelCollector visitArelNodeAnd(ArelNodeAnd and, ArelCollector collector) {
@@ -473,10 +510,37 @@ public class ArelVisitorToSql extends ArelVisitor {
         return collector;
     }
 
+    public ArelCollector visitArelNodeNamedFunction(ArelNodeNamedFunction namedFunction, ArelCollector collector) {
+        collector.append(namedFunction.name());
+        collector.append(GROUPING_OPEN);
+        if (namedFunction.distinct()) {
+            collector.append(DISTINCT);
+            collector.append(SPACE);
+        }
+        collector = injectJoin(namedFunction.expressions(), collector, COMMA);
+        collector.append(GROUPING_CLOSE);
+        if (namedFunction.alias() != null) {
+            collector.append(AS);
+            collector = visit(namedFunction.alias(), collector);
+        }
+
+        return collector;
+    }
+
     public ArelCollector visitArelNodeNamedWindow(ArelNodeNamedWindow namedWindow, ArelCollector collector) {
         collector.append(quoteColumnName(namedWindow.name));
         collector.append(AS);
         collector = visitArelNodeWindow(namedWindow, collector);
+
+        return collector;
+    }
+
+    public ArelCollector visitArelNodeNot(ArelNodeNot not, ArelCollector collector) {
+        collector.append(NOT);
+        collector.append(SPACE);
+        collector.append(GROUPING_OPEN);
+        collector = visit(not.expr(), collector);
+        collector.append(GROUPING_CLOSE);
 
         return collector;
     }
@@ -911,6 +975,22 @@ public class ArelVisitorToSql extends ArelVisitor {
         return visitList(arrayList, collector);
     }
 
+    public ArelCollector visitBigDecimal(BigDecimal bigDecimal, ArelCollector collector) {
+        return literal(bigDecimal, collector);
+    }
+
+    public ArelCollector visitBigInteger(BigInteger bigInteger, ArelCollector collector) {
+        return literal(bigInteger, collector);
+    }
+
+    public ArelCollector visitClass(Class<?> aClass, ArelCollector collector) {
+        return unsupported(aClass, collector);
+    }
+
+    public ArelCollector visitDouble(Double douoble, ArelCollector collector) {
+        return literal(douoble, collector);
+    }
+
     public ArelCollector visitInteger(Integer integer, ArelCollector collector) {
         return literal(integer, collector);
     }
@@ -979,7 +1059,7 @@ public class ArelVisitorToSql extends ArelVisitor {
 
         ArelAttribute attr = (ArelAttribute) object;
 
-        String name = attr.name;
+        Object name = attr.name;
         Object table = attr.relation.tableName();
 
         if (!tableExists(table)) {
@@ -1051,7 +1131,7 @@ public class ArelVisitorToSql extends ArelVisitor {
         if (attribute != null && attribute.isAbleToTypeCast()) {
             return quote(attribute.typeCastForDatabase(object));
         } else {
-            return quote(object);
+            return quote(object, columnFor(attribute));
         }
     }
 
@@ -1061,5 +1141,9 @@ public class ArelVisitorToSql extends ArelVisitor {
 
     private boolean tableExists(Object name) {
         return schemaCache().tableExists(name);
+    }
+
+    private ArelCollector unsupported(Object object, ArelCollector collector) {
+        throw new RuntimeException(String.format("Unsupported: %s", object.getClass().getName()));
     }
 }

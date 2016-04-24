@@ -114,12 +114,6 @@ public class ArelNodeEqualityTest {
             }
 
             @Override
-            public Object quote(Object value, Object column) {
-                quoteCount++;
-                return super.quote(value, column);
-            }
-
-            @Override
             public String quoteColumnName(String columnName) {
                 quoteCount++;
                 return super.quoteColumnName(columnName);

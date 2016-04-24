@@ -4,11 +4,12 @@ import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelPredicationsInterface;
 import tech.arauk.ark.arel.ArelWindowPredications;
 import tech.arauk.ark.arel.ArelWindowPredicationsInterface;
+import tech.arauk.ark.arel.interfaces.ArelDistinctInterface;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterface, ArelWindowPredicationsInterface {
+public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterface, ArelDistinctInterface, ArelWindowPredicationsInterface {
     public Object alias;
     public Object expressions;
     public Boolean distinct;
@@ -33,6 +34,17 @@ public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterf
     @Override
     public ArelNode between(Object begin, Object end, boolean inclusive) {
         return ArelPredications.between(this, begin, end, inclusive);
+    }
+
+    @Override
+    public Boolean distinct() {
+        return Boolean.TRUE.equals(this.distinct);
+    }
+
+    @Override
+    public ArelNodeFunction distinct(Boolean distinct) {
+        this.distinct = distinct;
+        return this;
     }
 
     @Override
@@ -232,15 +244,6 @@ public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterf
 
     public ArelNodeFunction alias(Object alias) {
         this.alias = alias;
-        return this;
-    }
-
-    public Boolean distinct() {
-        return this.distinct;
-    }
-
-    public ArelNodeFunction distinct(Boolean distinct) {
-        this.distinct = distinct;
         return this;
     }
 

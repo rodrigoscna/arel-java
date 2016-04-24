@@ -65,6 +65,11 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     }
 
     @Override
+    public ArelAttribute get(ArelNodeSqlLiteral name) {
+        return new ArelAttribute(this, name);
+    }
+
+    @Override
     public ArelNodeGrouping grouping(Object expr) {
         return ArelFactoryMethods.grouping(expr);
     }
@@ -96,7 +101,7 @@ public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMet
     }
 
     @Override
-    public Object typeCastForDatabase(String name, Object value) {
+    public Object typeCastForDatabase(Object name, Object value) {
         try {
             Method method = relation().getClass().getMethod("typeCastForDatabase", String.class, Object.class);
             return method.invoke(this, name, value);

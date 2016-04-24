@@ -967,7 +967,7 @@ public class ArelAttributeTest {
         public void testTypeCastingWitbExplicitCaster() {
             ArelTypeCaster fakeCaster = new ArelTypeCaster() {
                 @Override
-                public Object typeCastForDatabase(String attributeName, Object value) {
+                public Object typeCastForDatabase(Object attributeName, Object value) {
                     if (Objects.deepEquals(attributeName, "id")) {
                         return Integer.valueOf(String.valueOf(value));
                     } else {
@@ -988,7 +988,7 @@ public class ArelAttributeTest {
             ArelNode condition = table.get("id").eq("1");
 
             assertFalse(table.isAbleToTypeCast());
-            assertEquals("\"users\".\"id\" = '1'", condition.toSql());
+            assertEquals("\"users\".\"id\" = 1", condition.toSql());
         }
     }
 }

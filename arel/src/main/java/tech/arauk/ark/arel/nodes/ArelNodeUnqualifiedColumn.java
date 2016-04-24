@@ -12,7 +12,7 @@ public class ArelNodeUnqualifiedColumn extends ArelNodeUnary {
         return ((ArelAttribute) this.expr()).relation;
     }
 
-    public String name() {
+    public Object name() {
         return ((ArelAttribute) this.expr()).name;
     }
 }

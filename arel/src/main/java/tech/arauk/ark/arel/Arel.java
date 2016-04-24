@@ -7,7 +7,7 @@ public class Arel {
         return new ArelNodeSqlLiteral(rawSql);
     }
 
-    public static String star() {
-        return "*";
+    public static ArelNodeSqlLiteral star() {
+        return sql("*");
     }
 }

@@ -2,9 +2,12 @@ package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.nodes.ArelNodeNamedFunction;
+import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 
 public interface ArelRelation {
     ArelAttribute get(String name);
+
+    ArelAttribute get(ArelNodeSqlLiteral name);
 
     boolean isAbleToTypeCast();
 
@@ -22,5 +25,5 @@ public interface ArelRelation {
 
     ArelRelation tableName(Object tableName);
 
-    Object typeCastForDatabase(String name, Object value);
+    Object typeCastForDatabase(Object name, Object value);
 }

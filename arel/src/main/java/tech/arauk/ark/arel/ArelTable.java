@@ -137,6 +137,11 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     }
 
     @Override
+    public ArelAttribute get(ArelNodeSqlLiteral name) {
+        return new ArelAttribute(this, name);
+    }
+
+    @Override
     public ArelNodeGrouping grouping(Object expr) {
         return ArelFactoryMethods.grouping(expr);
     }
@@ -168,7 +173,7 @@ public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface
     }
 
     @Override
-    public Object typeCastForDatabase(String attributeName, Object value) {
+    public Object typeCastForDatabase(Object attributeName, Object value) {
         return this.mTypeCaster.typeCastForDatabase(attributeName, value);
     }
 

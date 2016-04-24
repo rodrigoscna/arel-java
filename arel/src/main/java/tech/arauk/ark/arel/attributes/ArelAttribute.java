@@ -11,9 +11,9 @@ import java.util.Objects;
 
 public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
     public ArelRelation relation;
-    public String name;
+    public Object name;
 
-    public ArelAttribute(Object relation, String name) {
+    public ArelAttribute(Object relation, Object name) {
         if (relation instanceof String) {
             this.relation = new ArelTable((String) relation);
         } else {

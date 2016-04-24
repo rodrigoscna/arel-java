@@ -9,6 +9,8 @@ import tech.arauk.ark.arel.visitors.ArelVisitorToSql;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FakeRecord {
     public static class Column {
@@ -44,11 +46,13 @@ public class FakeRecord {
                     new Column("id", "integer"),
                     new Column("name", "string"),
                     new Column("bool", "boolean"),
-                    new Column("created_at", "date")
+                    new Column("created_at", "datetime"),
+                    new Column("created_at_date", "date"),
+                    new Column("created_at_time", "time"),
             });
             this.columns.put("products", new Column[]{
                     new Column("id", "integer"),
-                    new Column("price", "decimal")
+                    new Column("price", "decimal"),
             });
 
             this.columnsHash = new HashMap<>();
@@ -107,11 +111,29 @@ public class FakeRecord {
                 String type = ((Column) column).type;
 
                 switch (type) {
+                    case "date":
+                        convertedThing = new SimpleDateFormat("yyyy-MM-dd").format(((Date) thing));
+                        break;
+                    case "datetime":
+                        convertedThing = new SimpleDateFormat("yyyy-MM-dd H:m:s").format(((Date) thing));
+                        break;
                     case "integer":
-                        convertedThing = Integer.parseInt(String.valueOf(thing));
+                        StringBuilder integerThing = new StringBuilder();
+
+                        Pattern pattern = Pattern.compile("^(\\-)?(\\d+)");
+                        Matcher matcher = pattern.matcher(String.valueOf(thing));
+
+                        while (matcher.find()) {
+                            integerThing.append(matcher.group());
+                        }
+
+                        convertedThing = Integer.valueOf(integerThing.toString());
                         break;
                     case "string":
                         convertedThing = String.valueOf(thing);
+                        break;
+                    case "time":
+                        convertedThing = new SimpleDateFormat("H:m:s").format(((Date) thing));
                         break;
                 }
             }
@@ -151,7 +173,7 @@ public class FakeRecord {
 
     public static class TypeCaster implements ArelTypeCaster {
         @Override
-        public Object typeCastForDatabase(String attributeName, Object value) {
+        public Object typeCastForDatabase(Object attributeName, Object value) {
             if ("id".equals(attributeName)) {
                 return Integer.valueOf(String.valueOf(value));
             } else {
