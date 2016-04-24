@@ -34,51 +34,63 @@ public abstract class ArelPredications {
     }
 
     public static ArelNodeDoesNotMatch doesNotMatch(Object holder, Object right) {
-        return new ArelNodeDoesNotMatch(holder, quotedNode(holder, right));
+        return doesNotMatch(holder, right, null);
     }
 
-    public static ArelNodeGrouping doesNotMatchAll(Object holder, Object[] others) {
-        return groupingAll(holder, "doesNotMatch", others);
+    public static ArelNodeDoesNotMatch doesNotMatch(Object holder, Object right, Object escape) {
+        return new ArelNodeDoesNotMatch(holder, quotedNode(holder, right), escape);
     }
 
-    public static ArelNodeGrouping doesNotMatchAny(Object holder, Object[] others) {
-        return groupingAny(holder, "doesNotMatch", others);
+    public static ArelNodeGrouping doesNotMatchAll(Object holder, Object others) {
+        return doesNotMatchAll(holder, others, null);
+    }
+
+    public static ArelNodeGrouping doesNotMatchAll(Object holder, Object others, Object escape) {
+        return groupingAll(holder, "doesNotMatch", objectToArray(others), escape);
+    }
+
+    public static ArelNodeGrouping doesNotMatchAny(Object holder, Object others) {
+        return doesNotMatchAny(holder, others, null);
+    }
+
+    public static ArelNodeGrouping doesNotMatchAny(Object holder, Object others, Object escape) {
+        return groupingAny(holder, "doesNotMatch", objectToArray(others), escape);
     }
 
     public static ArelNodeEquality eq(Object holder, Object other) {
         return new ArelNodeEquality(holder, quotedNode(holder, other));
     }
 
-    public static ArelNodeGrouping eqAll(Object holder, Object[] others) {
-        return groupingAll(holder, "eq", others);
+    public static ArelNodeGrouping eqAll(Object holder, Object others) {
+        return groupingAll(holder, "eq", objectToArray(others));
     }
 
-    public static ArelNodeGrouping eqAny(Object holder, Object[] others) {
-        return groupingAny(holder, "eq", others);
+    public static ArelNodeGrouping eqAny(Object holder, Object others) {
+        return groupingAny(holder, "eq", objectToArray(others));
     }
 
     public static ArelNodeGreaterThan gt(Object holder, Object right) {
         return new ArelNodeGreaterThan(holder, quotedNode(holder, right));
     }
 
-    public static ArelNodeGrouping gtAll(Object holder, Object[] others) {
-        return groupingAll(holder, "gt", others);
+    public static ArelNodeGrouping gtAll(Object holder, Object others) {
+        return groupingAll(holder, "gt", objectToArray(others));
     }
 
-    public static ArelNodeGrouping gtAny(Object holder, Object[] others) {
-        return groupingAny(holder, "gt", others);
+    public static ArelNodeGrouping gtAny(Object holder, Object others) {
+        return groupingAny(holder, "gt", objectToArray(others));
     }
 
     public static ArelNodeGreaterThanOrEqual gteq(Object holder, Object right) {
         return new ArelNodeGreaterThanOrEqual(holder, quotedNode(holder, right));
     }
 
-    public static ArelNodeGrouping gteqAll(Object holder, Object[] others) {
-        return groupingAll(holder, "gteq", others);
+    public static ArelNodeGrouping gteqAll(Object holder, Object others) {
+        return groupingAll(holder, "gteq", objectToArray(others));
     }
 
-    public static ArelNodeGrouping gteqAny(Object holder, Object[] others) {
-        return groupingAny(holder, "gteq", others);
+    public static ArelNodeGrouping gteqAny(Object holder, Object others) {
+        return groupingAny(holder, "gteq", objectToArray(others));
     }
 
     public static ArelNodeIn in(Object holder, Object other) {
@@ -93,48 +105,60 @@ public abstract class ArelPredications {
         }
     }
 
-    public static ArelNodeGrouping inAll(Object holder, Object[] others) {
-        return groupingAll(holder, "in", others);
+    public static ArelNodeGrouping inAll(Object holder, Object others) {
+        return groupingAll(holder, "in", objectToArray(others));
     }
 
-    public static ArelNodeGrouping inAny(Object holder, Object[] others) {
-        return groupingAny(holder, "in", others);
+    public static ArelNodeGrouping inAny(Object holder, Object others) {
+        return groupingAny(holder, "in", objectToArray(others));
     }
 
     public static ArelNodeLessThan lt(Object holder, Object right) {
         return new ArelNodeLessThan(holder, quotedNode(holder, right));
     }
 
-    public static ArelNodeGrouping ltAll(Object holder, Object[] others) {
-        return groupingAll(holder, "lt", others);
+    public static ArelNodeGrouping ltAll(Object holder, Object others) {
+        return groupingAll(holder, "lt", objectToArray(others));
     }
 
-    public static ArelNodeGrouping ltAny(Object holder, Object[] others) {
-        return groupingAny(holder, "lt", others);
+    public static ArelNodeGrouping ltAny(Object holder, Object others) {
+        return groupingAny(holder, "lt", objectToArray(others));
     }
 
     public static ArelNodeLessThanOrEqual lteq(Object holder, Object right) {
         return new ArelNodeLessThanOrEqual(holder, quotedNode(holder, right));
     }
 
-    public static ArelNodeGrouping lteqAll(Object holder, Object[] others) {
-        return groupingAll(holder, "lteq", others);
+    public static ArelNodeGrouping lteqAll(Object holder, Object others) {
+        return groupingAll(holder, "lteq", objectToArray(others));
     }
 
-    public static ArelNodeGrouping lteqAny(Object holder, Object[] others) {
-        return groupingAny(holder, "lteq", others);
+    public static ArelNodeGrouping lteqAny(Object holder, Object others) {
+        return groupingAny(holder, "lteq", objectToArray(others));
     }
 
     public static ArelNodeMatches matches(Object holder, Object right) {
-        return new ArelNodeMatches(holder, quotedNode(holder, right));
+        return matches(holder, right, null);
     }
 
-    public static ArelNodeGrouping matchesAll(Object holder, Object[] others) {
-        return groupingAll(holder, "matches", others);
+    public static ArelNodeMatches matches(Object holder, Object right, Object escape) {
+        return new ArelNodeMatches(holder, quotedNode(holder, right), escape);
     }
 
-    public static ArelNodeGrouping matchesAny(Object holder, Object[] others) {
-        return groupingAny(holder, "matches", others);
+    public static ArelNodeGrouping matchesAll(Object holder, Object others) {
+        return matchesAll(holder, others, null);
+    }
+
+    public static ArelNodeGrouping matchesAll(Object holder, Object others, Object escape) {
+        return groupingAll(holder, "matches", objectToArray(others), escape);
+    }
+
+    public static ArelNodeGrouping matchesAny(Object holder, Object others) {
+        return matchesAny(holder, others, null);
+    }
+
+    public static ArelNodeGrouping matchesAny(Object holder, Object others, Object escape) {
+        return groupingAny(holder, "matches", objectToArray(others), escape);
     }
 
     public static ArelNode notBetween(Object holder, Object begin, Object end) {
@@ -168,12 +192,12 @@ public abstract class ArelPredications {
         return new ArelNodeNotEqual(holder, quotedNode(holder, other));
     }
 
-    public static ArelNodeGrouping notEqAll(Object holder, Object[] others) {
-        return groupingAll(holder, "notEq", others);
+    public static ArelNodeGrouping notEqAll(Object holder, Object others) {
+        return groupingAll(holder, "notEq", objectToArray(others));
     }
 
-    public static ArelNodeGrouping notEqAny(Object holder, Object[] others) {
-        return groupingAny(holder, "notEq", others);
+    public static ArelNodeGrouping notEqAny(Object holder, Object others) {
+        return groupingAny(holder, "notEq", objectToArray(others));
     }
 
     public static ArelNodeNotIn notIn(Object holder, Object other) {
@@ -188,12 +212,12 @@ public abstract class ArelPredications {
         }
     }
 
-    public static ArelNodeGrouping notInAll(Object holder, Object[] others) {
-        return groupingAll(holder, "notIn", others);
+    public static ArelNodeGrouping notInAll(Object holder, Object others) {
+        return groupingAll(holder, "notIn", objectToArray(others));
     }
 
-    public static ArelNodeGrouping notInAny(Object holder, Object[] others) {
-        return groupingAny(holder, "notIn", others);
+    public static ArelNodeGrouping notInAny(Object holder, Object others) {
+        return groupingAny(holder, "notIn", objectToArray(others));
     }
 
     private static boolean equalsQuoted(Object maybeQuoted, Object value) {
@@ -238,6 +262,16 @@ public abstract class ArelPredications {
         }
 
         return new ArelNodeGrouping(node);
+    }
+
+    private static Object[] objectToArray(Object object) {
+        if (object instanceof List) {
+            return ((List) object).toArray();
+        } else if (object instanceof Object[]) {
+            return (Object[]) object;
+        } else {
+            return new Object[]{object};
+        }
     }
 
     private static List<Object> quotedArray(Object holder, List<Object> others) {

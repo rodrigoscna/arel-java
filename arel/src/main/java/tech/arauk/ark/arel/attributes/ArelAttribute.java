@@ -2,10 +2,6 @@ package tech.arauk.ark.arel.attributes;
 
 import tech.arauk.ark.arel.*;
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.ArelNodeAvg;
-import tech.arauk.ark.arel.nodes.ArelNodeMax;
-import tech.arauk.ark.arel.nodes.ArelNodeMin;
-import tech.arauk.ark.arel.nodes.ArelNodeSum;
 
 import java.util.Objects;
 
@@ -68,13 +64,28 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping doesNotMatchAll(Object... others) {
+    public ArelNodeDoesNotMatch doesNotMatch(Object right, Object escape) {
+        return ArelPredications.doesNotMatch(this, right, escape);
+    }
+
+    @Override
+    public ArelNodeGrouping doesNotMatchAll(Object others) {
         return ArelPredications.doesNotMatchAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping doesNotMatchAny(Object... others) {
+    public ArelNodeGrouping doesNotMatchAll(Object others, Object escape) {
+        return ArelPredications.doesNotMatchAll(this, others, escape);
+    }
+
+    @Override
+    public ArelNodeGrouping doesNotMatchAny(Object others) {
         return ArelPredications.doesNotMatchAny(this, others);
+    }
+
+    @Override
+    public ArelNodeGrouping doesNotMatchAny(Object others, Object escape) {
+        return ArelPredications.doesNotMatchAny(this, others, escape);
     }
 
     @Override
@@ -83,12 +94,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping eqAll(Object... others) {
+    public ArelNodeGrouping eqAll(Object others) {
         return ArelPredications.eqAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping eqAny(Object... others) {
+    public ArelNodeGrouping eqAny(Object others) {
         return ArelPredications.eqAny(this, others);
     }
 
@@ -113,12 +124,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping gtAll(Object... others) {
+    public ArelNodeGrouping gtAll(Object others) {
         return ArelPredications.gtAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping gtAny(Object... others) {
+    public ArelNodeGrouping gtAny(Object others) {
         return ArelPredications.gtAny(this, others);
     }
 
@@ -128,12 +139,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping gteqAll(Object... others) {
+    public ArelNodeGrouping gteqAll(Object others) {
         return ArelPredications.gteqAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping gteqAny(Object... others) {
+    public ArelNodeGrouping gteqAny(Object others) {
         return ArelPredications.gteqAny(this, others);
     }
 
@@ -143,12 +154,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping inAll(Object... others) {
+    public ArelNodeGrouping inAll(Object others) {
         return ArelPredications.inAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping inAny(Object... others) {
+    public ArelNodeGrouping inAny(Object others) {
         return ArelPredications.inAny(this, others);
     }
 
@@ -158,12 +169,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping ltAll(Object... others) {
+    public ArelNodeGrouping ltAll(Object others) {
         return ArelPredications.ltAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping ltAny(Object... others) {
+    public ArelNodeGrouping ltAny(Object others) {
         return ArelPredications.ltAny(this, others);
     }
 
@@ -173,12 +184,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping lteqAll(Object... others) {
+    public ArelNodeGrouping lteqAll(Object others) {
         return ArelPredications.lteqAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping lteqAny(Object... others) {
+    public ArelNodeGrouping lteqAny(Object others) {
         return ArelPredications.lteqAny(this, others);
     }
 
@@ -188,13 +199,28 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping matchesAll(Object... others) {
+    public ArelNodeMatches matches(Object right, Object escape) {
+        return ArelPredications.matches(this, right, escape);
+    }
+
+    @Override
+    public ArelNodeGrouping matchesAll(Object others) {
         return ArelPredications.matchesAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping matchesAny(Object... others) {
+    public ArelNodeGrouping matchesAll(Object others, Object escape) {
+        return ArelPredications.matchesAll(this, others, escape);
+    }
+
+    @Override
+    public ArelNodeGrouping matchesAny(Object others) {
         return ArelPredications.matchesAny(this, others);
+    }
+
+    @Override
+    public ArelNodeGrouping matchesAny(Object others, Object escape) {
+        return ArelPredications.matchesAny(this, others, escape);
     }
 
     @Override
@@ -223,12 +249,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping notEqAll(Object... others) {
+    public ArelNodeGrouping notEqAll(Object others) {
         return ArelPredications.notEqAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping notEqAny(Object... others) {
+    public ArelNodeGrouping notEqAny(Object others) {
         return ArelPredications.notEqAny(this, others);
     }
 
@@ -238,12 +264,12 @@ public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpres
     }
 
     @Override
-    public ArelNodeGrouping notInAll(Object... others) {
+    public ArelNodeGrouping notInAll(Object others) {
         return ArelPredications.notInAll(this, others);
     }
 
     @Override
-    public ArelNodeGrouping notInAny(Object... others) {
+    public ArelNodeGrouping notInAny(Object others) {
         return ArelPredications.notInAny(this, others);
     }
 
