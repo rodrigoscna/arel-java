@@ -1,16 +1,10 @@
 package tech.arauk.ark.arel;
 
 import tech.arauk.ark.arel.nodes.*;
-import tech.arauk.ark.arel.nodes.ArelNodeOn;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-/**
- * Class designed for creating various kinds of Arel Nodes.
- *
- * @author Rodrigo Scomazzon do Nascimento <rodrigo.sc.na@gmail.com>
- */
 public abstract class ArelFactoryMethods {
     public static ArelNodeAnd createAnd(List<Object> clauses) {
         return new ArelNodeAnd(clauses);
