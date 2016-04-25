@@ -1,1 +1,1 @@
-include ":arel"
+rootProject.name = "arel"

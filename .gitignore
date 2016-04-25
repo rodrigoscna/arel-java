@@ -16,6 +16,9 @@ gen
 # Ignore DEX files.
 *.dex
 
+# Ignore log files.
+*.log
+
 # Ignore local configuration file.
 local.properties
 
