@@ -1,52 +1,16 @@
 apply plugin: "java"
-apply plugin: "maven-publish"
 
-group "tech.arauk.ark"
-version "1.0-SNAPSHOT"
+sourceCompatibility = 1.7
+
+repositories {
+    jcenter()
+}
 
 dependencies {
     testCompile group: "junit", name: "junit", version: "4.12"
     testCompile group: "org.reflections", name: "reflections", version: "0.9.10"
 }
 
-publishing {
-    publications {
-        arel(MavenPublication) {
-            from components.java
-
-            artifact(javadocJar) {
-                classifier = "javadoc"
-            }
-
-            artifact(sourceJar) {
-                classifier = "sources"
-            }
-        }
-    }
-
-    repositories {
-        maven {
-            url "file:/${project.projectDir}/build/artifacts"
-        }
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-sourceCompatibility = 1.7
-
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc"
-    from javadoc.destinationDir
-}
-
-task sourceJar(type: Jar) {
-    classifier = "sources"
-    from sourceSets.main.allSource
 }
