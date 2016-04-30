@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.interfaces.ArelFramingInterface;
 import tech.arauk.ark.arel.interfaces.ArelOrdersInterface;
 import tech.arauk.ark.arel.interfaces.ArelPartitionsInterface;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@Beta
 public class ArelNodeWindow extends ArelNode implements ArelFramingInterface, ArelOrdersInterface, ArelPartitionsInterface {
     public List<Object> orders;
     public List<Object> partitions;

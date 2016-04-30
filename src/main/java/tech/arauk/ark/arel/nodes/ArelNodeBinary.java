@@ -1,8 +1,11 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
+
 import java.util.Arrays;
 import java.util.Objects;
 
+@Beta
 public class ArelNodeBinary extends ArelNode {
     private Object left;
     private Object right;

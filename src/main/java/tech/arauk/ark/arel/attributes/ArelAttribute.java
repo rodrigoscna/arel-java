@@ -1,10 +1,12 @@
 package tech.arauk.ark.arel.attributes;
 
 import tech.arauk.ark.arel.*;
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.*;
 
 import java.util.Objects;
 
+@Beta
 public class ArelAttribute implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelMathInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
     public ArelRelation relation;
     public Object name;

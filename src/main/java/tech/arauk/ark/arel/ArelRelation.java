@@ -1,9 +1,11 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.nodes.ArelNodeNamedFunction;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 
+@Beta
 public interface ArelRelation {
     ArelAttribute get(String name);
 

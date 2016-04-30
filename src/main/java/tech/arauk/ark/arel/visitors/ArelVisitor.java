@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel.visitors;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.connection.ArelConnection;
 
@@ -7,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+@Beta
 public class ArelVisitor {
     public ArelConnection connection;
     private DispatchCache mDispatch;

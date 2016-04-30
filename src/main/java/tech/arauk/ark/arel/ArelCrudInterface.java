@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 
+@Beta
 public interface ArelCrudInterface {
     ArelDeleteManager compileDelete();
 

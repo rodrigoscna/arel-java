@@ -1,10 +1,12 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+@Beta
 public abstract class ArelFactoryMethods {
     public static ArelNodeAnd createAnd(List<Object> clauses) {
         return new ArelNodeAnd(clauses);

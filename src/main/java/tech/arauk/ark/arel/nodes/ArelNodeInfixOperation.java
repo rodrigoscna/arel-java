@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.*;
+import tech.arauk.ark.arel.annotations.Beta;
 
+@Beta
 public class ArelNodeInfixOperation extends ArelNodeBinary implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelMathInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
     private Object operator;
 

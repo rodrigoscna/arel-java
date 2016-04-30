@@ -1,9 +1,11 @@
 package tech.arauk.ark.arel.visitors;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.connection.ArelConnection;
 import tech.arauk.ark.arel.nodes.ArelNodeBin;
 
+@Beta
 public class ArelVisitorMySQL extends ArelVisitorToSql {
     public static final String BINARY = "BINARY ";
 

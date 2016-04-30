@@ -1,9 +1,11 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.interfaces.ArelNameInterface;
 
 import java.util.Objects;
 
+@Beta
 public class ArelNodeNamedFunction extends ArelNodeFunction implements ArelNameInterface {
     public String name;
 

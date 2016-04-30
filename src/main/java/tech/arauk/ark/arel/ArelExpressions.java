@@ -1,10 +1,12 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Beta
 public abstract class ArelExpressions {
     public static ArelNodeAvg average(Object holder) {
         return new ArelNodeAvg(objectToArray(holder));

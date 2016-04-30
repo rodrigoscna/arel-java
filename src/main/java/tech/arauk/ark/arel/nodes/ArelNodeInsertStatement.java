@@ -1,12 +1,14 @@
 package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.ArelRelation;
+import tech.arauk.ark.arel.annotations.Beta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@Beta
 public class ArelNodeInsertStatement extends ArelNodeStatement {
     public List<Object> columns;
     public ArelRelation relation;

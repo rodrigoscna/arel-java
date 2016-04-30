@@ -4,11 +4,13 @@ import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelPredicationsInterface;
 import tech.arauk.ark.arel.ArelWindowPredications;
 import tech.arauk.ark.arel.ArelWindowPredicationsInterface;
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.interfaces.ArelDistinctInterface;
 
 import java.util.Arrays;
 import java.util.Objects;
 
+@Beta
 public class ArelNodeFunction extends ArelNode implements ArelPredicationsInterface, ArelDistinctInterface, ArelWindowPredicationsInterface {
     public Object alias;
     public Object expressions;

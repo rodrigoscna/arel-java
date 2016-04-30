@@ -1,5 +1,8 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
+
+@Beta
 public class ArelNodeAscending extends ArelNodeUnary {
     public ArelNodeAscending(Object expr) {
         super(expr);

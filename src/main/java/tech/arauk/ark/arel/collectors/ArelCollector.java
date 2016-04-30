@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel.collectors;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.ArelNodeBindParam;
 
+@Beta
 public class ArelCollector {
     private StringBuilder mBuilder;
     private int mBindIndex;

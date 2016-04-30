@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.interfaces.ArelFromInterface;
 import tech.arauk.ark.arel.interfaces.ArelWheresInterface;
@@ -9,6 +10,7 @@ import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 import java.util.Iterator;
 import java.util.Map;
 
+@Beta
 public abstract class ArelCrud {
     public static ArelDeleteManager compileDelete(Object holder) {
         if (holder instanceof ArelSelectManager) {

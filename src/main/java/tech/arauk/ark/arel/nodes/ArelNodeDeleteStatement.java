@@ -1,10 +1,12 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.interfaces.ArelWheresInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Beta
 public class ArelNodeDeleteStatement extends ArelNodeBinary implements ArelWheresInterface {
     public Object limit;
 

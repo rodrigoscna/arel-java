@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.*;
 
+@Beta
 public class Attributes {
     public static Class<? extends ArelAttribute> forColumn(ArelAttribute.Type column) {
         if (column.type() != null) {

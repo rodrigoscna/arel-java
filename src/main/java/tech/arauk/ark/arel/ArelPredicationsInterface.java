@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.*;
 
+@Beta
 public interface ArelPredicationsInterface {
     ArelNode between(Object begin, Object end);
 

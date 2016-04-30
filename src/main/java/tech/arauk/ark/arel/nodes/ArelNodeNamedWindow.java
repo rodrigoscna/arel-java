@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.interfaces.ArelNameInterface;
 
+@Beta
 public class ArelNodeNamedWindow extends ArelNodeWindow implements ArelNameInterface {
     public String name;
 

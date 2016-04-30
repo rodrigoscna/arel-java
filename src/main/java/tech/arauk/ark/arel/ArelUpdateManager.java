@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.interfaces.*;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
 import tech.arauk.ark.arel.nodes.ArelNodeUnqualifiedColumn;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Beta
 public class ArelUpdateManager extends ArelTreeManager {
     public ArelUpdateManager() {
         super(new ArelNodeUpdateStatement());

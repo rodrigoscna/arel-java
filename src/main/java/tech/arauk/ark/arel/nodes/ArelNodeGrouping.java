@@ -2,7 +2,9 @@ package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelPredicationsInterface;
+import tech.arauk.ark.arel.annotations.Beta;
 
+@Beta
 public class ArelNodeGrouping extends ArelNodeUnary implements ArelPredicationsInterface {
     public ArelNodeGrouping(Object expr) {
         super(expr);

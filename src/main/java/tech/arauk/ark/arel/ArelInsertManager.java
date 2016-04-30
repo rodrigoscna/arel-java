@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.nodes.ArelNodeInsertStatement;
 import tech.arauk.ark.arel.nodes.ArelNodeSqlLiteral;
@@ -10,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@Beta
 public class ArelInsertManager extends ArelTreeManager {
     public ArelInsertManager() {
         super(new ArelNodeInsertStatement());

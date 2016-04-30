@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.interfaces.*;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+@Beta
 public class ArelNodeSelectStatement extends ArelNodeStatement implements ArelCoresInterface, ArelLimitInterface, ArelLockInterface, ArelOffsetInterface, ArelOrdersInterface, ArelWithInterface {
     public ArelNodeSelectCore[] cores;
     public ArelNodeLimit limit;

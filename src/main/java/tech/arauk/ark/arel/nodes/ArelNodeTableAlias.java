@@ -3,12 +3,14 @@ package tech.arauk.ark.arel.nodes;
 import tech.arauk.ark.arel.ArelFactoryMethods;
 import tech.arauk.ark.arel.ArelFactoryMethodsInterface;
 import tech.arauk.ark.arel.ArelRelation;
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+@Beta
 public class ArelNodeTableAlias extends ArelNodeBinary implements ArelFactoryMethodsInterface, ArelRelation {
     public ArelNodeTableAlias(Object left, Object right) {
         super(left, right);

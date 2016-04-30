@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Beta
 public abstract class ArelPredications {
     public static ArelNode between(Object holder, Object begin, Object end) {
         return between(holder, begin, end, true);

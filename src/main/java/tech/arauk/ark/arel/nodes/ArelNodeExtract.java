@@ -4,9 +4,11 @@ import tech.arauk.ark.arel.ArelAliasPredications;
 import tech.arauk.ark.arel.ArelAliasPredicationsInterface;
 import tech.arauk.ark.arel.ArelPredications;
 import tech.arauk.ark.arel.ArelPredicationsInterface;
+import tech.arauk.ark.arel.annotations.Beta;
 
 import java.util.Objects;
 
+@Beta
 public class ArelNodeExtract extends ArelNodeUnary implements ArelAliasPredicationsInterface, ArelPredicationsInterface {
     private Object field;
 

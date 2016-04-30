@@ -1,9 +1,11 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 
 import java.util.Objects;
 
+@Beta
 public class ArelNodeCasted extends ArelNode {
     public Object val;
     public ArelAttribute attribute;

@@ -1,5 +1,6 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.ArelAttribute;
 import tech.arauk.ark.arel.connection.ArelTypeCaster;
 import tech.arauk.ark.arel.nodes.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Beta
 public class ArelTable implements ArelCrudInterface, ArelFactoryMethodsInterface, ArelRelation {
     public static ArelVisitor engine;
     private List<Object> mAliases;

@@ -2,7 +2,7 @@ package tech.arauk.ark.arel.visitors;
 
 import tech.arauk.ark.arel.ArelSelectManager;
 import tech.arauk.ark.arel.ArelTable;
-import tech.arauk.ark.arel.ArelUtils;
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.attributes.*;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.connection.ArelConnection;
@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
+@Beta
 public class ArelVisitorToSql extends ArelVisitor {
     public static final String AND = " AND ";
     public static final String AS = " AS ";
@@ -77,13 +78,43 @@ public class ArelVisitorToSql extends ArelVisitor {
     public static final String WHERE = "WHERE ";
     public static final String WINDOW = " WINDOW ";
     public static final String WITH = "WITH ";
-
     public static final String WITH_RECURSIVE = "WITH RECURSIVE ";
+
     private static final String ONE_EQUALS_ONE = "1=1";
     private static final String ONE_EQUALS_ZERO = "1=0";
 
     public ArelVisitorToSql(ArelConnection arelConnection) {
         super(arelConnection);
+    }
+
+    private static String join(List<String> stringsList, String separator) {
+        if (stringsList == null) {
+            return null;
+        }
+
+        Iterator iterator = stringsList.iterator();
+
+        if (!iterator.hasNext()) {
+            return "";
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(iterator.next());
+
+        while (iterator.hasNext()) {
+            if (separator != null) {
+                stringBuilder.append(separator);
+            }
+
+            Object object = iterator.next();
+
+            if (object != null) {
+                stringBuilder.append(object);
+            }
+        }
+
+        return stringBuilder.toString();
     }
 
     public ArelCollector injectJoin(List list, ArelCollector collector, String joinStr) {
@@ -454,7 +485,7 @@ public class ArelVisitorToSql extends ArelVisitor {
                     quotedColumns.add(quoteColumnName(column));
                 }
             }
-            collector.append(String.format(" (%s)", ArelUtils.join(quotedColumns, ", ")));
+            collector.append(String.format(" (%s)", join(quotedColumns, ", ")));
         }
 
         if (insertStatement.values != null) {

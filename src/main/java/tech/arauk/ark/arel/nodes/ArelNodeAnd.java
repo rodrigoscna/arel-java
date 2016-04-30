@@ -1,8 +1,11 @@
 package tech.arauk.ark.arel.nodes;
 
+import tech.arauk.ark.arel.annotations.Beta;
+
 import java.util.List;
 import java.util.Objects;
 
+@Beta
 public class ArelNodeAnd extends ArelNode {
     public List<Object> children;
 

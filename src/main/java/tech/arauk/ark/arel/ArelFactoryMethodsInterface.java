@@ -1,10 +1,12 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.*;
 import tech.arauk.ark.arel.nodes.ArelNodeOn;
 
 import java.util.List;
 
+@Beta
 public interface ArelFactoryMethodsInterface {
     ArelNodeAnd createAnd(List<Object> clauses);
 

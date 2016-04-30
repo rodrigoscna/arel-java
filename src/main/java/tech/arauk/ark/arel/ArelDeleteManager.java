@@ -1,10 +1,12 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.ArelNodeDeleteStatement;
 import tech.arauk.ark.arel.nodes.ArelNodeLimit;
 
 import java.util.List;
 
+@Beta
 public class ArelDeleteManager extends ArelTreeManager {
     public ArelDeleteManager() {
         super(new ArelNodeDeleteStatement());

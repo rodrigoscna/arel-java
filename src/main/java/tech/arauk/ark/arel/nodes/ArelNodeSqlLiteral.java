@@ -1,9 +1,11 @@
 package tech.arauk.ark.arel.nodes;
 
 import tech.arauk.ark.arel.*;
+import tech.arauk.ark.arel.annotations.Beta;
 
 import java.util.Objects;
 
+@Beta
 public class ArelNodeSqlLiteral implements ArelAliasPredicationsInterface, ArelExpressionsInterface, ArelOrderPredicationsInterface, ArelPredicationsInterface {
     private String mValue;
 

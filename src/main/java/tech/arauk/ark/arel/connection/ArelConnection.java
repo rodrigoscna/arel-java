@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel.connection;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
+@Beta
 public interface ArelConnection {
     ArelVisitor getVisitor();
 

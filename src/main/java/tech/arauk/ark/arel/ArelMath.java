@@ -1,7 +1,9 @@
 package tech.arauk.ark.arel;
 
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.nodes.*;
 
+@Beta
 public abstract class ArelMath {
     public static ArelNodeGrouping add(Object holder, Object other) {
         return new ArelNodeGrouping(new ArelNodeAddition(holder, other));

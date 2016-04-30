@@ -3,6 +3,7 @@ package tech.arauk.ark.arel.nodes;
 import tech.arauk.ark.arel.ArelFactoryMethods;
 import tech.arauk.ark.arel.ArelFactoryMethodsInterface;
 import tech.arauk.ark.arel.ArelTable;
+import tech.arauk.ark.arel.annotations.Beta;
 import tech.arauk.ark.arel.collectors.ArelCollector;
 import tech.arauk.ark.arel.visitors.ArelVisitor;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Beta
 public class ArelNode implements ArelFactoryMethodsInterface {
     static List<Object> objectToList(Object object) {
         List<Object> objects;
